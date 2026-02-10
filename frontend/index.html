@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealMindanao - Best Deals in Mindanao</title>
+  <meta name="description" content="Find the best deals and discounts in Mindanao. Shop quality products at unbeatable prices.">
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg">
+      <div class="animate-spin h-10 w-10 border-4 border-brand-600 border-t-transparent rounded-full mx-auto"></div>
+      <p class="mt-4 text-gray-700">Loading...</p>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+    <nav class="page-shell">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="/" class="flex items-center space-x-2">
+          <svg class="w-8 h-8 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"/>
+          </svg>
+          <span class="text-xl font-bold text-gray-900">DealMindanao</span>
+        </a>
+
+        <!-- Navigation Links -->
+        <div class="hidden md:flex items-center space-x-1">
+          <a href="/" class="px-4 py-2 text-sm font-medium text-brand-600 bg-brand-50 rounded-lg">Home</a>
+          <a href="/shop.html" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Shop</a>
+          <a href="/about.html" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">About</a>
+          <a href="/contact.html" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Contact</a>
+        </div>
+
+        <!-- User Menu -->
+        <div class="flex items-center space-x-4">
+          <a href="/cart.html" class="relative p-2 text-gray-700 hover:text-brand-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-brand-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+          </a>
+          
+          <div id="user-menu" class="hidden">
+            <a href="/dashboard.html" class="btn-secondary">Dashboard</a>
+          </div>
+          
+          <div id="guest-menu">
+            <a href="/auth/login.html" class="btn-secondary">Login</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="page-shell py-8 lg:py-10">
+    <div class="page-section">
+      <!-- Hero Section -->
+      <section class="card bg-gradient-to-r from-brand-600 to-brand-700 text-white">
+        <div class="text-center">
+          <h1 class="text-white">Welcome to DealMindanao</h1>
+          <p class="mt-4 text-lg text-brand-50">Discover amazing deals and discounts in Mindanao</p>
+          <div class="mt-8">
+            <a href="/shop.html" class="btn-primary bg-white text-brand-600 hover:bg-gray-100">
+              Browse Deals
+              <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Products -->
+      <section>
+        <div class="flex items-center justify-between mb-6">
+          <h2>Featured Deals</h2>
+          <a href="/shop.html" class="text-brand-600 hover:text-brand-700 font-medium">View All →</a>
+        </div>
+        
+        <div id="featured-products" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Products will be loaded here -->
+          <div class="text-center py-12 col-span-full">
+            <div class="animate-spin h-8 w-8 border-4 border-brand-600 border-t-transparent rounded-full mx-auto"></div>
+            <p class="mt-4 text-gray-500">Loading products...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 mt-16">
+    <div class="page-shell py-12">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4">DealMindanao</h3>
+          <p class="text-sm">Your trusted marketplace for the best deals in Mindanao.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/shop.html" class="hover:text-white">Shop</a></li>
+            <li><a href="/about.html" class="hover:text-white">About Us</a></li>
+            <li><a href="/contact.html" class="hover:text-white">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/privacy.html" class="hover:text-white">Privacy Policy</a></li>
+            <li><a href="/terms.html" class="hover:text-white">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+        <p>&copy; 2026 DealMindanao. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>

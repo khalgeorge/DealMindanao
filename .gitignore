@@ -1,0 +1,55 @@
+# DealMindanao Monorepo .gitignore
+
+# Backend Environment Files
+backend/.env
+backend/.env.backup
+backend/.env.production
+
+# Frontend Environment Files
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# IDE & Editors
+*.log
+.DS_Store
+.phpactor.json
+.phpunit.result.cache
+/.fleet
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+Homestead.json
+Homestead.yaml
+Thumbs.db
+
+# Backend Dependencies & Build
+backend/vendor/
+backend/node_modules/
+backend/public/build
+backend/public/hot
+backend/public/storage
+backend/storage/*.key
+backend/storage/pail
+backend/.phpunit.cache
+
+# Frontend Dependencies & Build
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+
+# Database & Logs
+*.sqlite
+*.sqlite-journal
+backend/storage/logs/
+backend/database/*.sqlite
+backend/database/*.sqlite-journal
+
+# OS Files
+.DS_Store
+Thumbs.db
+*.swp
+*~
