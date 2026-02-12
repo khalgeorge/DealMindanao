@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Settings | DealMindanao</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="bg-gray-50 admin-layout">
+  <div id="sidebar"></div>
+  
+  <main class="admin-main">
+    <header class="admin-header">
+      <div>
+        <h1 class="text-xl font-black text-gray-900 uppercase tracking-tighter">Settings</h1>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Platform Parameters</p>
+      </div>
+      <button id="save-all-btn" class="btn-primary btn-sm">Save Changes</button>
+    </header>
+    
+    <div class="admin-content">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Sidebar Navigation -->
+        <div class="lg:col-span-1 space-y-2">
+          <nav class="flex flex-col space-y-1">
+            <button onclick="switchTab('general')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg bg-white border border-gray-100 text-brand-600 shadow-sm" id="tab-btn-general">
+              General Configuration
+            </button>
+            <button onclick="switchTab('regional')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" id="tab-btn-regional">
+              Regional & Logistics
+            </button>
+            <button onclick="switchTab('security')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" id="tab-btn-security">
+              Security & Access
+            </button>
+            <button onclick="switchTab('notifications')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" id="tab-btn-notifications">
+               SMS & Email Alerts
+            </button>
+          </nav>
+        </div>
+
+        <!-- Content Area -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- General Tab -->
+          <div id="tab-general" class="settings-tab">
+            <div class="bg-white rounded-lg border border-gray-100 p-8 shadow-sm">
+              <h2 class="text-xl font-black text-gray-900 mb-6 uppercase tracking-tight">Store Profile</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Platform Name</label>
+                  <input type="text" value="DealMindanao Marketplace" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 font-bold focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Support Email</label>
+                  <input type="email" value="support@dealmindanao.ph" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 font-bold focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Header Logo</label>
+                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                       <div class="flex items-center gap-4 mb-3">
+                          <div class="w-12 h-12 bg-white rounded-lg border border-gray-100 flex items-center justify-center overflow-hidden shrink-0">
+                             <img src="/logo-no-bg.png" class="max-h-8 w-auto">
+                          </div>
+                          <div>
+                             <p class="text-sm font-bold text-gray-900">current-logo.png</p>
+                             <p class="text-[10px] text-gray-400 font-bold uppercase">Light Background Version</p>
+                          </div>
+                       </div>
+                       <div class="relative">
+                          <input type="file" id="header-logo-upload" class="hidden" accept="image/*" onchange="updateFileName(this, 'header-logo-name')">
+                          <label for="header-logo-upload" class="flex items-center justify-center gap-2 w-full py-2 px-4 bg-white border border-gray-200 rounded-lg text-xs font-black text-gray-600 hover:bg-gray-100 cursor-pointer transition-colors uppercase tracking-widest">
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                             Upload New
+                          </label>
+                          <p id="header-logo-name" class="text-[10px] text-brand-600 font-bold mt-2 text-center"></p>
+                       </div>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Footer Logo</label>
+                    <div class="p-4 bg-gray-900 border border-gray-800 rounded-lg">
+                       <div class="flex items-center gap-4 mb-3">
+                          <div class="w-12 h-12 bg-gray-800 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden shrink-0">
+                             <img src="/logo-no-bg.png" class="max-h-8 w-auto brightness-200">
+                          </div>
+                          <div>
+                             <p class="text-sm font-bold text-white">footer-logo-white.png</p>
+                             <p class="text-[10px] text-gray-500 font-bold uppercase">Dark Background Version</p>
+                          </div>
+                       </div>
+                       <div class="relative">
+                          <input type="file" id="footer-logo-upload" class="hidden" accept="image/*" onchange="updateFileName(this, 'footer-logo-name')">
+                          <label for="footer-logo-upload" class="flex items-center justify-center gap-2 w-full py-2 px-4 bg-gray-800 border border-gray-700 rounded-lg text-xs font-black text-gray-300 hover:bg-gray-700 cursor-pointer transition-colors uppercase tracking-widest">
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                             Upload New
+                          </label>
+                          <p id="footer-logo-name" class="text-[10px] text-brand-400 font-bold mt-2 text-center"></p>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                   <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Maintenance Mode</label>
+                   <div class="flex items-center gap-3">
+                      <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out bg-gray-200 rounded-full cursor-pointer">
+                         <input type="checkbox" class="absolute w-6 h-6 transition duration-200 ease-in-out transform bg-white border-2 border-gray-200 rounded-full appearance-none cursor-pointer checked:translate-x-6 checked:bg-brand-600 checked:border-brand-600"/>
+                      </div>
+                      <span class="text-sm font-bold text-gray-500 italic">Off (Live)</span>
+                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Regional Tab (Hidden) -->
+          <div id="tab-regional" class="settings-tab hidden">
+            <div class="bg-white rounded-lg border border-gray-100 p-8 shadow-sm">
+              <h2 class="text-xl font-black text-gray-900 mb-6 uppercase tracking-tight">Mindanao Logistics</h2>
+              <div class="space-y-6">
+                <div>
+                  <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Default Currency</label>
+                  <select class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 font-bold outline-none">
+                    <option>Philippine Peso (PHP)</option>
+                    <option>US Dollar (USD)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Supported Regions</label>
+                  <div class="grid grid-cols-2 gap-4">
+                    <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                      <input type="checkbox" checked class="accent-brand-600 w-5 h-5">
+                      <span class="text-sm font-bold">Davao Region</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                      <input type="checkbox" checked class="accent-brand-600 w-5 h-5">
+                      <span class="text-sm font-bold">Northern Mindanao</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                      <input type="checkbox" checked class="accent-brand-600 w-5 h-5">
+                      <span class="text-sm font-bold">Zamboanga Peninsula</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                      <input type="checkbox" checked class="accent-brand-600 w-5 h-5">
+                      <span class="text-sm font-bold">SOCCSKSARGEN</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Tab (Hidden) -->
+          <div id="tab-security" class="settings-tab hidden">
+             <div class="bg-white rounded-lg border border-gray-100 p-8 shadow-sm">
+                <h2 class="text-xl font-black text-gray-900 mb-6 uppercase tracking-tight">Access Control</h2>
+                <div class="space-y-4">
+                   <button class="w-full text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-100 transition-all flex justify-between items-center group">
+                      <div>
+                         <p class="font-bold text-gray-900">Change Admin Password</p>
+                         <p class="text-xs text-gray-500">Last changed 2 months ago</p>
+                      </div>
+                      <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                   </button>
+                   <button class="w-full text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-100 transition-all flex justify-between items-center group">
+                      <div>
+                         <p class="font-bold text-gray-900">Two-Factor Authentication</p>
+                         <p class="text-xs text-green-600 font-bold uppercase tracking-widest">Enabled</p>
+                      </div>
+                      <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                   </button>
+                </div>
+             </div>
+          </div>
+
+          <!-- SMS & Email Tab (Hidden) -->
+          <div id="tab-notifications" class="settings-tab hidden">
+             <div class="bg-white rounded-lg border border-gray-100 p-8 shadow-sm">
+                <h2 class="text-xl font-black text-gray-900 mb-6 uppercase tracking-tight">Alert Configuration</h2>
+                <div class="space-y-8">
+                   <!-- Email -->
+                   <div class="space-y-4">
+                      <div class="flex items-center justify-between">
+                         <h3 class="font-black text-gray-900 uppercase text-sm tracking-widest">Email Notifications (SMTP)</h3>
+                         <span class="text-[10px] font-bold py-1 px-2 bg-green-50 text-green-700 rounded-lg">CONNECTED</span>
+                      </div>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Host</label>
+                            <input type="text" value="smtp.postmarkapp.com" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 font-bold text-sm outline-none">
+                         </div>
+                         <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Port</label>
+                            <input type="text" value="587" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 font-bold text-sm outline-none">
+                         </div>
+                      </div>
+                      <label class="flex items-center gap-3 cursor-pointer">
+                         <input type="checkbox" checked class="accent-brand-600 w-4 h-4">
+                         <span class="text-sm font-bold text-gray-600">Send copy of Order PDF to Customer</span>
+                      </label>
+                   </div>
+
+                   <!-- SMS -->
+                   <div class="space-y-4 pt-8 border-t border-gray-50">
+                      <div class="flex items-center justify-between">
+                         <h3 class="font-black text-gray-900 uppercase text-sm tracking-widest">SMS Gateway (Sema)</h3>
+                         <span class="text-[10px] font-bold py-1 px-2 bg-brand-50 text-brand-700 rounded-lg">1,240 CREDITS REMAINING</span>
+                      </div>
+                      <div>
+                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">API Key</label>
+                         <input type="password" value="••••••••••••••••" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 font-bold text-sm outline-none">
+                      </div>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" checked class="accent-brand-600 w-4 h-4">
+                            <span class="text-sm font-bold text-gray-600">Notify Admin on New Order</span>
+                         </label>
+                         <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" checked class="accent-brand-600 w-4 h-4">
+                            <span class="text-sm font-bold text-gray-600">Notify Courier on Pickup Ready</span>
+                         </label>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/src/js/layout.js"></script>
+  <script type="module">
+    import { showToast } from '/src/js/utils.js';
+
+    window.switchTab = (tabId) => {
+      // Hide all tabs
+      document.querySelectorAll('.settings-tab').forEach(t => t.classList.add('hidden'));
+      // Show selected tab
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      
+      // Update buttons
+      document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => {
+        btn.classList.remove('bg-white', 'border', 'border-gray-100', 'text-brand-600', 'shadow-sm');
+        btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+      });
+      
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      activeBtn.classList.add('bg-white', 'border', 'border-gray-100', 'text-brand-600', 'shadow-sm');
+      activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+    };
+
+    window.updateFileName = (input, targetId) => {
+       if (input.files && input.files[0]) {
+          document.getElementById(targetId).textContent = `Selected: ${input.files[0].name}`;
+       }
+    };
+
+    document.getElementById('save-all-btn').addEventListener('click', () => {
+       showToast('Settings saved successfully!');
+    });
+  </script>
+</body>
+</html>

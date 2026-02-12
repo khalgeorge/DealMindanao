@@ -1,0 +1,404 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products - DealMindanao Admin</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="admin-layout">
+  <div id="sidebar"></div>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <div>
+        <h1 class="text-xl font-black text-gray-900">Products</h1>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Manage Store Inventory</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="openProductModal()" class="btn-primary flex items-center gap-2">
+           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+           Add Product
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <!-- Filters & Search -->
+      <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+         <div class="relative w-full md:w-96">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </span>
+            <input type="text" id="product-search" placeholder="Search products, SKUs, or partners..." class="input pl-11">
+         </div>
+         <div class="flex gap-2 w-full md:w-auto">
+            <select id="filter-category" class="input py-2 text-xs font-bold uppercase tracking-wider">
+               <option value="">All Categories</option>
+               <option value="Food">Food & Delicacies</option>
+               <option value="Crafts">Handicrafts</option>
+               <option value="Drinks">Drinks</option>
+            </select>
+            <select id="filter-status" class="input py-2 text-xs font-bold uppercase tracking-wider">
+               <option value="">All Statuses</option>
+               <option value="Active">Active</option>
+               <option value="Low">Low Stock</option>
+               <option value="Out">Out of Stock</option>
+            </select>
+            <button onclick="resetFilters()" class="btn-secondary px-4 py-2 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 whitespace-nowrap">
+               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+               Reset
+            </button>
+         </div>
+      </div>
+
+      <!-- Products Table -->
+      <div class="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+         <div class="overflow-x-auto">
+            <table class="data-table">
+               <thead>
+                  <tr>
+                     <th>Product</th>
+                     <th>Category</th>
+                     <th>Partner</th>
+                     <th>Price</th>
+                     <th>Stock</th>
+                     <th>Status</th>
+                     <th class="text-right">Actions</th>
+                  </tr>
+               </thead>
+               <tbody id="product-list-body">
+                  <!-- Skeletons -->
+                  <tr class="animate-pulse">
+                     <td class="px-6 py-4"><div class="h-10 bg-gray-100 rounded-lg w-40"></div></td>
+                     <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-20"></div></td>
+                     <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-24"></div></td>
+                     <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-16"></div></td>
+                     <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-12"></div></td>
+                     <td class="px-6 py-4"><div class="h-6 bg-gray-50 rounded-full w-16"></div></td>
+                     <td class="px-6 py-4 text-right"><div class="ml-auto h-8 bg-gray-50 rounded-lg w-20"></div></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         
+         <!-- Pagination -->
+         <div class="p-6 border-t border-gray-50 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+               <span id="pagination-info" class="text-xs font-bold text-gray-400 uppercase tracking-widest">Showing 1-10 of 42 products</span>
+               <div class="h-4 w-px bg-gray-200"></div>
+               <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Rows:</span>
+                  <select id="rows-per-page" class="bg-transparent border-none text-xs font-black text-gray-900 focus:ring-0 cursor-pointer">
+                     <option value="5">5</option>
+                     <option value="10" selected>10</option>
+                     <option value="20">20</option>
+                     <option value="50">50</option>
+                  </select>
+               </div>
+            </div>
+            <div class="flex gap-2">
+               <button id="prev-page" class="btn-secondary btn-sm opacity-50 cursor-not-allowed">Previous</button>
+               <button id="next-page" class="btn-secondary btn-sm">Next</button>
+            </div>
+         </div>
+      </div>
+  </main>
+
+  <!-- Product Modal (Add/Edit) -->
+  <div id="product-modal" class="fixed inset-0 z-[999] hidden" role="dialog" aria-modal="true">
+     <!-- Backdrop -->
+     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
+     
+     <!-- Modal Content -->
+     <div class="fixed inset-0 pointer-events-none flex items-center justify-center p-4">
+        <div class="pointer-events-auto bg-white w-full max-w-2xl rounded-lg shadow-2xl overflow-hidden transform transition-all">
+           <form id="product-form" class="flex flex-col max-h-[90vh]">
+              <input type="hidden" name="id" id="product-id">
+              <div class="p-8 overflow-y-auto">
+                 <div class="flex justify-between items-center mb-8">
+                    <h3 id="modal-title" class="text-2xl font-black text-gray-900 uppercase tracking-tighter">Add New Product</h3>
+                    <button type="button" onclick="closeProductModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                 </div>
+                 
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-4">
+                    <div class="md:col-span-2">
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Product Name</label>
+                       <input type="text" name="name" required placeholder="e.g. Premium Davao Durian" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                    </div>
+                    
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Category</label>
+                       <select name="category" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                          <option value="">Select Category</option>
+                          <option value="Food">Food & Delicacies</option>
+                          <option value="Crafts">Handicrafts</option>
+                          <option value="Health">Health & Wellness</option>
+                       </select>
+                    </div>
+
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Partner / Vendor</label>
+                       <select name="partner" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                          <option value="">Select Partner</option>
+                          <option value="DavaoTreats">Davao Treats</option>
+                          <option value="LakeSebuArts">Lake Sebu Arts</option>
+                          <option value="CDORoasters">CDO Roasters</option>
+                          <option value="MindanaoWellness">Mindanao Wellness</option>
+                          <option value="MindanaoGifts">Mindanao Gifts</option>
+                       </select>
+                    </div>
+
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Price (₱)</label>
+                       <input type="number" name="price" required step="0.01" placeholder="250.00" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                    </div>
+
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Stock Level</label>
+                       <input type="number" name="stock" required placeholder="100" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                    </div>
+
+                    <div class="md:col-span-2">
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Description</label>
+                       <textarea name="description" rows="3" placeholder="Detailed product description..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900"></textarea>
+                    </div>
+                 </div>
+              </div>
+              
+              <div class="bg-gray-50 px-8 py-6 flex flex-row-reverse gap-3 border-t border-gray-100">
+                 <button type="submit" class="btn-primary px-8 py-3 rounded-lg font-bold">Save Product</button>
+                 <button type="button" onclick="closeProductModal()" class="px-8 py-3 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors">Cancel</button>
+              </div>
+           </form>
+        </div>
+     </div>
+  </div>
+
+  <script type="module" src="/src/js/layout.js"></script>
+  <script type="module">
+    import { formatPrice, showToast } from '/src/js/utils.js';
+
+    // Global Modal Functions
+    window.openProductModal = () => {
+       const modal = document.getElementById('product-modal');
+       if (modal) {
+          modal.classList.remove('hidden');
+          modal.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+       }
+    };
+
+    window.closeProductModal = () => {
+       const modal = document.getElementById('product-modal');
+       const form = document.getElementById('product-form');
+       if (modal) {
+          modal.classList.add('hidden');
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+       }
+       if (form) {
+          form.reset();
+          document.getElementById('product-id').value = '';
+          document.getElementById('modal-title').textContent = 'Add New Product';
+          form.querySelector('button[type="submit"]').textContent = 'Save Product';
+       }
+    };
+
+    window.editProduct = (id) => {
+       const p = allProducts.find(prod => prod.id == id);
+       if (!p) return;
+
+       document.getElementById('product-id').value = p.id;
+       document.getElementById('modal-title').textContent = 'Edit Product';
+       
+       const form = document.getElementById('product-form');
+       form.querySelector('button[type="submit"]').textContent = 'Update Product';
+       
+       // Populate fields
+       form.elements['name'].value = p.name;
+       form.elements['category'].value = p.cat;
+       form.elements['partner'].value = p.partner.replace(/\s+/g, ''); // Simple mapping for demo
+       form.elements['price'].value = p.price;
+       form.elements['stock'].value = p.stock;
+       form.elements['description'].value = p.description || '';
+
+       openProductModal();
+    };
+
+    window.resetFilters = () => {
+       document.getElementById('product-search').value = '';
+       document.getElementById('filter-category').value = '';
+       document.getElementById('filter-status').value = '';
+       currentPage = 1;
+       renderProducts();
+    };
+
+    const allProducts = [
+       { id: 1, name: 'Durian Pastillas', cat: 'Food', partner: 'Davao Treats', price: 150, stock: 45, status: 'Active', description: 'Sweet durian candy from Davao.' },
+       { id: 2, name: 'Tboli Weave Bag', cat: 'Crafts', partner: 'Lake Sebu Arts', price: 1200, stock: 5, status: 'Low', description: 'Traditional Tboli woven bag.' },
+       { id: 3, name: 'Cagayan Coffee', cat: 'Drinks', partner: 'CDO Roasters', price: 450, stock: 0, status: 'Out', description: 'Freshly roasted coffee beans.' },
+       { id: 4, name: 'Mangosteen Tea', cat: 'Food', partner: 'Mindanao Wellness', price: 320, stock: 120, status: 'Active', description: 'Healthy mangosteen tea.' },
+       { id: 5, name: 'Davao Pearl Earrings', cat: 'Crafts', partner: 'Mindanao Gifts', price: 2500, stock: 15, status: 'Active', description: 'Genuine South Sea pearls.' },
+       { id: 6, name: 'Maranao Brass Band', cat: 'Crafts', partner: 'Mindanao Gifts', price: 1800, stock: 3, status: 'Low', description: 'Traditional brass instruments.' },
+       { id: 7, name: 'Bukidnon Honey', cat: 'Food', partner: 'Davao Treats', price: 350, stock: 60, status: 'Active', description: 'Wild honey from Bukidnon.' },
+       { id: 8, name: 'Coco Sugar', cat: 'Food', partner: 'Mindanao Wellness', price: 200, stock: 85, status: 'Active', description: 'Organic coconut sugar.' },
+       { id: 9, name: 'Dried Santol', cat: 'Food', partner: 'Davao Treats', price: 120, stock: 2, status: 'Low', description: 'Sweet and sour dried fruit.' },
+       { id: 10, name: 'Tribal Beaded Belt', cat: 'Crafts', partner: 'Lake Sebu Arts', price: 850, stock: 12, status: 'Active', description: 'Hand-beaded tribal accessory.' },
+       { id: 11, name: 'Yakan Weave Scarf', cat: 'Crafts', partner: 'Mindanao Gifts', price: 950, stock: 0, status: 'Out', description: 'Traditional Yakan woven scarf.' },
+       { id: 12, name: 'Sulu Coffee Blend', cat: 'Drinks', partner: 'CDO Roasters', price: 550, stock: 30, status: 'Active', description: 'Strong Sulu coffee beans.' }
+    ];
+
+    let currentPage = 1;
+    let itemsPerPage = 10;
+
+    function renderProducts() {
+       const body = document.getElementById('product-list-body');
+       const paginationInfo = document.getElementById('pagination-info');
+       const prevBtn = document.getElementById('prev-page');
+       const nextBtn = document.getElementById('next-page');
+       
+       if (!body) return;
+       
+       const search = document.getElementById('product-search').value.toLowerCase();
+       const catFilter = document.getElementById('filter-category').value;
+       const statusFilter = document.getElementById('filter-status').value;
+
+       // 1. Filter
+       const filtered = allProducts.filter(p => {
+          const matchesSearch = p.name.toLowerCase().includes(search) || p.partner.toLowerCase().includes(search);
+          const matchesCat = !catFilter || p.cat === catFilter;
+          const matchesStatus = !statusFilter || p.status === statusFilter;
+          return matchesSearch && matchesCat && matchesStatus;
+       });
+
+       // 2. Paginate
+       const totalItems = filtered.length;
+       const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+       if (currentPage > totalPages) currentPage = totalPages;
+
+       const start = (currentPage - 1) * itemsPerPage;
+       const end = start + itemsPerPage;
+       const paginatedItems = filtered.slice(start, end);
+
+       // 3. Update Table
+       if (paginatedItems.length === 0) {
+          body.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400 font-bold italic">No products found matching filters</td></tr>`;
+       } else {
+          body.innerHTML = paginatedItems.map(p => `
+             <tr>
+                <td class="px-6 py-4 font-bold text-gray-900">${p.name}</td>
+                <td class="px-6 py-4">${p.cat}</td>
+                <td class="px-6 py-4 text-xs font-bold text-brand-600 uppercase">${p.partner}</td>
+                <td class="px-6 py-4 font-mono text-gray-900">₱${p.price}</td>
+                <td class="px-6 py-4">${p.stock}</td>
+                <td class="px-6 py-4">
+                   <span class="badge-${p.status.toLowerCase()}">${p.status}</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                   <button onclick="editProduct(${p.id})" class="text-gray-400 hover:text-brand-600 font-bold text-xs uppercase tracking-widest">Edit</button>
+                </td>
+             </tr>
+          `).join('');
+       }
+
+       // 4. Update Pagination Controls
+       const currentEnd = Math.min(end, totalItems);
+       paginationInfo.textContent = `Showing ${totalItems === 0 ? 0 : start + 1}-${currentEnd} of ${totalItems} products`;
+       
+       prevBtn.disabled = currentPage === 1;
+       prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+       prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+       
+       nextBtn.disabled = currentPage === totalPages;
+       nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
+       nextBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
+    }
+
+    // Event Listeners for searching & filtering
+    document.getElementById('product-search').addEventListener('input', () => {
+       currentPage = 1;
+       renderProducts();
+    });
+    document.getElementById('filter-category').addEventListener('change', () => {
+       currentPage = 1;
+       renderProducts();
+    });
+    document.getElementById('filter-status').addEventListener('change', () => {
+       currentPage = 1;
+       renderProducts();
+    });
+
+    // Pagination Listeners
+    document.getElementById('rows-per-page')?.addEventListener('change', (e) => {
+       itemsPerPage = parseInt(e.target.value);
+       currentPage = 1;
+       renderProducts();
+    });
+
+    document.getElementById('prev-page')?.addEventListener('click', () => {
+       if (currentPage > 1) {
+          currentPage--;
+          renderProducts();
+       }
+    });
+
+    document.getElementById('next-page')?.addEventListener('click', () => {
+       const filteredCount = allProducts.filter(p => {
+          const search = document.getElementById('product-search').value.toLowerCase();
+          const catFilter = document.getElementById('filter-category').value;
+          const statusFilter = document.getElementById('filter-status').value;
+          const matchesSearch = p.name.toLowerCase().includes(search) || p.partner.toLowerCase().includes(search);
+          const matchesCat = !catFilter || p.cat === catFilter;
+          const matchesStatus = !statusFilter || p.status === statusFilter;
+          return matchesSearch && matchesCat && matchesStatus;
+       }).length;
+
+       if (currentPage < Math.ceil(filteredCount / itemsPerPage)) {
+          currentPage++;
+          renderProducts();
+       }
+    });
+
+    setTimeout(renderProducts, 100);
+
+    document.getElementById('product-form').addEventListener('submit', (e) => {
+       e.preventDefault();
+       const formData = new FormData(e.target);
+       const id = formData.get('id');
+       
+       const productData = {
+          name: formData.get('name'),
+          cat: formData.get('category'),
+          partner: formData.get('partner'), // Note: simplified for demo
+          price: parseFloat(formData.get('price')),
+          stock: parseInt(formData.get('stock')),
+          description: formData.get('description'),
+          status: parseInt(formData.get('stock')) > 10 ? 'Active' : (parseInt(formData.get('stock')) > 0 ? 'Low' : 'Out')
+       };
+
+       if (id) {
+          // Update
+          const index = allProducts.findIndex(p => p.id == id);
+          if (index !== -1) {
+             allProducts[index] = { ...allProducts[index], ...productData };
+             showToast('Product updated successfully');
+          }
+       } else {
+          // Add
+          const newProduct = {
+             id: Date.now(),
+             ...productData
+          };
+          allProducts.unshift(newProduct);
+          showToast('Product added successfully');
+       }
+
+       renderProducts();
+       closeProductModal();
+    });
+  </script>
+</body>
+</html>

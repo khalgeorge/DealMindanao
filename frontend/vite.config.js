@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
+import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [tailwindcss()],
@@ -17,14 +18,23 @@ export default defineConfig({
     assetsDir: 'assets',
     rollupOptions: {
       input: {
-        main: './index.html',
-        shop: './shop.html',
-        product: './product.html',
-        checkout: './checkout.html',
-        dashboard: './dashboard.html',
-        profile: './profile.html',
-        login: './auth/login.html',
-        register: './auth/register.html',
+        // Public pages
+        main: resolve(__dirname, 'index.html'),
+        shop: resolve(__dirname, 'shop.html'),
+        product: resolve(__dirname, 'product.html'),
+        cart: resolve(__dirname, 'cart.html'),
+        checkout: resolve(__dirname, 'checkout.html'),
+        about: resolve(__dirname, 'about.html'),
+        partner: resolve(__dirname, 'partner.html'),
+        contact: resolve(__dirname, 'contact.html'),
+        // Admin pages
+        adminLogin: resolve(__dirname, 'admin/login.html'),
+        adminDashboard: resolve(__dirname, 'admin/dashboard.html'),
+        adminProducts: resolve(__dirname, 'admin/products.html'),
+        adminOrders: resolve(__dirname, 'admin/orders.html'),
+        adminCompanies: resolve(__dirname, 'admin/companies.html'),
+        adminCategories: resolve(__dirname, 'admin/categories.html'),
+        adminSettings: resolve(__dirname, 'admin/settings.html'),
       },
     },
   },

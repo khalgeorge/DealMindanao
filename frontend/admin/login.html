@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - DealMindanao</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-6">
+  <div class="w-full max-w-md bg-white rounded-lg border border-gray-100 shadow-xl overflow-hidden">
+     <div class="bg-brand-600 p-8 text-white text-center">
+        <h1 class="text-2xl font-black italic tracking-tighter">DEALMINDANAO</h1>
+        <p class="text-xs font-bold uppercase tracking-widest opacity-70 mt-2">Administrative Access</p>
+     </div>
+     
+     <form class="p-8 space-y-6" id="login-form">
+        <div>
+           <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Username</label>
+           <input type="text" class="input w-full" placeholder="Enter username" value="admin" required>
+        </div>
+        <div>
+           <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Password</label>
+           <input type="password" class="input w-full" placeholder="••••••••" value="password" required>
+        </div>
+        
+        <button type="submit" class="btn-primary w-full py-4 rounded-lg font-black uppercase tracking-widest">
+           Sign In
+        </button>
+        
+        <p class="text-center text-xs text-gray-400 font-bold uppercase tracking-wider">
+           Forgottoen password? <a href="#" class="text-brand-600 hover:underline">Contact Support</a>
+        </p>
+     </form>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+       e.preventDefault();
+       localStorage.setItem('admin_session', 'true');
+       window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>

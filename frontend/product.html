@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - DealMindanao</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="bg-gray-50">
+  <div id="navbar"></div>
+
+  <main class="page-shell py-12">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 hidden md:block">
+      <ol class="flex items-center space-x-2 text-sm text-gray-500">
+        <li><a href="/index.html" class="hover:text-brand-600 transition-colors">Home</a></li>
+        <li class="flex items-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          <a href="/shop.html" class="hover:text-brand-600 transition-colors">Shop</a>
+        </li>
+        <li class="flex items-center space-x-2 text-gray-900 font-medium">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          <span id="breadcrumb-current">Product Detail</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Loading Skeleton -->
+    <div id="loading-state" class="grid grid-cols-1 lg:grid-cols-2 gap-12 animate-pulse">
+      <div class="bg-gray-200 aspect-square rounded-lg"></div>
+      <div class="space-y-6">
+        <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+        <div class="h-20 bg-gray-200 rounded"></div>
+        <div class="h-12 bg-gray-200 rounded w-1/3"></div>
+      </div>
+    </div>
+
+    <!-- Product Content -->
+    <div id="product-content" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        
+        <!-- Image Section -->
+        <div class="sticky top-24">
+          <div class="aspect-square bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100 mb-6">
+            <img id="main-image" src="" alt="" class="w-full h-full object-cover">
+          </div>
+          
+          <!-- Image Gallery Placeholder -->
+          <div class="grid grid-cols-4 gap-4">
+            <div class="aspect-square bg-gray-100 rounded-lg border-2 border-brand-500 overflow-hidden cursor-pointer hover:border-brand-600 transition-all">
+                <img id="thumb-1" src="" class="w-full h-full object-cover">
+            </div>
+            <div class="aspect-square bg-gray-200 rounded-lg border border-gray-100 overflow-hidden cursor-pointer hover:border-brand-200 transition-all">
+                <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+            </div>
+            <div class="aspect-square bg-gray-200 rounded-lg border border-gray-100 overflow-hidden cursor-pointer hover:border-brand-200 transition-all">
+                <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+            </div>
+            <div class="aspect-square bg-gray-200 rounded-lg border border-gray-100 overflow-hidden cursor-pointer hover:border-brand-200 transition-all">
+                <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="flex flex-col">
+          <div class="mb-8">
+            <span id="product-category" class="inline-block px-3 py-1 bg-brand-50 text-brand-700 text-xs font-bold uppercase tracking-widest rounded-full mb-4"></span>
+            <h1 id="product-name" class="text-4xl font-extrabold text-gray-900 leading-tight mb-2"></h1>
+            
+            <div class="flex items-center gap-4 mt-4 p-4 rounded-lg bg-white border border-gray-100 shadow-sm">
+                <div class="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Partner Vendor</p>
+                    <p id="product-partner" class="text-gray-900 font-bold"></p>
+                </div>
+            </div>
+          </div>
+
+          <!-- Price Section -->
+          <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-8">
+            <div class="flex items-center gap-4">
+              <span id="current-price" class="text-4xl font-black text-brand-600"></span>
+              <div id="discount-area" class="hidden flex flex-col">
+                <span id="old-price" class="text-lg text-gray-400 line-through decoration-brand-200"></span>
+                <span id="discount-pct" class="text-xs font-bold text-accent-600"></span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-50 flex items-center gap-2 text-gray-500 text-sm italic">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Offline Payment Only: Pay via GCash or COD upon confirmation.
+            </div>
+          </div>
+
+          <!-- Tabs/Description -->
+          <div class="mb-10">
+            <h3 class="font-bold text-gray-900 mb-4 text-lg">About this deal</h3>
+            <div id="product-description" class="text-gray-600 leading-relaxed text-lg prose"></div>
+          </div>
+
+          <!-- Actions -->
+          <div class="space-y-6">
+            <div class="flex items-center gap-6">
+              <div class="flex items-center bg-gray-100 rounded-lg p-1">
+                <button id="minus-qty" class="w-12 h-12 flex items-center justify-center text-gray-600 hover:text-brand-600 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                </button>
+                <span id="qty-val" class="w-12 text-center font-bold text-lg">1</span>
+                <button id="plus-qty" class="w-12 h-12 flex items-center justify-center text-gray-600 hover:text-brand-600 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+              </div>
+              <p class="text-sm text-gray-500"><span id="stock-val" class="font-bold text-gray-900"></span> units available</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button id="add-to-cart" class="btn-primary btn-lg flex-1 shadow-brand-200/50 shadow-lg">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                Add to Cart
+              </button>
+              <button id="wishlist" class="btn-secondary btn-lg px-6">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Guarantee Signals -->
+          <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-center gap-4 p-4 rounded-lg bg-green-50 text-green-700">
+              <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+              </div>
+              <p class="text-xs font-bold uppercase tracking-tight">Verified Mindanao Artisan</p>
+            </div>
+            <div class="flex items-center gap-4 p-4 rounded-lg bg-brand-50 text-brand-700">
+              <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <p class="text-xs font-bold uppercase tracking-tight">Fast Regional Shipping</p>
+            </div>
+          </div>
+
+          <div class="mt-6 flex items-center justify-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+            Trustworthy Mindanao Platform • Verified Partners Only
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script type="module" src="/src/js/layout.js"></script>
+  <script type="module">
+    import { formatPrice, showToast } from '/src/js/utils.js';
+    import api from '/src/js/api.js';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    let qty = 1;
+
+    async function initProduct() {
+      if (!productId) {
+        window.location.href = '/shop.html';
+        return;
+      }
+
+      try {
+        let product;
+        try {
+          const res = await api.get(/products/ + productId);
+          product = res.data;
+        } catch (e) {
+          const demoData = {
+             '1': { id: '1', name: "Bukidnon Highlands Arabica", partner: "Mt. Kitanglad Farms", price: 850, discount: 15, category: "food", stock: 24, description: "Directly sourced from the volcanic soils of Bukidnon. This Arabica coffee offers a complex flavor profile with notes of citrus, caramel, and chocolate.", image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800" },
+             '2': { id: '2', name: "Handwoven T'nalak Wallet", partner: "Lake Sebu Weavers", price: 1200, discount: 0, category: "fashion", stock: 12, description: "Authentic T'nalak fabric hand-woven by the T'boli community in Lake Sebu using traditional abaca fibers and natural dyes.", image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?q=80&w=800" }
+          };
+          product = demoData[productId] || demoData['1'];
+        }
+        render(product);
+      } catch (err) {
+        showToast('Product not found', 'error');
+      }
+    }
+
+    function render(p) {
+      const loader = document.getElementById('loading-state');
+      if(loader) loader.remove();
+      
+      document.getElementById('product-content').classList.remove('hidden');
+      document.getElementById('breadcrumb-current').textContent = p.name;
+      document.getElementById('product-name').textContent = p.name;
+      document.getElementById('product-partner').textContent = "by " + (p.partner || 'Mindanao Artisan');
+      document.getElementById('product-category').textContent = p.category;
+      document.getElementById('product-description').textContent = p.description;
+      document.getElementById('main-image').src = p.image || p.image_url;
+      document.getElementById('thumb-1').src = p.image || p.image_url;
+      document.getElementById('stock-val').textContent = p.stock || 0;
+
+      const salePrice = p.discount > 0 ? p.price * (1 - p.discount/100) : p.price;
+      document.getElementById('current-price').textContent = formatPrice(salePrice);
+      
+      if (p.discount > 0) {
+        document.getElementById('discount-area').classList.remove('hidden');
+        document.getElementById('old-price').textContent = formatPrice(p.price);
+        document.getElementById('discount-pct').textContent = p.discount + "% OFF";
+      }
+
+      document.getElementById('plus-qty').onclick = () => { if (qty < (p.stock||100)) { qty++; updateQty(); } };
+      document.getElementById('minus-qty').onclick = () => { if (qty > 1) { qty--; updateQty(); } };
+      const updateQty = () => { document.getElementById('qty-val').textContent = qty; };
+
+      document.getElementById('add-to-cart').onclick = () => {
+        showToast(qty + " x " + p.name + " added to cart!", 'success');
+      };
+    }
+
+    initProduct();
+  </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System - DealMindanao</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="bg-gray-50">
+  <div id="navbar"></div>
+
+  <main class="page-shell py-12">
+    <div class="mb-12">
+      <h1 class="text-4xl">DealMindanao Design System</h1>
+      <p class="text-lg text-gray-600 mt-2">A comprehensive guide to the UI components and layout patterns.</p>
+    </div>
+
+    <!-- Section: Colors -->
+    <section class="mb-16">
+      <h2 class="mb-6 border-b pb-2">Color Palette</h2>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="space-y-2">
+          <div class="h-16 w-full bg-brand-600 rounded-lg"></div>
+          <p class="text-xs font-mono">brand-600 (Primary)</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-16 w-full bg-brand-100 rounded-lg"></div>
+          <p class="text-xs font-mono">brand-100 (Subtle)</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-16 w-full bg-accent-500 rounded-lg"></div>
+          <p class="text-xs font-mono">accent-500 (Sale/CTA)</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-16 w-full bg-gray-900 rounded-lg"></div>
+          <p class="text-xs font-mono">gray-900 (Text/Dark)</p>
+        </div>
+        <div class="space-y-2">
+          <div class="h-16 w-full bg-red-600 rounded-lg"></div>
+          <p class="text-xs font-mono">red-600 (Danger)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Buttons -->
+    <section class="mb-16">
+      <h2 class="mb-6 border-b pb-2">Buttons</h2>
+      <div class="flex flex-wrap gap-4 items-center">
+        <button class="btn-primary">Primary Button</button>
+        <button class="btn-secondary">Secondary Button</button>
+        <button class="btn-accent">Accent/Sale Button</button>
+        <button class="btn-danger">Danger Button</button>
+        <button class="btn-primary" disabled>Disabled</button>
+      </div>
+      <div class="mt-6 flex flex-wrap gap-4 items-baseline">
+        <button class="btn-primary btn-sm">Small Button</button>
+        <button class="btn-primary">Regular Button</button>
+        <button class="btn-primary btn-lg">Large Button</button>
+      </div>
+    </section>
+
+    <!-- Section: Cards -->
+    <section class="mb-16">
+      <h2 class="mb-6 border-b pb-2">Cards & Wrappers</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="card">
+          <h3 class="mb-4">Standard Card</h3>
+          <p>The standard `card` utility provides consistent padding, rounding, and a subtle shadow.</p>
+        </div>
+        <div class="card-hover">
+          <h3 class="mb-4">Hoverable Card</h3>
+          <p>The `card-hover` utility adds a shadow lift effect on interaction. Perfect for products or features.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Forms -->
+    <section class="mb-16">
+      <h2 class="mb-6 border-b pb-2">Forms & Inputs</h2>
+      <div class="max-w-md space-y-4">
+        <div>
+          <label>Standard Label</label>
+          <input type="text" placeholder="Enter text here..." class="input mt-1">
+        </div>
+        <div>
+          <label>Select Input</label>
+          <select class="input mt-1">
+            <option>Option 1</option>
+            <option>Option 2</option>
+          </select>
+        </div>
+        <div>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="w-4 h-4 text-brand-600 rounded border-gray-300">
+            <span>Checkbox Label</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Feedback -->
+    <section class="mb-16">
+      <h2 class="mb-6 border-b pb-2">Badges & Alerts</h2>
+      <div class="flex flex-wrap gap-3 mb-8">
+        <span class="badge-brand">Brand</span>
+        <span class="badge-success">Success</span>
+        <span class="badge-warning">Warning</span>
+        <span class="badge-danger">Danger</span>
+        <span class="badge-info">Info</span>
+      </div>
+      <div class="space-y-4">
+        <div class="alert-success">Successful operation message here.</div>
+        <div class="alert-error">Something went wrong with your request.</div>
+        <div class="alert-warning">Please review your information before proceeding.</div>
+      </div>
+    </section>
+
+    <!-- Section: Tables -->
+    <section class="mb-16">
+      <h2 class="mb-6 border-b pb-2">Data Tables</h2>
+      <div class="card overflow-hidden !p-0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-medium">Premium Arabica</td>
+              <td><span class="badge-success">Active</span></td>
+              <td>Feb 10, 2026</td>
+              <td><button class="text-brand-600 font-medium">Edit</button></td>
+            </tr>
+            <tr>
+              <td class="font-medium">Maranao Lamp</td>
+              <td><span class="badge-warning">Low Stock</span></td>
+              <td>Feb 09, 2026</td>
+              <td><button class="text-brand-600 font-medium">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section: Layout Patterns -->
+    <section class="mb-16">
+      <h2 class="mb-6 border-b pb-2">Layout Wrapper Templates</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h4 class="mb-4">Public Layout</h4>
+          <pre class="bg-gray-900 text-brand-300 p-4 rounded-lg text-xs overflow-x-auto">
+&lt;!-- Wrapper Structure --&gt;
+&lt;body&gt;
+  &lt;div id="navbar"&gt;&lt;/div&gt; &lt;!-- Dynamic --&gt;
+  &lt;main class="page-shell py-8"&gt;
+    &lt;!-- Page Content --&gt;
+  &lt;/main&gt;
+  &lt;div id="footer"&gt;&lt;/div&gt; &lt;!-- Dynamic --&gt;
+&lt;/body&gt;</pre>
+        </div>
+        <div>
+          <h4 class="mb-4">Admin Layout</h4>
+          <pre class="bg-gray-900 text-brand-300 p-4 rounded-lg text-xs overflow-x-auto">
+&lt;!-- Wrapper Structure --&gt;
+&lt;body class="admin-layout"&gt;
+  &lt;div id="sidebar"&gt;&lt;/div&gt;
+  &lt;main class="admin-main"&gt;
+    &lt;header class="admin-header"&gt;...&lt;/header&gt;
+    &lt;div class="admin-content"&gt;
+      &lt;!-- Page Content --&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+&lt;/body&gt;</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script type="module" src="/src/js/layout.js"></script>
+</body>
+</html>

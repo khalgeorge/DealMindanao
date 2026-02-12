@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories - DealMindanao Admin</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="admin-layout">
+  <div id="sidebar"></div>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <div>
+        <h1 class="text-xl font-black text-gray-900">Categories</h1>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Manage Product Taxonomy</p>
+      </div>
+      <button onclick="openCategoryModal()" class="btn-primary flex items-center gap-2">
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+         Add Category
+      </button>
+    </header>
+
+    <div class="admin-content">
+      <!-- Filters & Search -->
+      <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+         <div class="relative w-full md:w-96">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </span>
+            <input type="text" id="category-search" placeholder="Search categories or slugs..." class="input pl-11">
+         </div>
+         <div class="flex gap-2 w-full md:w-auto">
+            <select id="filter-status" class="input py-2 text-xs font-bold uppercase tracking-wider">
+               <option value="">All Statuses</option>
+               <option value="Active">Active</option>
+               <option value="Hidden">Hidden</option>
+            </select>
+            <button onclick="resetFilters()" class="btn-secondary px-4 py-2 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 whitespace-nowrap">
+               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+               Reset
+            </button>
+         </div>
+      </div>
+
+       <div class="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+             <table class="data-table">
+                <thead>
+                   <tr>
+                      <th>Category Name</th>
+                      <th>Slug</th>
+                      <th>Status</th>
+                      <th class="text-right">Products</th>
+                      <th class="text-right">Actions</th>
+                   </tr>
+                </thead>
+                <tbody id="category-list">
+                   <!-- Skeleton -->
+                   <tr class="animate-pulse">
+                      <td class="px-6 py-4"><div class="h-6 bg-gray-100 rounded-lg w-32"></div></td>
+                      <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-24"></div></td>
+                      <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-16"></div></td>
+                      <td class="px-6 py-4 text-right"><div class="ml-auto h-4 bg-gray-50 rounded-lg w-12"></div></td>
+                      <td class="px-6 py-4 text-right"><div class="ml-auto h-8 bg-gray-50 rounded-lg w-20"></div></td>
+                   </tr>
+                </tbody>
+             </table>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="p-6 border-t border-gray-50 flex items-center justify-between">
+             <div class="flex items-center gap-4">
+                <span id="pagination-info" class="text-xs font-bold text-gray-400 uppercase tracking-widest">Showing 4 parent categories</span>
+                <div class="h-4 w-px bg-gray-200"></div>
+                <div class="flex items-center gap-2">
+                   <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Rows:</span>
+                   <select id="rows-per-page" class="bg-transparent border-none text-xs font-black text-gray-900 focus:ring-0 cursor-pointer">
+                      <option value="5">5</option>
+                      <option value="10" selected>10</option>
+                      <option value="20">20</option>
+                      <option value="50">50</option>
+                   </select>
+                </div>
+             </div>
+             <div class="flex gap-2">
+                <button id="prev-page" class="btn-secondary btn-sm opacity-50 cursor-not-allowed">Previous</button>
+                <button id="next-page" class="btn-secondary btn-sm">Next</button>
+             </div>
+          </div>
+       </div>
+  </main>
+
+  <!-- Category Modal -->
+  <div id="category-modal" class="fixed inset-0 z-[999] hidden" role="dialog" aria-modal="true">
+     <!-- Backdrop -->
+     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeCategoryModal()"></div>
+     
+     <!-- Modal Content -->
+     <div class="fixed inset-0 pointer-events-none flex items-center justify-center p-4">
+        <div class="pointer-events-auto bg-white w-full max-w-md rounded-lg shadow-2xl overflow-hidden transform transition-all">
+           <form id="category-form" class="flex flex-col">
+              <input type="hidden" id="category-index" value="">
+              <div class="p-8">
+                 <div class="flex justify-between items-center mb-8">
+                    <h3 id="modal-title" class="text-2xl font-black text-gray-900 uppercase tracking-tighter">New Category</h3>
+                    <button type="button" onclick="closeCategoryModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                 </div>
+
+                 <div class="space-y-6 pb-4">
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Category Name</label>
+                       <input type="text" id="category-name" name="name" required placeholder="e.g. Fresh Fruits" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                    </div>
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Slug</label>
+                       <input type="text" id="category-slug" name="slug" required placeholder="e.g. fresh-fruits" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900 text-xs font-mono">
+                    </div>
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Status</label>
+                       <select id="category-status" name="status" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                          <option value="Active">Active</option>
+                          <option value="Hidden">Hidden</option>
+                       </select>
+                    </div>
+                 </div>
+              </div>
+              
+              <div class="bg-gray-50 px-8 py-6 flex flex-row-reverse gap-3 border-t border-gray-100">
+                 <button type="submit" class="btn-primary px-8 py-3 rounded-lg font-bold">Save Category</button>
+                 <button type="button" onclick="closeCategoryModal()" class="px-8 py-3 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors">Cancel</button>
+              </div>
+           </form>
+        </div>
+     </div>
+  </div>
+
+  <script type="module" src="/src/js/layout.js"></script>
+  <script type="module">
+    import { showToast } from '/src/js/utils.js';
+
+    // Global Modal Functions
+    window.openCategoryModal = () => {
+       const modal = document.getElementById('category-modal');
+       const modalTitle = document.getElementById('modal-title');
+       const form = document.getElementById('category-form');
+       if (modal) {
+          modalTitle.innerText = 'New Category';
+          form.reset();
+          document.getElementById('category-index').value = '';
+          modal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+          modal.style.display = 'block';
+       }
+    };
+
+    window.closeCategoryModal = () => {
+       const modal = document.getElementById('category-modal');
+       const form = document.getElementById('category-form');
+       if (modal) {
+          modal.classList.add('hidden');
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+       }
+       if (form) form.reset();
+    };
+
+    window.editCategory = (index) => {
+       const cat = allCats[index];
+       if (!cat) return;
+
+       const modal = document.getElementById('category-modal');
+       const modalTitle = document.getElementById('modal-title');
+       const form = document.getElementById('category-form');
+       
+       modalTitle.innerText = 'Edit Category';
+       document.getElementById('category-index').value = index;
+       document.getElementById('category-name').value = cat.name;
+       document.getElementById('category-slug').value = cat.slug;
+       document.getElementById('category-status').value = cat.status;
+
+       modal.classList.remove('hidden');
+       modal.style.display = 'block';
+       document.body.style.overflow = 'hidden';
+    };
+
+    window.resetFilters = () => {
+       document.getElementById('category-search').value = '';
+       document.getElementById('filter-status').value = '';
+       currentPage = 1;
+       renderCategories();
+    };
+
+    const allCats = [
+       { name: 'Fresh Fruits', slug: 'fresh-fruits', count: 124, status: 'Active' },
+       { name: 'Seafood', slug: 'seafood', count: 82, status: 'Active' },
+       { name: 'Handicrafts', slug: 'handicrafts', count: 45, status: 'Active' },
+       { name: 'Beverages', slug: 'beverages', count: 12, status: 'Hidden' },
+       { name: 'Wellness', slug: 'wellness', count: 34, status: 'Active' },
+       { name: 'Gifts', slug: 'gifts', count: 21, status: 'Active' },
+       { name: 'Spices', slug: 'spices', count: 56, status: 'Active' },
+       { name: 'Textiles', slug: 'textiles', count: 18, status: 'Active' },
+       { name: 'Jewelry', slug: 'jewelry', count: 9, status: 'Hidden' },
+       { name: 'Furniture', slug: 'furniture', count: 15, status: 'Active' },
+       { name: 'Bakery', slug: 'bakery', count: 42, status: 'Active' },
+       { name: 'Apparel', slug: 'apparel', count: 67, status: 'Active' }
+    ];
+
+    let currentPage = 1;
+    let itemsPerPage = 10;
+
+    function renderCategories() {
+       const body = document.getElementById('category-list');
+       const paginationInfo = document.getElementById('pagination-info');
+       const prevBtn = document.getElementById('prev-page');
+       const nextBtn = document.getElementById('next-page');
+       
+       if (!body) return;
+       
+       const search = document.getElementById('category-search').value.toLowerCase();
+       const statusFilter = document.getElementById('filter-status').value;
+
+       // 1. Filter
+       const filtered = allCats.filter(c => {
+          const matchesSearch = c.name.toLowerCase().includes(search) || c.slug.toLowerCase().includes(search);
+          const matchesStatus = !statusFilter || c.status === statusFilter;
+          return matchesSearch && matchesStatus;
+       });
+
+       // 2. Paginate
+       const totalItems = filtered.length;
+       const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+       if (currentPage > totalPages) currentPage = totalPages;
+
+       const start = (currentPage - 1) * itemsPerPage;
+       const end = start + itemsPerPage;
+       const paginatedItems = filtered.slice(start, end);
+
+       // 3. Update Table
+       if (paginatedItems.length === 0) {
+          body.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400 font-bold italic">No categories found matching filters</td></tr>`;
+       } else {
+          body.innerHTML = paginatedItems.map(c => {
+             const realIndex = allCats.findIndex(item => item.slug === c.slug);
+             return `
+                <tr class="hover:bg-gray-50/50 transition-colors">
+                   <td class="px-6 py-4">
+                      <div class="font-bold text-gray-900">${c.name}</div>
+                      <div class="md:hidden text-[10px] font-mono text-gray-400 mt-0.5">${c.slug}</div>
+                   </td>
+                   <td class="px-6 py-4 hidden md:table-cell">
+                      <span class="text-xs font-mono text-gray-400 bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">${c.slug}</span>
+                   </td>
+                   <td class="px-6 py-4">
+                      <span class="badge-${c.status === 'Active' ? 'success' : 'warning'} text-[10px]">${c.status}</span>
+                   </td>
+                   <td class="px-6 py-4 text-right">
+                      <span class="text-sm font-black text-gray-700">${c.count}</span>
+                      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 hidden sm:inline">items</span>
+                   </td>
+                   <td class="px-6 py-4 text-right">
+                      <button onclick="editCategory(${realIndex})" class="text-brand-600 font-bold text-xs uppercase hover:underline">Edit</button>
+                   </td>
+                </tr>
+             `;
+          }).join('');
+       }
+
+       // 4. Update Pagination Controls
+       const currentEnd = Math.min(end, totalItems);
+       paginationInfo.textContent = `Showing ${totalItems === 0 ? 0 : start + 1}-${currentEnd} of ${totalItems} categories`;
+       
+       prevBtn.disabled = currentPage === 1;
+       prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+       prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+       
+       nextBtn.disabled = currentPage === totalPages;
+       nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
+       nextBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
+    }
+
+    // Filter Listeners
+    document.getElementById('category-search').addEventListener('input', () => {
+       currentPage = 1;
+       renderCategories();
+    });
+    document.getElementById('filter-status').addEventListener('change', () => {
+       currentPage = 1;
+       renderCategories();
+    });
+
+    // Pagination Listeners
+    document.getElementById('rows-per-page')?.addEventListener('change', (e) => {
+       itemsPerPage = parseInt(e.target.value);
+       currentPage = 1;
+       renderCategories();
+    });
+
+    document.getElementById('prev-page')?.addEventListener('click', () => {
+       if (currentPage > 1) {
+          currentPage--;
+          renderCategories();
+       }
+    });
+
+    document.getElementById('next-page')?.addEventListener('click', () => {
+       const filteredCount = allCats.filter(c => {
+          const search = document.getElementById('category-search').value.toLowerCase();
+          const statusFilter = document.getElementById('filter-status').value;
+          const matchesSearch = c.name.toLowerCase().includes(search) || c.slug.toLowerCase().includes(search);
+          const matchesStatus = !statusFilter || c.status === statusFilter;
+          return matchesSearch && matchesStatus;
+       }).length;
+
+       if (currentPage < Math.ceil(filteredCount / itemsPerPage)) {
+          currentPage++;
+          renderCategories();
+       }
+    });
+
+    setTimeout(renderCategories, 100);
+
+    document.getElementById('category-form').addEventListener('submit', (e) => {
+       e.preventDefault();
+       const index = document.getElementById('category-index').value;
+       const name = document.getElementById('category-name').value;
+       const slug = document.getElementById('category-slug').value;
+       const status = document.getElementById('category-status').value;
+
+       if (index !== "") {
+          // Update
+          allCats[index].name = name;
+          allCats[index].slug = slug;
+          allCats[index].status = status;
+          showToast('Category updated successfully');
+       } else {
+          // Add
+          allCats.unshift({
+             name: name,
+             slug: slug,
+             status: status,
+             count: 0
+          });
+          showToast('Category added successfully');
+       }
+       
+       renderCategories();
+       window.closeCategoryModal();
+    });
+
+    // Handle ESC key to close
+    window.addEventListener('keydown', (e) => {
+       if (e.key === 'Escape') {
+          window.closeCategoryModal();
+       }
+    });
+
+    setTimeout(renderCategories, 400);
+  </script>
+</body>
+</html>
