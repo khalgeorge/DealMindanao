@@ -35,7 +35,7 @@
            <p class="text-gray-500 mt-1">Here is what is happening with DealMindanao today.</p>
         </div>
         <div class="flex gap-2">
-           <button class="btn-secondary btn-sm px-4">Download Report</button>
+           <button onclick="downloadReport()" class="btn-secondary btn-sm px-4">Download Report</button>
            <button class="btn-primary btn-sm px-4" onclick="location.href='/admin/products.html'">Add Product</button>
         </div>
       </div>
@@ -171,12 +171,68 @@
 
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
-    import { formatPrice } from '/src/js/utils.js';
+    import { formatPrice, showToast } from '/src/js/utils.js';
     
     document.getElementById('logout-btn')?.addEventListener('click', () => {
       localStorage.removeItem('token');
       window.location.href = '/admin/login.html';
     });
+
+    // Download comprehensive dashboard report
+    window.downloadReport = () => {
+      const timestamp = new Date().toISOString().split('T')[0];
+      const reportDate = new Date().toLocaleDateString('en-PH', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      // Sample dashboard data
+      const dashboardData = {
+        revenue: 248500,
+        orders: 156,
+        products: 342,
+        activePartners: 28,
+        recentOrders: [
+          { id: 'ORD-2024-00156', customer: 'Maria Santos', amount: 4500, status: 'Pending' },
+          { id: 'ORD-2024-00155', customer: 'Juan Dela Cruz', amount: 2350, status: 'Processing' },
+          { id: 'ORD-2024-00154', customer: 'Anna Rodriguez', amount: 8200, status: 'Completed' }
+        ]
+      };
+
+      // Create CSV content
+      const csvContent = [
+        'DealMindanao Dashboard Report',
+        `Generated: ${reportDate}`,
+        '',
+        'OVERVIEW STATISTICS',
+        'Metric,Value',
+        `Total Revenue,₱${dashboardData.revenue.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`,
+        `Total Orders,${dashboardData.orders}`,
+        `Active Products,${dashboardData.products}`,
+        `Partner Vendors,${dashboardData.activePartners}`,
+        '',
+        'RECENT ORDERS',
+        'Order ID,Customer,Amount,Status',
+        ...dashboardData.recentOrders.map(o => 
+          `${o.id},${o.customer},₱${o.amount.toLocaleString('en-PH', { minimumFractionDigits: 2 })},${o.status}`
+        )
+      ].join('\n');
+
+      // Download CSV
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `dealmindanao_dashboard_report_${timestamp}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('Dashboard report downloaded successfully!');
+    };
   </script>
 </body>
 </html>
