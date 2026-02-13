@@ -12,7 +12,7 @@
               <img src="/logo_main-final.png" alt="DealMindanao Logo" class="w-auto" style="height: calc(var(--spacing) * 20);">
             </a>
             <p class="text-sm text-gray-500 font-medium leading-relaxed max-w-xs">
-              Empowering the local economy of Mindanao by connecting artisans and farmers to the global stage.
+              A curated online marketplace for hardware and heavy equipment in Mindanao, connecting customers with quality local deals.
             </p>
             <div class="flex gap-4">
                <div class="w-10 h-10 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center hover:bg-brand-600 transition-colors pointer-cursor">
@@ -29,13 +29,13 @@
             <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-10">Marketplace</h4>
             <ul class="space-y-4">
               <li><a href="/shop.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
-                 <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Fresh Harvest
+                 <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Shop Deals
               </a></li>
-              <li><a href="/shop.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
-                 <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Native Crafts
+              <li><a href="/cart.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+                 <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Your Cart
               </a></li>
-              <li><a href="/shop.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
-                 <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Eco-Products
+              <li><a href="/trust-safety.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+                 <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Trust & Safety
               </a></li>
             </ul>
           </div>
@@ -44,10 +44,10 @@
           <div class="lg:pl-10">
             <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-10">Company</h4>
             <ul class="space-y-4">
-              <li><a href="/about.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Our Story</a></li>
-              <li><a href="/partner.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Join as Partner</a></li>
-              <li><a href="/contact.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Support Center</a></li>
-              <li><a href="/admin/login.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Seller Portal</a></li>
+              <li><a href="/about.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">About Us</a></li>
+              <li><a href="/partner.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Become a Partner</a></li>
+              <li><a href="/contact.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Contact Support</a></li>
+              <li><a href="/help.html" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Help Center</a></li>
             </ul>
           </div>
           
@@ -71,9 +71,11 @@
 
         <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest">© 2026 DealMindanao. All Rights Reserved.</p>
-           <div class="flex gap-8">
-              <a href="#" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Privacy Policy</a>
-              <a href="#" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Terms of Service</a>
+           <div class="flex flex-wrap gap-6 justify-center md:justify-end">
+              <a href="/privacy.html" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Privacy</a>
+              <a href="/terms.html" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Terms</a>
+              <a href="/refunds.html" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Refunds</a>
+              <a href="/trust-safety.html" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Trust & Safety</a>
            </div>
         </div>
       </div>

@@ -11,8 +11,8 @@
 
   <main class="page-shell py-8">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Discover Best Deals</h1>
-      <p class="text-gray-600 mt-2">Authentic Mindanao products at unbeatable prices.</p>
+      <h1 class="text-3xl font-bold text-gray-900">Shop Deals</h1>
+      <p class="text-gray-600 mt-2">Browse curated hardware and equipment deals from trusted local sellers.</p>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8">
@@ -64,6 +64,14 @@
             <option value="popular">Most Popular</option>
           </select>
         </div>
+
+        <!-- Reset Filters Button -->
+        <button id="reset-filters-btn" class="btn-outline w-full">
+          <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Reset Filters
+        </button>
       </aside>
 
       <!-- Results Grid -->
@@ -99,8 +107,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
           </div>
-          <h2 class="text-xl font-bold text-gray-900 mb-2">No deals found</h2>
-          <p class="text-gray-500 mb-8">Try adjusting your filters or search keywords.</p>
+          <h2 class="text-xl font-bold text-gray-900 mb-2">No deals available yet</h2>
+          <p class="text-gray-500 mb-8">Please check back soon.</p>
           <button id="clear-filters" class="btn-primary">Clear All Filters</button>
         </div>
 
@@ -108,72 +116,145 @@
         <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <!-- Dynamic products injected here -->
         </div>
+        
+        <!-- Pagination Controls -->
+        <div id="pagination-controls" class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <label class="text-sm text-gray-600">Show:</label>
+            <select id="rows-per-page" class="input h-9 w-20">
+              <option value="8">8</option>
+              <option value="12">12</option>
+              <option value="16">16</option>
+              <option value="24">24</option>
+              <option value="all">All</option>
+            </select>
+            <span class="text-sm text-gray-600">per page</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="prev-page" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            <span id="page-info" class="text-sm text-gray-600 px-4">Page 1 of 1</span>
+            <button id="next-page" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Footer Note -->
+        <div class="mt-12 text-center">
+          <p class="text-sm text-gray-500">Prices and availability are subject to confirmation after order review.</p>
+        </div>
       </div>
     </div>
   </main>
 
   <div id="footer"></div>
 
+  <!-- Product Detail Modal -->
+  <div id="product-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+      <!-- Background overlay -->
+      <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" id="modal-backdrop"></div>
+
+      <!-- Modal panel -->
+      <div class="relative inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+        <button id="close-modal" class="absolute top-4 right-4 z-10 p-2 text-gray-400 hover:text-gray-600 bg-white rounded-full shadow-sm">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+
+        <div id="modal-content" class="p-6 sm:p-8">
+          <!-- Dynamic content loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
+    console.log('Shop page script loaded');
+    
     import { formatPrice, showToast } from '/src/js/utils.js';
     import api from '/src/js/api.js';
 
+    console.log('Imports successful');
+
     let allProducts = [];
+    let filteredProducts = [];
+    let currentPage = 1;
+    let rowsPerPage = 8;
+    
     const grid = document.getElementById('products-grid');
     const skeleton = document.getElementById('loading-skeleton');
     const emptyState = document.getElementById('empty-state');
     const countLabel = document.getElementById('result-count');
+    const modal = document.getElementById('product-modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    console.log('Elements found:', { grid, skeleton, emptyState, countLabel });
 
     async function loadProducts() {
+      console.log('=== loadProducts called ===');
       grid.innerHTML = '';
       skeleton.classList.remove('hidden');
       emptyState.classList.add('hidden');
 
-      try {
-        let products = [];
-        try {
-          const response = await api.get('/products');
-          products = response.data.data || response.data || [];
-        } catch (e) {
-          console.warn('Using demo data');
-          products = [
-            { id: 1, name: "Bukidnon Highlands Arabica", partner: "Mt. Kitanglad Farms", price: 850, discount: 15, category: "food", image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=400" },
-            { id: 2, name: "Handwoven T'nalak Wallet", partner: "Lake Sebu Weavers", price: 1200, discount: 0, category: "fashion", image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?q=80&w=400" },
-            { id: 3, name: "Artisan Wood Carving", partner: "Paete Mindanao", price: 4500, discount: 20, category: "crafts", image: "https://images.unsplash.com/photo-1571217333550-93836d934661?q=80&w=400" },
-            { id: 4, name: "Davao Dark Chocolate 70%", partner: "Malagos Garden", price: 350, discount: 10, category: "food", image: "https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=400" },
-            { id: 5, name: "Native Pearl Earrings", partner: "Tawi-Tawi Gems", price: 15000, discount: 5, category: "fashion", image: "https://images.unsplash.com/photo-1599643477877-537ef5278533?q=80&w=400" },
-            { id: 6, name: "Abaca Fiber Laptop Sleeve", partner: "Bicol-Mindanao Fiber", price: 950, discount: 0, category: "electronics", image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=400" },
-            { id: 7, name: "Zamboanga Sardines Gift Pack", partner: "Mega Global", price: 580, discount: 25, category: "food", image: "https://images.unsplash.com/photo-1599307772551-0730d07db0a0?q=80&w=400" },
-            { id: 8, name: "Maranao Brass Gong", partner: "Lanao Arts", price: 8500, discount: 12, category: "crafts", image: "https://images.unsplash.com/photo-1580915411954-282cb1b0d780?q=80&w=400" }
-          ];
-        }
+      // Force demo data immediately for testing
+      const products = [
+        { id: 1, name: "Bukidnon Highlands Arabica", partner: "Mt. Kitanglad Farms", price: 850, discount: 15, category: "food", image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=400" },
+        { id: 2, name: "Handwoven T'nalak Wallet", partner: "Lake Sebu Weavers", price: 1200, discount: 0, category: "fashion", image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?q=80&w=400" },
+        { id: 3, name: "Artisan Wood Carving", partner: "Paete Mindanao", price: 4500, discount: 20, category: "crafts", image: "https://images.unsplash.com/photo-1571217333550-93836d934661?q=80&w=400" },
+        { id: 4, name: "Davao Dark Chocolate 70%", partner: "Malagos Garden", price: 350, discount: 10, category: "food", image: "https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=400" },
+        { id: 5, name: "Native Pearl Earrings", partner: "Tawi-Tawi Gems", price: 15000, discount: 5, category: "fashion", image: "https://images.unsplash.com/photo-1599643477877-537ef5278533?q=80&w=400" },
+        { id: 6, name: "Abaca Fiber Laptop Sleeve", partner: "Bicol-Mindanao Fiber", price: 950, discount: 0, category: "electronics", image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=400" },
+        { id: 7, name: "Zamboanga Sardines Gift Pack", partner: "Mega Global", price: 580, discount: 25, category: "food", image: "https://images.unsplash.com/photo-1599307772551-0730d07db0a0?q=80&w=400" },
+        { id: 8, name: "Maranao Brass Gong", partner: "Lanao Arts", price: 8500, discount: 12, category: "crafts", image: "https://images.unsplash.com/photo-1580915411954-282cb1b0d780?q=80&w=400" }
+      ];
 
-        allProducts = products;
-        renderProducts(allProducts);
-      } catch (error) {
-        showToast('Failed to load deals', 'error');
-      } finally {
-        skeleton.classList.add('hidden');
-      }
+      allProducts = products;
+      console.log('Products loaded:', products.length);
+      skeleton.classList.add('hidden');
+      renderProducts(allProducts);
     }
 
     function renderProducts(products) {
+      filteredProducts = products;
       countLabel.textContent = products.length;
       
       if (products.length === 0) {
         grid.innerHTML = '';
         emptyState.classList.remove('hidden');
+        document.getElementById('pagination-controls').classList.add('hidden');
         return;
       }
 
       emptyState.classList.add('hidden');
-      grid.innerHTML = products.map(product => {
+      document.getElementById('pagination-controls').classList.remove('hidden');
+      
+      // Pagination logic
+      const totalPages = rowsPerPage === 'all' ? 1 : Math.ceil(products.length / rowsPerPage);
+      const startIndex = rowsPerPage === 'all' ? 0 : (currentPage - 1) * rowsPerPage;
+      const endIndex = rowsPerPage === 'all' ? products.length : startIndex + rowsPerPage;
+      const paginatedProducts = products.slice(startIndex, endIndex);
+      
+      // Update pagination controls
+      document.getElementById('prev-page').disabled = currentPage === 1;
+      document.getElementById('next-page').disabled = currentPage === totalPages;
+      document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+
+      grid.innerHTML = paginatedProducts.map(product => {
         const salePrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
         
         return `
           <div class="product-card group flex flex-col h-full bg-white animate-fade-in shadow-sm hover:shadow-xl transition-all duration-300 rounded-lg">
-            <a href="/product.html?id=${product.id}" class="block overflow-hidden relative aspect-[4/5] bg-gray-100 rounded-t-lg">
+            <div class="block overflow-hidden relative aspect-[4/5] bg-gray-100 rounded-t-lg cursor-pointer" onclick="window.viewProductModal(${product.id})">
               <img src="${product.image || 'https://via.placeholder.com/400'}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
               
               ${product.discount > 0 ? `
@@ -183,20 +264,32 @@
               ` : ''}
 
               <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
-            </a>
+            </div>
             
             <div class="p-4 flex-1 flex flex-col justify-between">
               <div>
-                <p class="text-[10px] font-bold text-brand-600 uppercase tracking-widest mb-1 truncate">${product.partner || 'Mindanao Artisan'}</p>
                 <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2">${product.name}</h3>
               </div>
               
-              <div class="mt-4 flex flex-col gap-3">
+              <div class="mt-4 flex flex-col gap-2">
                 <div class="flex items-center gap-2">
                   <span class="text-lg font-bold text-gray-900">${formatPrice(salePrice)}</span>
                   ${product.discount > 0 ? `<span class="text-xs text-gray-400 line-through">${formatPrice(product.price)}</span>` : ''}
                 </div>
-                <button class="btn-primary w-full btn-sm">View Deal</button>
+                <div class="flex gap-2">
+                  <button onclick="window.viewProductModal(${product.id})" class="btn-primary flex-1 btn-sm text-xs">
+                    <svg class="w-3.5 h-3.5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    View
+                  </button>
+                  <button onclick="window.addToCartFromShop(${product.id})" class="p-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -232,358 +325,141 @@
       renderProducts(filtered);
     }
 
-    document.getElementById('clear-filters').addEventListener('click', () => {
+    document.getElementById('clear-filters').addEventListener('click', resetFilters);
+    document.getElementById('reset-filters-btn').addEventListener('click', resetFilters);
+
+    function resetFilters() {
       searchInput.value = '';
       document.querySelectorAll('#category-filters input').forEach(cb => cb.checked = false);
+      document.getElementById('sort-select').value = 'newest';
+      currentPage = 1;
       renderProducts(allProducts);
-    });
-
-    loadProducts();
-  </script>
-</body>
-</html>
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Loading State -->
-        <div id="loading" class="hidden text-center py-12">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-brand-600 border-t-transparent"></div>
-          <p class="mt-4 text-gray-600">Loading products...</p>
-        </div>
-
-        <!-- Products Grid -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <!-- Products will be inserted here -->
-        </div>
-
-        <!-- Empty State -->
-        <div id="empty-state" class="hidden text-center py-16">
-          <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-          </svg>
-          <h3 class="mt-4 text-lg font-medium text-gray-900">No products found</h3>
-          <p class="mt-2 text-gray-600">Try adjusting your filters or search terms</p>
-        </div>
-
-        <!-- Pagination -->
-        <div id="pagination" class="mt-8 flex justify-center">
-          <nav class="flex items-center space-x-2">
-            <button id="prev-page" class="btn-secondary btn-sm" disabled>Previous</button>
-            <div id="page-numbers" class="flex items-center space-x-1"></div>
-            <button id="next-page" class="btn-secondary btn-sm">Next</button>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <div id="footer"></div>
-
-  <script type="module">
-    import { createNavbar, initNavbar } from '/src/js/components/navbar.js';
-    import { createFooter } from '/src/js/components/footer.js';
-    import { formatPrice, showToast } from '/src/js/utils.js';
-    import api from '/src/js/api.js';
-
-    // Render components
-    document.getElementById('navbar').innerHTML = createNavbar();
-    document.getElementById('footer').innerHTML = createFooter();
-    initNavbar();
-
-    // State
-    let products = [];
-    let filteredProducts = [];
-    let currentPage = 1;
-    const perPage = 12;
-
-    // Demo Data Fallback
-    const demoProducts = [
-      {
-        id: '1',
-        name: 'Davao Durian Coffee (Special Blend)',
-        price: 450.00,
-        discount_percentage: 10,
-        image_url: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=400',
-        category_id: 'food',
-        average_rating: 4.8,
-        reviews_count: 124,
-        stock: 50,
-        created_at: '2024-01-01'
-      },
-      {
-        id: '2',
-        name: 'Handwoven T\'nalak Fabric - Tbolí Pattern',
-        price: 1200.00,
-        discount_percentage: 0,
-        image_url: 'https://images.unsplash.com/photo-1590736704690-af8010629731?auto=format&fit=crop&q=80&w=400',
-        category_id: 'crafts',
-        average_rating: 4.9,
-        reviews_count: 56,
-        stock: 12,
-        created_at: '2024-01-02'
-      },
-      {
-        id: '3',
-        name: 'Mindanao Brass Kettle (Heirloom quality)',
-        price: 3500.00,
-        discount_percentage: 15,
-        image_url: 'https://images.unsplash.com/photo-1580915411954-282cb1b0d780?auto=format&fit=crop&q=80&w=400',
-        category_id: 'crafts',
-        average_rating: 4.7,
-        reviews_count: 18,
-        stock: 5,
-        created_at: '2024-01-03'
-      },
-      {
-        id: '4',
-        name: 'Premium Camiguin Lanzones (Fresh, 5kg)',
-        price: 850.00,
-        discount_percentage: 5,
-        image_url: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=400',
-        category_id: 'food',
-        average_rating: 4.6,
-        reviews_count: 89,
-        stock: 30,
-        created_at: '2024-01-04'
-      },
-      {
-        id: '5',
-        name: 'Zamboanga Pearl Necklace (Genuine)',
-        price: 2800.00,
-        discount_percentage: 20,
-        image_url: 'https://images.unsplash.com/photo-1535633302704-b02f5421c0ad?auto=format&fit=crop&q=80&w=400',
-        category_id: 'fashion',
-        average_rating: 5.0,
-        reviews_count: 42,
-        stock: 8,
-        created_at: '2024-01-05'
-      },
-      {
-        id: '6',
-        name: 'Bukidnon Pure Wild Honey (750ml)',
-        price: 550.00,
-        discount_percentage: 0,
-        image_url: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400',
-        category_id: 'food',
-        average_rating: 4.8,
-        reviews_count: 215,
-        stock: 100,
-        created_at: '2024-01-06'
-      },
-      {
-        id: '7',
-        name: 'Maranao Inaul Scarf (Traditional Purple)',
-        price: 750.00,
-        discount_percentage: 10,
-        image_url: 'https://images.unsplash.com/photo-1456318019777-ccdc4d812336?auto=format&fit=crop&q=80&w=400',
-        category_id: 'fashion',
-        average_rating: 4.7,
-        reviews_count: 67,
-        stock: 25,
-        created_at: '2024-01-07'
-      },
-      {
-        id: '8',
-        name: 'Davao Malagos Dark Chocolate Set',
-        price: 1200.00,
-        discount_percentage: 0,
-        image_url: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&q=80&w=400',
-        category_id: 'food',
-        average_rating: 4.9,
-        reviews_count: 312,
-        stock: 45,
-        created_at: '2024-01-08'
-      }
-    ];
-
-    // Fetch products
-    async function fetchProducts() {
-      const loading = document.getElementById('loading');
-      const productsGrid = document.getElementById('products-grid');
-      const emptyState = document.getElementById('empty-state');
-      
-      loading.classList.remove('hidden');
-      productsGrid.innerHTML = '';
-      emptyState.classList.add('hidden');
-
-      try {
-        const response = await api.get('/products');
-        products = response.data.data || response.data;
-        if (!products || !products.length) throw new Error('No products found');
-      } catch (error) {
-        console.warn('API Failed, using demo data:', error);
-        products = demoProducts;
-      } finally {
-        filteredProducts = products;
-        renderProducts();
-        loading.classList.add('hidden');
-      }
     }
 
-    // Render products
-    function renderProducts() {
-      const productsGrid = document.getElementById('products-grid');
-      const emptyState = document.getElementById('empty-state');
-      const productCount = document.getElementById('product-count');
-      
-      productCount.textContent = filteredProducts.length;
-
-      if (filteredProducts.length === 0) {
-        productsGrid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      
-      const start = (currentPage - 1) * perPage;
-      const end = start + perPage;
-      const paginatedProducts = filteredProducts.slice(start, end);
-
-      productsGrid.innerHTML = paginatedProducts.map(product => {
-        const hasDiscount = product.discount_percentage > 0;
-        const originalPrice = parseFloat(product.price);
-        const salePrice = hasDiscount ? originalPrice * (1 - product.discount_percentage / 100) : originalPrice;
-        const rating = product.average_rating || 4.5;
-        const ratingStars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
-
-        return `
-          <div class="product-card">
-            <a href="/product.html?id=${product.id}" class="block">
-              <div class="aspect-square overflow-hidden bg-gray-100 relative">
-                ${hasDiscount ? `<div class="absolute top-2 right-2 z-10 discount-badge">${product.discount_percentage}% OFF</div>` : ''}
-                <img src="${product.image_url || 'https://via.placeholder.com/300'}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-              </div>
-              <div class="p-4">
-                <h3 class="font-medium text-gray-900 mb-1 line-clamp-2 group-hover:text-brand-600">${product.name}</h3>
-                <div class="flex items-center space-x-1 mb-2">
-                  <span class="text-yellow-400 text-sm">${ratingStars}</span>
-                  <span class="text-xs text-gray-500">(${product.reviews_count || 0})</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  ${hasDiscount ? `
-                    <span class="price-accent">${formatPrice(salePrice)}</span>
-                    <span class="price-original">${formatPrice(originalPrice)}</span>
-                  ` : `
-                    <span class="price-sale">${formatPrice(originalPrice)}</span>
-                  `}
-                </div>
-                ${product.stock < 10 && product.stock > 0 ? `<p class="text-xs text-red-600 mt-1">Only ${product.stock} left!</p>` : ''}
-                ${product.stock === 0 ? `<p class="text-xs text-red-600 mt-1">Out of stock</p>` : ''}
-              </div>
-            </a>
-          </div>
-        `;
-      }).join('');
-
-      renderPagination();
-    }
-
-    // Render pagination
-    function renderPagination() {
-      const totalPages = Math.ceil(filteredProducts.length / perPage);
-      const prevBtn = document.getElementById('prev-page');
-      const nextBtn = document.getElementById('next-page');
-      const pageNumbers = document.getElementById('page-numbers');
-
-      prevBtn.disabled = currentPage === 1;
-      nextBtn.disabled = currentPage === totalPages;
-
-      pageNumbers.innerHTML = Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `
-        <button class="px-3 py-1 text-sm rounded-lg ${page === currentPage ? 'bg-brand-600 text-white' : 'text-gray-700 hover:bg-gray-100'}" data-page="${page}">${page}</button>
-      `).join('');
-
-      pageNumbers.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentPage = parseInt(btn.dataset.page);
-          renderProducts();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      });
-    }
-
-    // Apply filters
-    function applyFilters() {
-      const search = document.getElementById('search').value.toLowerCase();
-      const category = document.getElementById('category').value;
-      const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
-      const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
-      const minRating = document.querySelector('input[name="rating"]:checked')?.value || 0;
-
-      filteredProducts = products.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(search) || 
-                            (product.description && product.description.toLowerCase().includes(search));
-        const matchesCategory = !category || product.category_id === category;
-        const price = parseFloat(product.price);
-        const matchesPrice = price >= minPrice && price <= maxPrice;
-        const matchesRating = (product.average_rating || 0) >= minRating;
-
-        return matchesSearch && matchesCategory && matchesPrice && matchesRating;
-      });
-
-      currentPage = 1;
-      renderProducts();
-    }
-
-    // Sort products
-    function sortProducts(sortBy) {
-      switch (sortBy) {
-        case 'price-asc':
-          filteredProducts.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-          break;
-        case 'price-desc':
-          filteredProducts.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-          break;
-        case 'rating':
-          filteredProducts.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0));
-          break;
-        case 'newest':
-          filteredProducts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          break;
-      }
-      renderProducts();
-    }
-
-    // Event listeners
-    document.getElementById('apply-filters').addEventListener('click', applyFilters);
-    document.getElementById('reset-filters').addEventListener('click', () => {
-      document.getElementById('search').value = '';
-      document.getElementById('category').value = '';
-      document.getElementById('minPrice').value = '';
-      document.getElementById('maxPrice').value = '';
-      document.querySelectorAll('input[name="rating"]').forEach(input => input.checked = false);
-      filteredProducts = products;
-      currentPage = 1;
-      renderProducts();
-    });
-
-    document.getElementById('search').addEventListener('input', applyFilters);
-    document.getElementById('sort').addEventListener('change', (e) => sortProducts(e.target.value));
-
+    // Pagination controls
     document.getElementById('prev-page').addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
-        renderProducts();
+        renderProducts(filteredProducts);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
 
     document.getElementById('next-page').addEventListener('click', () => {
-      const totalPages = Math.ceil(filteredProducts.length / perPage);
+      const totalPages = Math.ceil(filteredProducts.length / rowsPerPage);
       if (currentPage < totalPages) {
         currentPage++;
-        renderProducts();
+        renderProducts(filteredProducts);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
 
-    // Initialize
-    fetchProducts();
+    document.getElementById('rows-per-page').addEventListener('change', (e) => {
+      rowsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
+      currentPage = 1;
+      renderProducts(filteredProducts);
+    });
+
+    // Modal controls
+    window.viewProductModal = (productId) => {
+      const product = allProducts.find(p => p.id === productId);
+      if (!product) return;
+
+      const salePrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
+
+      modalContent.innerHTML = `
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+              <img src="${product.image || 'https://via.placeholder.com/600'}" alt="${product.name}" class="w-full h-full object-cover">
+            </div>
+          </div>
+          
+          <div class="flex flex-col">
+            <div class="mb-6">
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">${product.name}</h2>
+              
+              ${product.discount > 0 ? `
+                <div class="inline-flex items-center gap-2 bg-brand-50 px-3 py-1 rounded-full mb-4">
+                  <span class="text-brand-600 font-bold text-sm">${product.discount}% OFF</span>
+                </div>
+              ` : ''}
+              
+              <div class="flex items-baseline gap-3 mb-6">
+                <span class="text-4xl font-bold text-gray-900">${formatPrice(salePrice)}</span>
+                ${product.discount > 0 ? `<span class="text-xl text-gray-400 line-through">${formatPrice(product.price)}</span>` : ''}
+              </div>
+            </div>
+            
+            <div class="mb-6">
+              <h3 class="text-sm font-bold text-gray-900 mb-2">Product Details</h3>
+              <p class="text-gray-600">High-quality ${product.category} product from Mindanao. Contact seller for detailed specifications and availability.</p>
+            </div>
+            
+            <div class="mt-auto flex gap-3">
+              <button onclick="window.addToCartFromModal(${product.id})" class="btn-primary flex-1">
+                <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Add to Cart
+              </button>
+              <a href="/product.html?id=${product.id}" class="btn-outline flex-1 text-center">
+                Full Details
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    };
+
+    document.getElementById('close-modal').addEventListener('click', closeModal);
+    document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Add to cart functions
+    window.addToCartFromShop = (productId) => {
+      addToCart(productId);
+    };
+
+    window.addToCartFromModal = (productId) => {
+      addToCart(productId);
+      closeModal();
+    };
+
+    function addToCart(productId) {
+      const product = allProducts.find(p => p.id == productId);
+      if (!product) return;
+
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const existingItem = cart.find(item => item.id == productId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        const salePrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: salePrice,
+          discount_percentage: product.discount || 0,
+          quantity: 1,
+          image_url: product.image || 'https://via.placeholder.com/400'
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('cart-updated'));
+      showToast(`${product.name} added to cart!`, 'success');
+    }
+
+    loadProducts();
   </script>
 </body>
 </html>

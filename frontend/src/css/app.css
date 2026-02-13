@@ -33,6 +33,7 @@
 @layer base {
   body {
     @apply text-gray-900 bg-gray-50 font-sans antialiased;
+    padding-top: 80px; /* Account for fixed navbar height (h-20 = 5rem = 80px) */
   }
   
   h1 {
