@@ -8,7 +8,9 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
           <!-- Brand -->
           <div class="space-y-8">
-            <h2 class="text-2xl font-black text-white italic tracking-tighter">DEALMINDANAO</h2>
+            <a href="/index.html" class="inline-block">
+              <img src="/logo_main-final.png" alt="DealMindanao Logo" class="w-auto" style="height: calc(var(--spacing) * 20);">
+            </a>
             <p class="text-sm text-gray-500 font-medium leading-relaxed max-w-xs">
               Empowering the local economy of Mindanao by connecting artisans and farmers to the global stage.
             </p>

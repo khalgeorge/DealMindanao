@@ -3,121 +3,396 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DealMindanao - Best Deals in Mindanao</title>
-  <meta name="description" content="Find the best deals and discounts in Mindanao. Shop quality products at unbeatable prices.">
+  <title>DealMindanao - Authentic Mindanao Hardware & Heavy Equipment</title>
+  <meta name="description" content="Quality tools and equipment from trusted local sellers — order online, pay offline, delivered with care.">
   <link rel="stylesheet" href="/src/css/app.css">
 </head>
 <body class="bg-white">
   <div id="navbar"></div>
 
   <main>
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden pt-36 pb-24">
-       <!-- Abstract Background Shape -->
-       <div class="absolute top-0 right-0 -z-10 w-1/2 h-full bg-brand-50 rounded-l-lg hidden lg:block"></div>
-       <div class="absolute -top-20 -right-20 w-80 h-80 bg-brand-100 rounded-full blur-3xl opacity-50"></div>
-
-       <div class="container mx-auto px-6 lg:px-12">
-          <div class="grid lg:grid-cols-2 gap-12 items-center">
-             <div>
-                <span class="inline-block py-1 px-3 bg-brand-100 text-brand-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6">Marketplace of the South</span>
-                <h1 class="text-5xl lg:text-7xl font-black text-gray-900 leading-[1.1] mb-8">
-                   Discover <span class="text-brand-600 italic">Authentic</span> Mindanao.
-                </h1>
-                <p class="text-lg text-gray-500 font-medium mb-10 max-w-lg leading-relaxed">
-                   From the mountains of Bukidnon to the shores of Davao. Shop high-quality native products and support local Filipino artisans.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                   <a href="/shop.html" class="btn-primary px-10 py-5 rounded-lg text-lg shadow-xl shadow-brand-200">Start Shopping</a>
-                   <div class="flex items-center gap-3 px-6">
-                      <div class="flex -space-x-3">
-                         <div class="w-10 h-10 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://ui-avatars.com/api/?name=User+1" alt="User"></div>
-                         <div class="w-10 h-10 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://ui-avatars.com/api/?name=User+2" alt="User"></div>
-                         <div class="w-10 h-10 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://ui-avatars.com/api/?name=User+3" alt="User"></div>
+    <!-- Hero Banner Carousel Section -->
+    <section class="relative overflow-hidden bg-gray-900">
+       <div class="relative w-full h-[560px] md:h-[640px] lg:h-[720px]">
+          <!-- Hero Banner 1 -->
+          <div class="hero-slide absolute inset-0 transition-opacity duration-1000">
+             <img src="/hero1.png" class="w-full h-full object-cover" alt="DealMindanao - Hardware & Heavy Equipment">
+             <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+             <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+                   <div class="max-w-2xl">
+                      <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6">
+                         Discover Authentic<br/>Mindanao <span class="text-brand-400">Hardware & Heavy Equipment</span>
+                      </h1>
+                      <p class="text-base md:text-lg lg:text-xl text-white/90 font-medium mb-8 max-w-xl leading-relaxed">
+                         Quality tools and equipment from trusted local sellers — order online, pay offline, delivered with care.
+                      </p>
+                      
+                      <!-- CTA Button -->
+                      <div class="mb-8">
+                         <a href="/shop.html" class="inline-flex items-center justify-center px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white text-base font-bold rounded-lg shadow-xl transition-all transform hover:scale-105">
+                            Shop Deals
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                         </a>
                       </div>
-                      <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Join 5k+ Shoppers</p>
+                      
+                      <!-- Categories Pills -->
+                      <div class="flex flex-wrap gap-3 mb-6">
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Power Tools
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Home Improvement
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Outdoor Gear
+                         </span>
+                      </div>
+                      
+                      <!-- Trust Badges -->
+                      <div class="flex flex-wrap items-center gap-6">
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Trusted Sellers</span>
+                         </div>
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Cash on Delivery</span>
+                         </div>
+                      </div>
+                      
+                      <!-- Small Disclaimer -->
+                      <p class="mt-4 text-xs text-white/70 max-w-lg">
+                         Order request only. No online payment required. Our team will contact you to confirm.
+                      </p>
                    </div>
                 </div>
              </div>
-             <div class="relative group">
-                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.02]">
-                   <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Mindanao Marketplace">
-                </div>
-                <!-- Floating Card -->
-                <div class="absolute -bottom-10 -left-10 bg-white p-6 rounded-lg shadow-xl border border-gray-100 max-w-xs animate-bounce-slow">
-                   <div class="flex items-center gap-4">
-                      <div class="w-12 h-12 bg-green-50 text-green-600 rounded-lg flex items-center justify-center font-black">100%</div>
-                      <div>
-                         <p class="text-sm font-black text-gray-900 leading-none">Local Source</p>
-                         <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest">Certified Origin</p>
+          </div>
+          
+          <!-- Hero Banner 2 -->
+          <div class="hero-slide absolute inset-0 opacity-0 transition-opacity duration-1000">
+             <img src="/hero2.png" class="w-full h-full object-cover" alt="Mindanao Hardware Products">
+             <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+             <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+                   <div class="max-w-2xl">
+                      <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6">
+                         Quality <span class="text-accent-400">Hardware</span><br/>From Local Sellers
+                      </h1>
+                      <p class="text-base md:text-lg lg:text-xl text-white/90 font-medium mb-8 max-w-xl leading-relaxed">
+                         Browse curated deals and support Mindanao entrepreneurs with every purchase.
+                      </p>
+                      
+                      <!-- CTA Button -->
+                      <div class="mb-8">
+                         <a href="/shop.html" class="inline-flex items-center justify-center px-8 py-4 bg-accent-600 hover:bg-accent-700 text-white text-base font-bold rounded-lg shadow-xl transition-all transform hover:scale-105">
+                            Shop Deals
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                         </a>
                       </div>
+                      
+                      <!-- Categories Pills -->
+                      <div class="flex flex-wrap gap-3 mb-6">
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Power Tools
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Home Improvement
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Outdoor Gear
+                         </span>
+                      </div>
+                      
+                      <!-- Trust Badges -->
+                      <div class="flex flex-wrap items-center gap-6">
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Trusted Sellers</span>
+                         </div>
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Cash on Delivery</span>
+                         </div>
+                      </div>
+                      
+                      <!-- Small Disclaimer -->
+                      <p class="mt-4 text-xs text-white/70 max-w-lg">
+                         Order request only. No online payment required. Our team will contact you to confirm.
+                      </p>
                    </div>
                 </div>
              </div>
           </div>
+          
+          <!-- Carousel Controls -->
+          <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+             <button onclick="setSlide(0)" class="slide-indicator w-3 h-3 rounded-full bg-white transition-all" aria-label="Slide 1"></button>
+             <button onclick="setSlide(1)" class="slide-indicator w-3 h-3 rounded-full bg-white/50 transition-all" aria-label="Slide 2"></button>
+          </div>
+          
+          <!-- Navigation Arrows -->
+          <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all z-20" aria-label="Previous slide">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+             </svg>
+          </button>
+          <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all z-20" aria-label="Next slide">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+             </svg>
+          </button>
        </div>
     </section>
+    
+    <script>
+      // Hero carousel functionality
+      let currentSlide = 0;
+      const slides = document.querySelectorAll('.hero-slide');
+      const indicators = document.querySelectorAll('.slide-indicator');
+      
+      function setSlide(index) {
+        currentSlide = index;
+        slides.forEach((slide, i) => {
+          slide.style.opacity = i === index ? '1' : '0';
+        });
+        indicators.forEach((indicator, i) => {
+          indicator.style.backgroundColor = i === index ? 'white' : 'rgba(255, 255, 255, 0.5)';
+        });
+      }
+      
+      function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        setSlide(currentSlide);
+      }
+      
+      function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        setSlide(currentSlide);
+      }
+      
+      // Auto-advance slides every 5 seconds
+      setInterval(nextSlide, 5000);
+    </script>
 
-    <!-- Categories Section -->
-    <section class="py-24 bg-gray-50/50">
-       <div class="container mx-auto px-6 lg:px-12">
-          <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-             <div>
-                <h2 class="text-3xl font-black text-gray-900">Explore Mindanao</h2>
-                <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px] mt-2">Curated categories from the region</p>
-             </div>
-             <a href="/shop.html" class="group flex items-center gap-2 text-sm font-black text-brand-600 uppercase tracking-widest">
-                Browse All <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-             </a>
-          </div>
-
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-             <!-- Category Cards -->
-             <a href="/shop.html?category=electronics" class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl group">
-                <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center mb-6 transition-colors group-hover:bg-brand-600 group-hover:text-white">
-                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                </div>
-                <h3 class="font-black text-gray-900 group-hover:text-brand-600 transition-colors uppercase text-xs tracking-widest">Tech</h3>
-             </a>
-             <a href="/shop.html?category=food" class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl group">
-                <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-lg flex items-center justify-center mb-6 transition-colors group-hover:bg-orange-600 group-hover:text-white">
-                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                </div>
-                <h3 class="font-black text-gray-900 group-hover:text-orange-600 transition-colors uppercase text-xs tracking-widest">Fresh</h3>
-             </a>
-             <a href="/shop.html?category=crafts" class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl group">
-                <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mb-6 transition-colors group-hover:bg-amber-600 group-hover:text-white">
-                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
-                </div>
-                <h3 class="font-black text-gray-900 group-hover:text-amber-600 transition-colors uppercase text-xs tracking-widest">Native</h3>
-             </a>
-             <!-- More placeholders -->
-             <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm opacity-50 flex items-center justify-center">
-                <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">More Soon</span>
-             </div>
-             <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm opacity-50 flex items-center justify-center">
-                <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">More Soon</span>
-             </div>
-             <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm opacity-50 flex items-center justify-center">
-                <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">More Soon</span>
-             </div>
-          </div>
-       </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="py-24">
-       <div class="container mx-auto px-6 lg:px-12">
-          <div class="text-center mb-16">
-             <h2 class="text-4xl font-black text-gray-900">Weekly Highlights</h2>
-             <p class="text-gray-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-4">Selected for quality and value</p>
+    <!-- Weekly Highlights -->
+    <section class="py-20 md:py-28 bg-white">
+       <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+          <div class="text-center mb-12 md:mb-16">
+             <span class="inline-block py-1.5 px-4 bg-accent-100 text-accent-700 text-xs font-bold uppercase tracking-wider rounded-full mb-4">This Week</span>
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">Weekly Highlights</h2>
+             <p class="text-gray-600 font-medium text-base md:text-lg max-w-2xl mx-auto">
+                Handpicked deals and exclusive offers from our trusted local partners across Mindanao.
+             </p>
           </div>
           
           <div id="loading" class="text-center py-20">
              <div class="inline-block w-12 h-12 border-4 border-brand-100 border-t-brand-600 rounded-full animate-spin mb-4"></div>
-             <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">Fetching Mindanao's Finest...</p>
+             <p class="text-sm font-medium text-gray-400">Loading products...</p>
           </div>
-          <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"></div>
+          
+          <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"></div>
+          
+          <!-- View All Button -->
+          <div class="text-center mt-12 md:mt-16">
+             <a href="/shop.html" class="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 hover:bg-brand-600 text-white font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
+                View All Products
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+             </a>
+          </div>
+       </div>
+    </section>
+
+    <!-- Why Shop on Deal Mindanao -->
+    <section class="py-20 md:py-28 bg-gray-50">
+       <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+          <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">Why Shop on DealMindanao?</h2>
+             <p class="text-base md:text-lg text-gray-600">Experience the best of Mindanao with confidence and convenience.</p>
+          </div>
+          
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+             <!-- Benefit 1 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-brand-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">100% Authentic</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">All products are verified and sourced from trusted local sellers</p>
+             </div>
+
+             <!-- Benefit 2 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-accent-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Best Deals</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">Curated pricing for great value on quality hardware</p>
+             </div>
+
+             <!-- Benefit 3 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-brand-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Support Local</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">Every order supports Mindanao communities</p>
+             </div>
+
+             <!-- Benefit 4 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-accent-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Easy Shopping</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">Order online, we coordinate payment & delivery</p>
+             </div>
+          </div>
+       </div>
+    </section>
+
+    <!-- What to Expect After You Order -->
+    <section class="py-20 md:py-28 bg-white">
+       <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+          <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">What to Expect After You Order</h2>
+             <p class="text-base md:text-lg text-gray-600">A seamless journey from checkout to delivery</p>
+          </div>
+
+          <div class="max-w-4xl mx-auto">
+             <div class="relative">
+                <!-- Timeline line -->
+                <div class="absolute left-7 md:left-8 top-0 bottom-0 w-px bg-brand-200 hidden sm:block"></div>
+
+                <!-- Step 1 -->
+                <div class="relative flex gap-6 md:gap-8 mb-10 md:mb-12">
+                   <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 bg-brand-600 rounded-full flex items-center justify-center text-white font-black text-lg md:text-xl shadow-lg relative z-10">
+                      1
+                   </div>
+                   <div class="flex-1 pt-1 md:pt-2">
+                      <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Order Confirmation</h3>
+                      <p class="text-sm md:text-base text-gray-600 leading-relaxed mb-3 md:mb-4">We review your request within 24 hours</p>
+                      <div class="inline-flex items-center gap-2 text-xs md:text-sm text-brand-600 font-semibold">
+                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                         </svg>
+                         Within 24 hours
+                      </div>
+                   </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative flex gap-6 md:gap-8 mb-10 md:mb-12">
+                   <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 bg-brand-600 rounded-full flex items-center justify-center text-white font-black text-lg md:text-xl shadow-lg relative z-10">
+                      2
+                   </div>
+                   <div class="flex-1 pt-1 md:pt-2">
+                      <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Payment Instructions</h3>
+                      <p class="text-sm md:text-base text-gray-600 leading-relaxed mb-3 md:mb-4">We contact you with COD/Bank/GCash options</p>
+                      <div class="inline-flex items-center gap-2 text-xs md:text-sm text-brand-600 font-semibold">
+                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                         </svg>
+                         Next business day
+                      </div>
+                   </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative flex gap-6 md:gap-8 mb-10 md:mb-12">
+                   <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 bg-brand-600 rounded-full flex items-center justify-center text-white font-black text-lg md:text-xl shadow-lg relative z-10">
+                      3
+                   </div>
+                   <div class="flex-1 pt-1 md:pt-2">
+                      <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Order Processing</h3>
+                      <p class="text-sm md:text-base text-gray-600 leading-relaxed mb-3 md:mb-4">We prepare your order and update you</p>
+                      <div class="inline-flex items-center gap-2 text-xs md:text-sm text-brand-600 font-semibold">
+                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                         </svg>
+                         1-3 business days
+                      </div>
+                   </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative flex gap-6 md:gap-8">
+                   <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 bg-brand-600 rounded-full flex items-center justify-center text-white font-black text-lg md:text-xl shadow-lg relative z-10">
+                      4
+                   </div>
+                   <div class="flex-1 pt-1 md:pt-2">
+                      <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Delivery & Enjoy</h3>
+                      <p class="text-sm md:text-base text-gray-600 leading-relaxed mb-3 md:mb-4">Items delivered to your door</p>
+                      <div class="inline-flex items-center gap-2 text-xs md:text-sm text-brand-600 font-semibold">
+                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                         </svg>
+                         3-7 business days
+                      </div>
+                   </div>
+                </div>
+             </div>
+
+             <!-- Additional Info -->
+             <div class="mt-16 p-8 bg-brand-50 rounded-2xl border-2 border-brand-200">
+                <div class="flex items-start gap-4">
+                   <svg class="w-6 h-6 text-brand-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                   </svg>
+                   <div>
+                      <h4 class="font-bold text-gray-900 mb-2">Need Help?</h4>
+                      <p class="text-gray-600 leading-relaxed">Our customer support team is ready to assist you throughout your order journey. Contact us anytime via email or phone for questions about your order.</p>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 md:py-28 bg-gradient-to-br from-brand-600 to-brand-700 relative overflow-hidden">
+       <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
+       
+       <div class="container mx-auto px-6 lg:px-16 max-w-7xl relative z-10">
+          <div class="max-w-3xl mx-auto text-center">
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-5 md:mb-6 leading-tight">
+                Join the Mindanao Movement
+             </h2>
+             <p class="text-brand-100 text-base md:text-lg mb-8 md:mb-10 leading-relaxed font-medium">
+                Become a partner and showcase your quality hardware products across Mindanao.
+             </p>
+             <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/partner.html" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 bg-white text-brand-700 font-bold text-sm uppercase tracking-wider rounded-lg shadow-xl hover:shadow-2xl hover:bg-gray-50 transition-all">
+                   Become a Partner
+                </a>
+                <a href="/about.html" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 border-2 border-white text-white font-bold text-sm uppercase tracking-wider rounded-lg hover:bg-white/10 transition-all">
+                   Learn More
+                </a>
+             </div>
+          </div>
        </div>
     </section>
   </main>
@@ -126,40 +401,269 @@
 
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
+    import { products, categories } from '/src/js/api.js';
     import { formatPrice } from '/src/js/utils.js';
 
+    // Load featured products from API
     async function loadFeatured() {
        try {
-          const response = await fetch('/public/products.json');
-          const data = await response.json();
-          const featured = data.products.slice(0, 4);
+          const data = await products.getAll({ is_featured: true, limit: 8 });
           
           document.getElementById('loading').classList.add('hidden');
           const grid = document.getElementById('featured-products-grid');
           
-          grid.innerHTML = featured.map(p => `
-             <div class="group">
-                <div class="aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden mb-6 relative shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-brand-100">
-                   <img src="${p.image_url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}">
-                   <div class="absolute top-6 left-6">
-                      <span class="bg-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg text-gray-900">${p.category}</span>
+          // Use demo products if no data from API
+          let productsToShow = [];
+          
+          if (!data.data || data.data.length === 0) {
+            // Demo products for showcase
+            productsToShow = [
+              {
+                id: 1,
+                name: 'Mindanao Durian',
+                price: 1500,
+                discount: 300,
+                images: ['https://images.unsplash.com/photo-1510832842230-87253f48d74f?auto=format&fit=crop&q=80&w=800'],
+                category: { name: 'Fresh Fruits' },
+                company: { name: 'Davao Farms' }
+              },
+              {
+                id: 2,
+                name: 'Native Coffee Beans',
+                price: 450,
+                discount: 0,
+                images: ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=800'],
+                category: { name: 'Beverages' },
+                company: { name: 'Bukidnon Harvest' }
+              },
+              {
+                id: 3,
+                name: 'Handwoven T\'nalak',
+                price: 2500,
+                discount: 500,
+                images: ['https://images.unsplash.com/photo-1617333366395-926d1c4e8d65?auto=format&fit=crop&q=80&w=800'],
+                category: { name: 'Handicrafts' },
+                company: { name: 'T\'boli Weavers' }
+              },
+              {
+                id: 4,
+                name: 'Organic Cacao',
+                price: 350,
+                discount: 0,
+                images: ['https://images.unsplash.com/photo-1511381939415-e44015466834?auto=format&fit=crop&q=80&w=800'],
+                category: { name: 'Food Products' },
+                company: { name: 'CDO Organics' }
+              }
+            ];
+          } else {
+            productsToShow = data.data.slice(0, 4);
+          }
+          
+          grid.innerHTML = productsToShow.map(p => {
+            // Calculate discount
+            let discount = 0;
+            let finalPrice = p.price;
+            
+            if (p.discount && p.discount > 0) {
+              finalPrice = p.price - p.discount;
+              discount = Math.round((p.discount / p.price) * 100);
+            }
+            
+            // Get image URL
+            const imageUrl = Array.isArray(p.images) && p.images.length > 0 
+              ? p.images[0] 
+              : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800';
+            
+            return `
+             <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-brand-200 transition-all duration-300 hover:shadow-xl">
+                <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
+                   <img src="${imageUrl}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800'">
+                   
+                   ${discount > 0 ? `
+                   <div class="absolute top-4 right-4">
+                      <span class="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg">
+                         -${discount}%
+                      </span>
+                   </div>` : ''}
+                   
+                   ${p.category?.name ? `
+                   <div class="absolute top-4 left-4">
+                      <span class="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow text-gray-900">
+                         ${p.category.name}
+                      </span>
+                   </div>` : ''}
+                   
+                   <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <a href="/product.html?id=${p.id}" class="px-6 py-3 bg-white text-gray-900 font-black text-sm uppercase tracking-wider rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                         Quick View
+                      </a>
                    </div>
                 </div>
-                <div>
-                   <h3 class="font-black text-gray-900 group-hover:text-brand-600 transition-colors uppercase tracking-tight mb-1 text-lg">${p.name}</h3>
-                   <div class="flex items-center justify-between">
-                      <p class="text-gray-400 text-xs font-bold uppercase tracking-widest">From ${p.partner}</p>
-                      <p class="font-black text-brand-600">₱${p.price}</p>
+                
+                <div class="p-5">
+                   ${p.company?.name ? `
+                   <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">
+                      ${p.company.name}
+                   </p>` : ''}
+                   
+                   <h3 class="font-black text-gray-900 text-lg mb-3 leading-tight min-h-[56px]">
+                      ${p.name}
+                   </h3>
+                   
+                   <div class="flex items-center gap-2 mb-4">
+                      <p class="font-black text-2xl text-brand-600">${formatPrice(finalPrice)}</p>
+                      ${discount > 0 ? `<p class="text-sm text-gray-400 line-through">${formatPrice(p.price)}</p>` : ''}
                    </div>
-                   <a href="/product.html?id=${p.id}" class="inline-block mt-4 text-[10px] font-black text-gray-900 border-b-2 border-brand-100 uppercase tracking-widest hover:border-brand-600 transition-all">Details</a>
+                   
+                   <a href="/product.html?id=${p.id}" class="block w-full py-3 bg-gray-900 hover:bg-brand-600 text-white text-center font-bold uppercase tracking-wider rounded-lg transition-all text-sm">
+                      View Details
+                   </a>
                 </div>
              </div>
-          `).join('');
+          `}).join('');
        } catch (err) {
-          console.error(err);
+          console.error('Error loading featured products:', err);
+          document.getElementById('loading').classList.add('hidden');
+          const grid = document.getElementById('featured-products-grid');
+          
+          // Show demo products on error as well
+          const demoProducts = [
+            {
+              id: 1,
+              name: 'Mindanao Durian',
+              price: 1500,
+              discount: 300,
+              images: ['https://images.unsplash.com/photo-1510832842230-87253f48d74f?auto=format&fit=crop&q=80&w=800'],
+              category: { name: 'Fresh Fruits' },
+              company: { name: 'Davao Farms' }
+            },
+            {
+              id: 2,
+              name: 'Native Coffee Beans',
+              price: 450,
+              discount: 0,
+              images: ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=800'],
+              category: { name: 'Beverages' },
+              company: { name: 'Bukidnon Harvest' }
+            },
+            {
+              id: 3,
+              name: 'Handwoven T\'nalak',
+              price: 2500,
+              discount: 500,
+              images: ['https://images.unsplash.com/photo-1617333366395-926d1c4e8d65?auto=format&fit=crop&q=80&w=800'],
+              category: { name: 'Handicrafts' },
+              company: { name: 'T\'boli Weavers' }
+            },
+            {
+              id: 4,
+              name: 'Organic Cacao',
+              price: 350,
+              discount: 0,
+              images: ['https://images.unsplash.com/photo-1511381939415-e44015466834?auto=format&fit=crop&q=80&w=800'],
+              category: { name: 'Food Products' },
+              company: { name: 'CDO Organics' }
+            }
+          ];
+          
+          grid.innerHTML = demoProducts.map(p => {
+            const discount = p.discount ? Math.round((p.discount / p.price) * 100) : 0;
+            const finalPrice = p.price - (p.discount || 0);
+            
+            return `
+             <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-brand-200 transition-all duration-300 hover:shadow-xl">
+                <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
+                   <img src="${p.images[0]}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}">
+                   
+                   ${discount > 0 ? `
+                   <div class="absolute top-4 right-4">
+                      <span class="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg">
+                         -${discount}%
+                      </span>
+                   </div>` : ''}
+                   
+                   <div class="absolute top-4 left-4">
+                      <span class="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow text-gray-900">
+                         ${p.category.name}
+                      </span>
+                   </div>
+                   
+                   <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <a href="/product.html?id=${p.id}" class="px-6 py-3 bg-white text-gray-900 font-black text-sm uppercase tracking-wider rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                         Quick View
+                      </a>
+                   </div>
+                </div>
+                
+                <div class="p-5">
+                   <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">
+                      ${p.company.name}
+                   </p>
+                   
+                   <h3 class="font-black text-gray-900 text-lg mb-3 leading-tight min-h-[56px]">
+                      ${p.name}
+                   </h3>
+                   
+                   <div class="flex items-center gap-2 mb-4">
+                      <p class="font-black text-2xl text-brand-600">${formatPrice(finalPrice)}</p>
+                      ${discount > 0 ? `<p class="text-sm text-gray-400 line-through">${formatPrice(p.price)}</p>` : ''}
+                   </div>
+                   
+                   <a href="/product.html?id=${p.id}" class="block w-full py-3 bg-gray-900 hover:bg-brand-600 text-white text-center font-bold uppercase tracking-wider rounded-lg transition-all text-sm">
+                      View Details
+                   </a>
+                </div>
+             </div>
+          `}).join('');
        }
     }
 
+    // Load categories dynamically
+    async function loadCategories() {
+      try {
+        const data = await categories.getAll();
+        const categoryGrid = document.getElementById('category-grid');
+        
+        if (!data.data || data.data.length === 0) return;
+        
+        const categoryIcons = {
+          'Electronics': `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>`,
+          'Food': `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>`,
+          'Crafts': `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>`,
+          'default': `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>`
+        };
+        
+        const colors = ['brand', 'orange', 'amber', 'blue', 'purple', 'pink'];
+        
+        categoryGrid.innerHTML = data.data.slice(0, 6).map((cat, idx) => {
+          const color = colors[idx % colors.length];
+          const icon = categoryIcons[cat.name] || categoryIcons.default;
+          
+          return `
+            <a href="/shop.html?category=${cat.id}" class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl group">
+              <div class="w-12 h-12 bg-${color}-50 text-${color}-600 rounded-lg flex items-center justify-center mb-6 transition-colors group-hover:bg-${color}-600 group-hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icon}</svg>
+              </div>
+              <h3 class="font-black text-gray-900 group-hover:text-${color}-600 transition-colors uppercase text-xs tracking-widest">${cat.name}</h3>
+            </a>
+          `;
+        }).join('');
+        
+        // Fill remaining slots with "More Soon" placeholders
+        const remaining = Math.max(0, 6 - data.data.length);
+        for (let i = 0; i < remaining; i++) {
+          categoryGrid.innerHTML += `
+            <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm opacity-50 flex items-center justify-center">
+              <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">More Soon</span>
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error('Error loading categories:', err);
+      }
+    }
+
+    // Initialize page
     loadFeatured();
   </script>
 </body>

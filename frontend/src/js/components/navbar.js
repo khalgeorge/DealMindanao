@@ -3,10 +3,10 @@ export function createNavbar(isAdmin = false) {
     return `
       <nav class="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div class="px-4 sm:px-6 lg:px-8">
-          <div class="flex items-center justify-between h-16">
+          <div class="flex items-center justify-between h-20">
             <div class="flex items-center">
               <a href="/admin/dashboard.html" class="flex items-center">
-                <img src="/logo-no-bg.png" alt="DealMindanao Logo" class="h-10 w-auto">
+                <img src="/logo_main-final.png" alt="DealMindanao Logo" class="w-auto" style="height: calc(var(--spacing) * 20);">
               </a>
             </div>
             <div class="flex items-center space-x-4">
@@ -21,11 +21,11 @@ export function createNavbar(isAdmin = false) {
   return `
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div class="page-shell">
-        <div class="flex items-center justify-between h-16">
+        <div class="flex items-center justify-between h-20">
           <!-- Logo -->
           <div class="flex items-center">
             <a href="/index.html" class="flex items-center">
-              <img src="/logo-no-bg.png" alt="DealMindanao Logo" class="h-10 w-auto">
+              <img src="/logo_main-final.png" alt="DealMindanao Logo" class="w-auto" style="height: calc(var(--spacing) * 20);">
             </a>
           </div>
           
