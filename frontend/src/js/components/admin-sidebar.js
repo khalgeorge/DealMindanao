@@ -2,9 +2,9 @@
 export function createAdminSidebar(activePage) {
   return `
     <aside class="w-64 bg-white border-r border-gray-200 min-h-screen">
-      <div class="p-6 border-b border-gray-200">
+      <div class="border-b border-gray-200" style="padding: calc(var(--spacing) * 0.4);">
         <a href="/admin/dashboard.html" class="flex items-center justify-center">
-          <img src="/logo-no-bg.png" alt="DealMindanao Logo" class="h-12 w-auto">
+          <img src="/logo_main-final.png" alt="DealMindanao Logo" class="w-auto" style="height: calc(var(--spacing) * 20);">
         </a>
       </div>
 

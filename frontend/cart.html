@@ -137,6 +137,9 @@
         empty.classList.remove('hidden');
         summary.classList.add('hidden');
         mobileCheckout.classList.add('hidden');
+        // Reset order summary values
+        document.getElementById('subtotal').textContent = formatPrice(0);
+        document.getElementById('total').textContent = formatPrice(0);
         return;
       }
 
