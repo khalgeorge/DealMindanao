@@ -1,20 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ShopController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-use App\Http\Controllers\Admin\CompanyController as AdminCompanyController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Admin\PageController as AdminPageController;
-use App\Http\Controllers\Admin\NavigationController as AdminNavigationController;
-use App\Http\Controllers\PageController;
 
+// Frontend is handled by Vite dev server on port 5173
+// All frontend routes are disabled - use API routes instead
+Route::get('/', function () {
+    return response()->json([
+        'message' => 'DealMindanao API',
+        'version' => '1.0.0',
+        'frontend_url' => env('FRONTEND_URL', 'http://localhost:5173'),
+        'api_url' => env('APP_URL', 'http://localhost:8000') . '/api',
+        'documentation' => env('APP_URL', 'http://localhost:8000') . '/api/docs',
+    ]);
+});
+
+// Web routes commented out - frontend is separate
+/*
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/shop', [ShopController::class, 'index']);
 Route::get('/shop/search', [ShopController::class, 'search']);
@@ -90,3 +91,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+*/
