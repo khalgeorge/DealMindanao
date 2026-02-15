@@ -24,7 +24,7 @@
 
     <div class="admin-content">
        <!-- Search & Filter Area -->
-       <div class="mb-8 flex flex-col md:flex-row gap-6 items-center justify-between">
+       <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
           <div class="flex items-center gap-4 w-full md:w-auto flex-1">
              <div class="relative flex-1 md:max-w-96">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
@@ -36,14 +36,6 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 Reset
              </button>
-          </div>
-          
-          <div class="border-b border-gray-100 flex-1 flex justify-end overflow-x-auto">
-             <nav class="flex gap-8 whitespace-nowrap">
-                <button onclick="window.filterByStatus('All')" id="tab-all" class="company-tab active border-brand-600 text-brand-600 border-b-2 pb-4 px-1 font-black text-[10px] uppercase tracking-widest transition-all">All Vendors</button>
-                <button onclick="window.filterByStatus('Verified')" id="tab-verified" class="company-tab border-transparent text-gray-400 hover:text-gray-900 border-b-2 pb-4 px-1 font-black text-[10px] uppercase tracking-widest transition-all">Verified</button>
-                <button onclick="window.filterByStatus('Pending')" id="tab-pending" class="company-tab border-transparent text-gray-400 hover:text-gray-900 border-b-2 pb-4 px-1 font-black text-[10px] uppercase tracking-widest transition-all">Pending</button>
-             </nav>
           </div>
        </div>
 
@@ -96,39 +88,27 @@
                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Company Name</label>
                        <input type="text" id="partner-name" name="name" required placeholder="Davao Fruit Corp" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-bold">
                     </div>
-                    
+
                     <div>
-                       <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Upload Logo (Optional)</label>
-                       <div class="flex items-center gap-4 p-4 bg-gray-50 border border-gray-100 rounded-xl">
-                          <div class="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden shrink-0" id="logo-preview-box">
-                             <span id="logo-preview-text" class="text-xs font-black text-gray-400 uppercase tracking-widest">Logo</span>
-                             <img id="logo-preview-img" class="w-full h-full object-cover hidden">
-                          </div>
-                          <div class="flex-1">
-                             <input type="file" id="partner-logo-file" name="logo_file" accept="image/*" class="hidden">
-                             <label for="partner-logo-file" class="inline-block px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-gray-100 cursor-pointer transition-all">
-                                Selection File
-                             </label>
-                          </div>
-                       </div>
+                       <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Location (City, Province)</label>
+                       <input type="text" id="partner-location" name="location" required placeholder="Davao City, Davao del Sur" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-bold">
+                       <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-1.5">Format: City, Province</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                        <div>
-                          <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Location</label>
-                          <input type="text" id="partner-location" name="location" required placeholder="Davao City" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-bold">
+                          <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Contact Email</label>
+                          <input type="email" id="partner-email" name="email" placeholder="contact@company.com" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-bold">
                        </div>
                        <div>
-                          <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Logo Alias</label>
-                          <input type="text" id="partner-logo" name="logo" maxlength="2" required placeholder="DF" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-black uppercase text-center">
+                          <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Contact Phone</label>
+                          <input type="tel" id="partner-phone" name="phone" placeholder="+63 912 345 6789" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-bold">
                        </div>
                     </div>
+
                     <div>
-                       <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Initial Status</label>
-                       <select id="partner-status" name="status" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-bold appearance-none">
-                          <option value="Verified">Verified Partner</option>
-                          <option value="Pending">Pending Review</option>
-                       </select>
+                       <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Description (Optional)</label>
+                       <textarea id="partner-description" name="description" rows="3" placeholder="Brief description of the company..." class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-900 text-sm font-bold resize-none"></textarea>
                     </div>
                  </div>
               </div>
@@ -271,56 +251,23 @@
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
     import { showToast } from '/src/js/utils.js';
+    import { companies } from '/src/js/api.js';
 
-    let currentFilter = 'All';
     let currentSearch = '';
+    let companiesData = [];
 
-    const partners = [
-       { 
-          id: 1,
-          name: 'Davao Fruit Corp', 
-          location: 'Davao City', 
-          products: 24, 
-          status: 'Verified', 
-          logo: 'DF',
-          email: 'contact@davaofruit.com',
-          phone: '+63 912 345 6789',
-          desc: 'Leading producer and exporter of high-quality tropical fruits from the heart of Davao. Specialized in bananas, pineapples, and durian.'
-       },
-       { 
-          id: 2,
-          name: 'Bukidnon Harvest', 
-          location: 'Malaybalay', 
-          products: 12, 
-          status: 'Verified', 
-          logo: 'BH',
-          email: 'hello@bukidnonharvest.ph',
-          phone: '+63 923 456 7890',
-          desc: 'Organic mountain-grown coffee and vegetables from the fertile soils of Bukidnon.'
-       },
-       { 
-          id: 3,
-          name: 'Zamboanga Seafoods', 
-          location: 'Zamboanga', 
-          products: 45, 
-          status: 'Pending', 
-          logo: 'ZS',
-          email: 'sales@zamboangaseafood.com',
-          phone: '+63 934 567 8901',
-          desc: 'Fresh and processed seafood products caught daily from the rich waters of the Sulu Sea.'
-       },
-       { 
-          id: 4,
-          name: 'Cagayan High-Tech', 
-          location: 'CDO', 
-          products: 8, 
-          status: 'Verified', 
-          logo: 'CH',
-          email: 'info@cagayantech.com',
-          phone: '+63 945 678 9012',
-          desc: 'Innovative agricultural technology solutions and precision farming equipment for Mindanaoan farmers.'
+    // Load companies from API
+    async function loadCompanies() {
+       try {
+          const data = await companies.getAll();
+          companiesData = Array.isArray(data) ? data : [];
+          renderCompanies();
+       } catch (error) {
+          console.error('Failed to load companies:', error);
+          showToast('Failed to load companies. Please try again.', 'error');
+          companiesData = [];
        }
-    ];
+    }
 
     window.openPartnerModal = () => {
        const form = document.getElementById('partner-form');
@@ -328,11 +275,6 @@
        document.getElementById('partner-id').value = '';
        document.getElementById('partner-modal-title').innerText = 'New Partner';
        document.getElementById('partner-submit-btn').innerText = 'Register Partner';
-       
-       // Reset logo preview
-       document.getElementById('logo-preview-img').src = '';
-       document.getElementById('logo-preview-img').classList.add('hidden');
-       document.getElementById('logo-preview-text').classList.remove('hidden');
 
        document.getElementById('partner-modal').classList.remove('hidden');
        document.body.classList.add('overflow-hidden');
@@ -343,46 +285,21 @@
        document.body.classList.remove('overflow-hidden');
     };
 
-    // Handle Logo Preview
-    const logoInput = document.getElementById('partner-logo-file');
-    if (logoInput) {
-       logoInput.addEventListener('change', function(e) {
-          const file = e.target.files[0];
-          if (file) {
-             const reader = new FileReader();
-             reader.onload = function(event) {
-                const img = document.getElementById('logo-preview-img');
-                const text = document.getElementById('logo-preview-text');
-                img.src = event.target.result;
-                img.classList.remove('hidden');
-                text.classList.add('hidden');
-             };
-             reader.readAsDataURL(file);
-          }
-       });
-    }
-
     window.quickEdit = (id) => {
-       const p = partners.find(comp => comp.id == id);
+       const p = companiesData.find(comp => comp.id == id);
        if (!p) return;
 
        document.getElementById('partner-id').value = p.id;
-       document.getElementById('partner-name').value = p.name;
-       document.getElementById('partner-location').value = p.location;
-       document.getElementById('partner-logo').value = p.logo;
-       document.getElementById('partner-status').value = p.status;
-
-       // Handle logo preview in edit mode
-       const img = document.getElementById('logo-preview-img');
-       const text = document.getElementById('logo-preview-text');
-       if (p.logoUrl) {
-          img.src = p.logoUrl;
-          img.classList.remove('hidden');
-          text.classList.add('hidden');
-       } else {
-          img.classList.add('hidden');
-          text.classList.remove('hidden');
-       }
+       document.getElementById('partner-name').value = p.name || '';
+       
+       // Backend fields: city and province, frontend shows as "location"
+       const location = [p.city, p.province].filter(Boolean).join(', ');
+       document.getElementById('partner-location').value = location;
+       
+       // Optional fields
+       document.getElementById('partner-email').value = p.contact_email || '';
+       document.getElementById('partner-phone').value = p.contact_phone || '';
+       document.getElementById('partner-description').value = p.description || '';
        
        document.getElementById('partner-modal-title').innerText = 'Edit Partner';
        document.getElementById('partner-submit-btn').innerText = 'Update Partner';
@@ -393,24 +310,6 @@
     window.resetFilters = () => {
        document.getElementById('company-search').value = '';
        currentSearch = '';
-       window.filterByStatus('All');
-    };
-
-    window.filterByStatus = (status) => {
-       currentFilter = status;
-       
-       // Update UI tabs
-       document.querySelectorAll('.company-tab').forEach(tab => {
-          tab.classList.remove('active', 'border-brand-600', 'text-brand-600');
-          tab.classList.add('border-transparent', 'text-gray-400');
-       });
-       
-       const activeTab = document.getElementById(`tab-${status.toLowerCase()}`);
-       if (activeTab) {
-          activeTab.classList.add('active', 'border-brand-600', 'text-brand-600');
-          activeTab.classList.remove('border-transparent', 'text-gray-400');
-       }
-       
        renderCompanies();
     };
 
@@ -427,19 +326,15 @@
        const grid = document.getElementById('company-grid');
        if (!grid) return;
        
-       let filtered = partners;
-
-       // Filter by Status
-       if (currentFilter !== 'All') {
-          filtered = filtered.filter(p => p.status === currentFilter);
-       }
+       let filtered = companiesData;
 
        // Filter by Search
        if (currentSearch) {
-          filtered = filtered.filter(p => 
-             p.name.toLowerCase().includes(currentSearch) || 
-             p.location.toLowerCase().includes(currentSearch)
-          );
+          filtered = filtered.filter(p => {
+             const location = [p.city, p.province].filter(Boolean).join(', ');
+             return p.name?.toLowerCase().includes(currentSearch) || 
+                    location.toLowerCase().includes(currentSearch);
+          });
        }
 
        if (filtered.length === 0) {
@@ -451,81 +346,88 @@
           return;
        }
 
-       grid.innerHTML = filtered.map(p => `
+       grid.innerHTML = filtered.map(p => {
+          const location = [p.city, p.province].filter(Boolean).join(', ') || 'N/A';
+          const initials = p.name?.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || '?';
+          
+          return `
           <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-300 transition-all duration-300 group relative flex flex-col overflow-hidden">
-             <!-- Top Badge -->
-             <div class="absolute top-4 right-4">
-                <div class="px-2.5 py-1 rounded-full ${p.status === 'Verified' ? 'bg-green-50 text-green-700 border-green-100' : 'bg-amber-50 text-amber-700 border-amber-100'} border text-[9px] font-black uppercase tracking-widest">
-                   ${p.status}
-                </div>
-             </div>
-
              <div class="p-6">
                 <div class="flex items-start gap-5 mb-6">
                    <!-- Logo Container -->
-                   <div class="w-14 h-14 shrink-0 bg-gray-50 flex items-center justify-center rounded-xl border border-gray-100 font-black text-gray-400 text-lg group-hover:bg-brand-50 group-hover:text-brand-600 group-hover:border-brand-100 transition-all overflow-hidden">
-                      ${p.logoUrl ? `<img src="${p.logoUrl}" class="w-full h-full object-cover">` : p.logo}
+                   <div class="w-14 h-14 shrink-0 bg-brand-50 flex items-center justify-center rounded-xl border border-brand-100 font-black text-brand-600 text-lg group-hover:bg-brand-600 group-hover:text-white transition-all overflow-hidden">
+                      ${initials}
                    </div>
                    
-                   <div class="flex-1 min-w-0 pr-12">
-                      <h3 class="font-black text-gray-900 text-base lg:text-lg uppercase tracking-tight truncate group-hover:text-brand-600 transition-colors mb-1">${p.name}</h3>
+                   <div class="flex-1 min-w-0">
+                      <h3 class="font-black text-gray-900 text-base lg:text-lg uppercase tracking-tight truncate group-hover:text-brand-600 transition-colors mb-1">${p.name || 'Unnamed Company'}</h3>
                       <div class="flex items-center gap-1.5 text-gray-400 font-bold text-[10px] uppercase tracking-widest">
                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                         ${p.location}
+                         ${location}
                       </div>
                    </div>
                 </div>
 
                 <div class="space-y-4">
-                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100/50">
-                      <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Digital Catalog</span>
-                      <span class="text-xs font-black text-gray-900">${p.products} Items</span>
+                   ${p.contact_email || p.contact_phone ? `
+                   <div class="space-y-2 text-xs text-gray-600">
+                      ${p.contact_email ? `
+                      <div class="flex items-center gap-2">
+                         <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                         <span class="truncate">${p.contact_email}</span>
+                      </div>
+                      ` : ''}
+                      ${p.contact_phone ? `
+                      <div class="flex items-center gap-2">
+                         <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                         <span>${p.contact_phone}</span>
+                      </div>
+                      ` : ''}
                    </div>
+                   ` : ''}
 
                    <div class="flex items-center gap-2 pt-2">
-                      <button onclick="window.viewCompanyProfile('${p.id}')" class="flex-1 text-[10px] font-black text-gray-900 uppercase tracking-widest px-4 py-3 bg-white rounded-lg hover:bg-brand-600 hover:text-white transition-all border border-gray-200 shadow-sm flex items-center justify-center gap-2">
-                         Open Profile
+                      <button onclick="window.viewCompanyProfile(${p.id})" class="flex-1 text-[10px] font-black text-gray-900 uppercase tracking-widest px-4 py-3 bg-white rounded-lg hover:bg-brand-600 hover:text-white transition-all border border-gray-200 shadow-sm flex items-center justify-center gap-2">
+                         View Profile
                       </button>
                       
                       <div class="flex items-center gap-1">
-                         <button onclick="window.quickEdit(${p.id})" title="Quick Edit" class="p-3 text-gray-400 hover:text-brand-600 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition-all">
+                         <button onclick="window.quickEdit(${p.id})" title="Edit Company" class="p-3 text-gray-400 hover:text-brand-600 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition-all">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                          </button>
-                         <button title="Susped Vendor" class="p-3 text-gray-400 hover:text-red-600 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                         <button onclick="window.deleteCompany(${p.id})" title="Delete Company" class="p-3 text-gray-400 hover:text-red-600 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                          </button>
                       </div>
                    </div>
                 </div>
              </div>
           </div>
-       `).join('');
+       `;
+       }).join('');
     }
 
     window.viewCompanyProfile = (id) => {
-       const p = partners.find(comp => comp.id == id);
+       const p = companiesData.find(comp => comp.id == id);
        if (!p) return;
 
-       const modalLogo = document.getElementById('profile-logo');
-       if (p.logoUrl) {
-          modalLogo.innerHTML = `<img src="${p.logoUrl}" class="w-full h-full object-cover">`;
-       } else {
-          modalLogo.textContent = p.logo;
-       }
+       const initials = p.name?.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || '?';
+       const location = [p.city, p.province].filter(Boolean).join(', ') || 'N/A';
 
-       document.getElementById('profile-name').textContent = p.name;
-       document.getElementById('profile-location').textContent = p.location + ', Philippines';
-       document.getElementById('profile-products').textContent = p.products;
-       document.getElementById('profile-desc').textContent = p.desc;
-       document.getElementById('profile-email').textContent = p.email;
-       document.getElementById('profile-phone').textContent = p.phone;
+       const modalLogo = document.getElementById('profile-logo');
+       modalLogo.textContent = initials;
+
+       document.getElementById('profile-name').textContent = p.name || 'Unnamed Company';
+       document.getElementById('profile-location').textContent = location + ', Philippines';
+       document.getElementById('profile-desc').textContent = p.description || 'No description provided.';
+       document.getElementById('profile-email').textContent = p.contact_email || 'N/A';
+       document.getElementById('profile-phone').textContent = p.contact_phone || 'N/A';
        
+       // Hide status badge and products count (not in backend)
        const statusBadge = document.getElementById('profile-status');
-       statusBadge.innerHTML = `
-          <span class="w-1.5 h-1.5 rounded-full ${p.status === 'Verified' ? 'bg-green-500' : 'bg-yellow-500'}"></span>
-          ${p.status}
-       `;
-       statusBadge.className = `${p.status === 'Verified' ? 'bg-green-50 text-green-700 border-green-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'} flex items-center gap-1.5 px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-widest`;
+       const productsEl = document.getElementById('profile-products');
+       if (statusBadge) statusBadge.style.display = 'none';
+       if (productsEl && productsEl.parentElement) productsEl.parentElement.style.display = 'none';
 
        document.getElementById('profile-modal').classList.remove('hidden');
        document.body.classList.add('overflow-hidden');
@@ -547,55 +449,55 @@
     document.getElementById('partner-form').addEventListener('submit', (e) => {
        e.preventDefault();
        const formData = new FormData(e.target);
-       const pid = document.getElementById('partner-id').value;
-       const logoFile = document.getElementById('partner-logo-file').files[0];
-       
-       const savePartner = (logoUrl = null) => {
-          if (pid) {
-             const index = partners.findIndex(p => p.id == pid);
-             if (index !== -1) {
-                partners[index] = {
-                   ...partners[index],
-                   name: formData.get('name'),
-                   location: formData.get('location'),
-                   logo: formData.get('logo').toUpperCase(),
-                   status: formData.get('status'),
-                   ...(logoUrl && { logoUrl })
-                };
-                showToast('Partner updated successfully!');
-             }
-          } else {
-             const newPartner = {
-                id: Date.now(),
-                name: formData.get('name'),
-                location: formData.get('location'),
-                logo: formData.get('logo').toUpperCase(),
-                logoUrl: logoUrl,
-                status: formData.get('status'),
-                products: 0,
-                email: `${formData.get('name').toLowerCase().replace(/\s+/g, '')}@example.com`,
-                phone: '+63 000 000 0000',
-                desc: `New partner from ${formData.get('location')}. Registered on Feb 12, 2026.`
-             };
-             partners.unshift(newPartner);
-             showToast('Partner registered successfully!');
-          }
+    window.deleteCompany = async (id) => {
+       if (!confirm('Are you sure you want to delete this company? This action cannot be undone.')) {
+          return;
+       }
 
-          renderCompanies();
-          closePartnerModal();
+       try {
+          await companies.delete(id);
+          showToast('Company deleted successfully!');
+          await loadCompanies();
+       } catch (error) {
+          console.error('Failed to delete company:', error);
+          showToast('Failed to delete company. It may have associated products.', 'error');
+       }
+    };
+
+    document.getElementById('partner-form').addEventListener('submit', async (e) => {
+       e.preventDefault();
+       const formData = new FormData(e.target);
+       const pid = document.getElementById('partner-id').value;
+       
+       // Parse location into city and province (format: "City, Province")
+       const location = formData.get('location') || '';
+       const [city, province] = location.split(',').map(s => s.trim());
+
+       const companyData = {
+          name: formData.get('name'),
+          city: city || null,
+          province: province || null,
+          contact_email: formData.get('email') || null,
+          contact_phone: formData.get('phone') || null,
+          description: formData.get('description') || null
        };
 
-       if (logoFile) {
-          const reader = new FileReader();
-          reader.onload = (event) => savePartner(event.target.result);
-          reader.readAsDataURL(logoFile);
-       } else {
-          savePartner();
+       try {
+          if (pid) {
+             await companies.update(pid, companyData);
+             showToast('Company updated successfully!');
+          } else {
+             await companies.create(companyData);
+             showToast('Company created successfully!');
+          }
+
+          await loadCompanies();
+          closePartnerModal();
+       } catch (error) {
+          console.error('Failed to save company:', error);
+          showToast('Failed to save company. Please try again.', 'error');
        }
     });
 
-    // Initial render
-    renderCompanies();
-  </script>
-</body>
-</html>
+    // Initial load
+    load
