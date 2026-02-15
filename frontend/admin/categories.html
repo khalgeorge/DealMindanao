@@ -32,11 +32,6 @@
             <input type="text" id="category-search" placeholder="Search categories or slugs..." class="input pl-11">
          </div>
          <div class="flex gap-2 w-full md:w-auto">
-            <select id="filter-status" class="input py-2 text-xs font-bold uppercase tracking-wider">
-               <option value="">All Statuses</option>
-               <option value="Active">Active</option>
-               <option value="Hidden">Hidden</option>
-            </select>
             <button onclick="resetFilters()" class="btn-secondary px-4 py-2 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 whitespace-nowrap">
                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                Reset
@@ -114,17 +109,7 @@
                     <div>
                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Category Name</label>
                        <input type="text" id="category-name" name="name" required placeholder="e.g. Fresh Fruits" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
-                    </div>
-                    <div>
-                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Slug</label>
-                       <input type="text" id="category-slug" name="slug" required placeholder="e.g. fresh-fruits" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900 text-xs font-mono">
-                    </div>
-                    <div>
-                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Status</label>
-                       <select id="category-status" name="status" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
-                          <option value="Active">Active</option>
-                          <option value="Hidden">Hidden</option>
-                       </select>
+                       <p class="text-xs text-gray-400 mt-1">Slug will be auto-generated from the name</p>
                     </div>
                  </div>
               </div>
@@ -141,6 +126,24 @@
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
     import { showToast } from '/src/js/utils.js';
+    import { categories as categoriesAPI } from '/src/js/api.js';
+
+    let allCats = [];
+    let currentPage = 1;
+    let itemsPerPage = 10;
+
+    // Load categories from API
+    async function loadCategories() {
+       try {
+          allCats = await categoriesAPI.getAll();
+          renderCategories();
+       } catch (error) {
+          console.error('Error loading categories:', error);
+          showToast('Failed to load categories', 'error');
+          allCats = [];
+          renderCategories();
+       }
+    }
 
     // Global Modal Functions
     window.openCategoryModal = () => {
@@ -168,23 +171,39 @@
        if (form) form.reset();
     };
 
-    window.editCategory = (index) => {
-       const cat = allCats[index];
+    window.editCategory = (id) => {
+       const cat = allCats.find(c => c.id === id);
        if (!cat) return;
 
        const modal = document.getElementById('category-modal');
        const modalTitle = document.getElementById('modal-title');
-       const form = document.getElementById('category-form');
        
        modalTitle.innerText = 'Edit Category';
-       document.getElementById('category-index').value = index;
+       document.getElementById('category-index').value = id;
        document.getElementById('category-name').value = cat.name;
-       document.getElementById('category-slug').value = cat.slug;
-       document.getElementById('category-status').value = cat.status;
 
        modal.classList.remove('hidden');
        modal.style.display = 'block';
        document.body.style.overflow = 'hidden';
+    };
+
+    window.deleteCategory = async (id) => {
+       const cat = allCats.find(c => c.id === id);
+       if (!cat) return;
+       
+       if (!confirm(`Delete category "${cat.name}"? This will fail if products exist in this category.`)) {
+          return;
+       }
+       
+       try {
+          await categoriesAPI.delete(id);
+          showToast('Category deleted successfully', 'success');
+          await loadCategories();
+       } catch (error) {
+          console.error('Error deleting category:', error);
+          const message = error.response?.data?.message || 'Failed to delete category';
+          showToast(message, 'error');
+       }
     };
 
     window.resetFilters = () => {
@@ -194,30 +213,11 @@
        renderCategories();
     };
 
-    const allCats = [
-       { name: 'Fresh Fruits', slug: 'fresh-fruits', count: 124, status: 'Active' },
-       { name: 'Seafood', slug: 'seafood', count: 82, status: 'Active' },
-       { name: 'Handicrafts', slug: 'handicrafts', count: 45, status: 'Active' },
-       { name: 'Beverages', slug: 'beverages', count: 12, status: 'Hidden' },
-       { name: 'Wellness', slug: 'wellness', count: 34, status: 'Active' },
-       { name: 'Gifts', slug: 'gifts', count: 21, status: 'Active' },
-       { name: 'Spices', slug: 'spices', count: 56, status: 'Active' },
-       { name: 'Textiles', slug: 'textiles', count: 18, status: 'Active' },
-       { name: 'Jewelry', slug: 'jewelry', count: 9, status: 'Hidden' },
-       { name: 'Furniture', slug: 'furniture', count: 15, status: 'Active' },
-       { name: 'Bakery', slug: 'bakery', count: 42, status: 'Active' },
-       { name: 'Apparel', slug: 'apparel', count: 67, status: 'Active' }
-    ];
-
-    let currentPage = 1;
-    let itemsPerPage = 10;
-
     function renderCategories() {
        const body = document.getElementById('category-list');
        const paginationInfo = document.getElementById('pagination-info');
        const prevBtn = document.getElementById('prev-page');
        const nextBtn = document.getElementById('next-page');
-       
        if (!body) return;
        
        const search = document.getElementById('category-search').value.toLowerCase();
@@ -226,8 +226,7 @@
        // 1. Filter
        const filtered = allCats.filter(c => {
           const matchesSearch = c.name.toLowerCase().includes(search) || c.slug.toLowerCase().includes(search);
-          const matchesStatus = !statusFilter || c.status === statusFilter;
-          return matchesSearch && matchesStatus;
+          return matchesSearch;
        });
 
        // 2. Paginate
@@ -243,9 +242,7 @@
        if (paginatedItems.length === 0) {
           body.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400 font-bold italic">No categories found matching filters</td></tr>`;
        } else {
-          body.innerHTML = paginatedItems.map(c => {
-             const realIndex = allCats.findIndex(item => item.slug === c.slug);
-             return `
+          body.innerHTML = paginatedItems.map(c => `
                 <tr class="hover:bg-gray-50/50 transition-colors">
                    <td class="px-6 py-4">
                       <div class="font-bold text-gray-900">${c.name}</div>
@@ -255,18 +252,19 @@
                       <span class="text-xs font-mono text-gray-400 bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">${c.slug}</span>
                    </td>
                    <td class="px-6 py-4">
-                      <span class="badge-${c.status === 'Active' ? 'success' : 'warning'} text-[10px]">${c.status}</span>
+                      <span class="badge-success text-[10px]">Active</span>
                    </td>
                    <td class="px-6 py-4 text-right">
-                      <span class="text-sm font-black text-gray-700">${c.count}</span>
+                      <span class="text-sm font-black text-gray-700">${c.products_count || 0}</span>
                       <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 hidden sm:inline">items</span>
                    </td>
-                   <td class="px-6 py-4 text-right">
-                      <button onclick="editCategory(${realIndex})" class="text-brand-600 font-bold text-xs uppercase hover:underline">Edit</button>
+                   <td class="px-6 py-4 text-right space-x-2">
+                      <button onclick="editCategory(${c.id})" class="text-brand-600 font-bold text-xs uppercase hover:underline">Edit</button>
+                      <span class="text-gray-300">|</span>
+                      <button onclick="deleteCategory(${c.id})" class="text-red-600 font-bold text-xs uppercase hover:underline">Delete</button>
                    </td>
                 </tr>
-             `;
-          }).join('');
+          `).join('');
        }
 
        // 4. Update Pagination Controls
@@ -288,11 +286,7 @@
        renderCategories();
     });
     document.getElementById('filter-status').addEventListener('change', () => {
-       currentPage = 1;
-       renderCategories();
-    });
-
-    // Pagination Listeners
+       Pagination Listeners
     document.getElementById('rows-per-page')?.addEventListener('change', (e) => {
        itemsPerPage = parseInt(e.target.value);
        currentPage = 1;
@@ -307,48 +301,47 @@
     });
 
     document.getElementById('next-page')?.addEventListener('click', () => {
-       const filteredCount = allCats.filter(c => {
-          const search = document.getElementById('category-search').value.toLowerCase();
-          const statusFilter = document.getElementById('filter-status').value;
-          const matchesSearch = c.name.toLowerCase().includes(search) || c.slug.toLowerCase().includes(search);
-          const matchesStatus = !statusFilter || c.status === statusFilter;
-          return matchesSearch && matchesStatus;
-       }).length;
-
-       if (currentPage < Math.ceil(filteredCount / itemsPerPage)) {
+       const totalPages = Math.ceil(allCats.length / itemsPerPage);
+       if (currentPage < totalPages) {
           currentPage++;
           renderCategories();
        }
     });
 
-    setTimeout(renderCategories, 100);
-
-    document.getElementById('category-form').addEventListener('submit', (e) => {
+    // Form Submit
+    document.getElementById('category-form').addEventListener('submit', async (e) => {
        e.preventDefault();
-       const index = document.getElementById('category-index').value;
-       const name = document.getElementById('category-name').value;
-       const slug = document.getElementById('category-slug').value;
-       const status = document.getElementById('category-status').value;
-
-       if (index !== "") {
-          // Update
-          allCats[index].name = name;
-          allCats[index].slug = slug;
-          allCats[index].status = status;
-          showToast('Category updated successfully');
-       } else {
-          // Add
-          allCats.unshift({
-             name: name,
-             slug: slug,
-             status: status,
-             count: 0
-          });
-          showToast('Category added successfully');
-       }
+       const id = document.getElementById('category-index').value;
+       const submitBtn = e.target.querySelector('button[type="submit"]');
+       const originalText = submitBtn.textContent;
        
-       renderCategories();
-       window.closeCategoryModal();
+       const categoryData = {
+          name: document.getElementById('category-name').value,
+          description: null,
+       };
+       
+       submitBtn.disabled = true;
+       submitBtn.textContent = id ? 'Updating...' : 'Saving...';
+
+       try {
+          if (id) {
+             await categoriesAPI.update(id, categoryData);
+             showToast('Category updated successfully', 'success');
+          } else {
+             await categoriesAPI.create(categoryData);
+             showToast('Category created successfully', 'success');
+          }
+          
+          await loadCategories();
+          window.closeCategoryModal();
+       } catch (error) {
+          console.error('Error saving category:', error);
+          const message = error.response?.data?.message || 'Failed to save category';
+          showToast(message, 'error');
+       } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+       }
     });
 
     // Handle ESC key to close
@@ -358,7 +351,5 @@
        }
     });
 
-    setTimeout(renderCategories, 400);
-  </script>
-</body>
-</html>
+    // Initial load
+    loadCategories();

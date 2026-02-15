@@ -1,22 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Authentication Routes (Disabled for API-only backend)
-|--------------------------------------------------------------------------
-|
-| These web authentication routes are disabled because this is an API-only
-| backend. Authentication is handled through API routes in routes/api.php
-| using Laravel Sanctum with bearer token authentication.
-|
-| The frontend (Vite dev server) handles all login/register UI.
-|
-*/
-
-// All auth routes are disabled - API authentication is handled in routes/api.php
-/*
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -26,6 +10,16 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+|
+| Laravel Breeze authentication routes for web application.
+| Handles registration, login, password reset, and email verification.
+|
+*/
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -73,4 +67,3 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
-*/

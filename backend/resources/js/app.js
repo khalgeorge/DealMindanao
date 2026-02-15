@@ -1,7 +1,8 @@
 import './bootstrap';
 
-import Alpine from 'alpinejs';
+// Import utilities
+import { formatPrice, showToast } from './utils.js';
 
-window.Alpine = Alpine;
-
-Alpine.start();
+// Make utilities globally available
+window.formatPrice = formatPrice;
+window.showToast = showToast;

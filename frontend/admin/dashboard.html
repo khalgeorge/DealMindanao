@@ -51,9 +51,9 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
           </div>
-          <p class="text-3xl font-black text-gray-900 leading-none">₱124,500</p>
+          <p id="total-revenue" class="text-3xl font-black text-gray-900 leading-none">₱0.00</p>
           <div class="mt-4 flex items-center gap-1.5 text-xs">
-            <span class="text-green-600 font-bold">+12%</span>
+            <span id="revenue-change" class="text-green-600 font-bold">--</span>
             <span class="text-gray-400 font-medium">from last week</span>
           </div>
         </div>
@@ -66,10 +66,10 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
             </div>
           </div>
-          <p class="text-3xl font-black text-gray-900 leading-none">42</p>
+          <p id="total-orders" class="text-3xl font-black text-gray-900 leading-none">0</p>
           <div class="mt-4 flex items-center gap-1.5 text-xs">
-            <span class="text-green-600 font-bold">+5</span>
-            <span class="text-gray-400 font-medium">new since morning</span>
+            <span id="orders-today" class="text-green-600 font-bold">0</span>
+            <span class="text-gray-400 font-medium">new today</span>
           </div>
         </div>
 
@@ -81,21 +81,21 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
             </div>
           </div>
-          <p class="text-3xl font-black text-gray-900 leading-none">18</p>
+          <p id="active-partners" class="text-3xl font-black text-gray-900 leading-none">0</p>
           <div class="mt-4 flex items-center gap-1.5 text-xs">
-            <span class="text-gray-400 font-medium">Across Davao & Butuan</span>
+            <span class="text-gray-400 font-medium">Marketplace Vendors</span>
           </div>
         </div>
 
         <!-- Pending Order Card -->
         <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Requests</span>
+            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Pending</span>
             <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
           </div>
-          <p class="text-3xl font-black text-gray-900 leading-none">3</p>
+          <p id="pending-orders" class="text-3xl font-black text-gray-900 leading-none">0</p>
           <div class="mt-4 flex items-center gap-1.5 text-xs">
             <span onclick="location.href='/admin/orders.html'" class="text-amber-600 font-bold underline cursor-pointer">Needs Attention</span>
           </div>
@@ -121,20 +121,9 @@
                         <th>Status</th>
                      </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="recent-orders-tbody">
                      <tr>
-                        <td>#DM-8921</td>
-                        <td class="font-bold text-gray-900">Juan D.</td>
-                        <td>Davao City</td>
-                        <td class="font-bold">₱4,500</td>
-                        <td><span class="badge-warning">Pending</span></td>
-                     </tr>
-                     <tr>
-                        <td>#DM-8920</td>
-                        <td class="font-bold text-gray-900">Sarah K.</td>
-                        <td>Butuan City</td>
-                        <td class="font-bold">₱1,200</td>
-                        <td><span class="badge-success">Shipped</span></td>
+                        <td colspan="5" class="text-center text-gray-400">Loading...</td>
                      </tr>
                   </tbody>
                </table>
@@ -173,11 +162,67 @@
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
     import { formatPrice, showToast } from '/src/js/utils.js';
+    import { dashboard } from '/src/js/api.js';
     
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-      localStorage.removeItem('token');
-      window.location.href = '/admin/login.html';
-    });
+    // Load dashboard data
+    async function loadDashboard() {
+      try {
+        // Fetch statistics
+        const stats = await dashboard.getStatistics();
+        
+        // Update statistics cards
+        document.getElementById('total-revenue').textContent = formatPrice(stats.total_revenue);
+        document.getElementById('total-orders').textContent = stats.total_orders;
+        document.getElementById('active-partners').textContent = stats.active_partners;
+        document.getElementById('pending-orders').textContent = stats.pending_orders;
+        document.getElementById('orders-today').textContent = `+${stats.orders_today}`;
+        
+        // Update revenue change
+        const revenueChangeEl = document.getElementById('revenue-change');
+        const change = stats.revenue_change_percent;
+        if (change >= 0) {
+          revenueChangeEl.textContent = `+${change}%`;
+          revenueChangeEl.className = 'text-green-600 font-bold';
+        } else {
+          revenueChangeEl.textContent = `${change}%`;
+          revenueChangeEl.className = 'text-red-600 font-bold';
+        }
+        
+        // Fetch recent orders
+        const orders = await dashboard.getRecentOrders(5);
+        const tbody = document.getElementById('recent-orders-tbody');
+        
+        if (orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-400">No orders yet</td></tr>';
+        } else {
+          tbody.innerHTML = orders.map(order => {
+            const statusClass = {
+              'pending': 'badge-warning',
+              'processing': 'badge-info',
+              'shipped': 'badge-success',
+              'delivered': 'badge-success',
+              'cancelled': 'badge-danger'
+            }[order.status] || 'badge-secondary';
+            
+            return `
+              <tr>
+                <td>${order.order_number}</td>
+                <td class="font-bold text-gray-900">${order.customer_name}</td>
+                <td>${order.shipping_city}</td>
+                <td class="font-bold">${formatPrice(order.total_amount)}</td>
+                <td><span class="${statusClass}">${order.status}</span></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+        showToast('Failed to load dashboard data', 'error');
+      }
+    }
+    
+    // Load dashboard on page load
+    loadDashboard();
 
     // Download comprehensive dashboard report
     window.downloadReport = () => {

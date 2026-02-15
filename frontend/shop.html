@@ -206,22 +206,38 @@
       skeleton.classList.remove('hidden');
       emptyState.classList.add('hidden');
 
-      // Force demo data immediately for testing
-      const products = [
-        { id: 1, name: "Bukidnon Highlands Arabica", partner: "Mt. Kitanglad Farms", price: 850, discount: 15, category: "food", image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=400" },
-        { id: 2, name: "Handwoven T'nalak Wallet", partner: "Lake Sebu Weavers", price: 1200, discount: 0, category: "fashion", image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?q=80&w=400" },
-        { id: 3, name: "Artisan Wood Carving", partner: "Paete Mindanao", price: 4500, discount: 20, category: "crafts", image: "https://images.unsplash.com/photo-1571217333550-93836d934661?q=80&w=400" },
-        { id: 4, name: "Davao Dark Chocolate 70%", partner: "Malagos Garden", price: 350, discount: 10, category: "food", image: "https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=400" },
-        { id: 5, name: "Native Pearl Earrings", partner: "Tawi-Tawi Gems", price: 15000, discount: 5, category: "fashion", image: "https://images.unsplash.com/photo-1599643477877-537ef5278533?q=80&w=400" },
-        { id: 6, name: "Abaca Fiber Laptop Sleeve", partner: "Bicol-Mindanao Fiber", price: 950, discount: 0, category: "electronics", image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?q=80&w=400" },
-        { id: 7, name: "Zamboanga Sardines Gift Pack", partner: "Mega Global", price: 580, discount: 25, category: "food", image: "https://images.unsplash.com/photo-1599307772551-0730d07db0a0?q=80&w=400" },
-        { id: 8, name: "Maranao Brass Gong", partner: "Lanao Arts", price: 8500, discount: 12, category: "crafts", image: "https://images.unsplash.com/photo-1580915411954-282cb1b0d780?q=80&w=400" }
-      ];
+      try {
+        // Import API client
+        const { products: productsAPI } = await import('/src/js/api.js');
+        
+        // Fetch products from backend API
+        const response = await productsAPI.getAll();
+        
+        // Transform API data to match frontend format
+        const products = response.data.map(product => ({
+          id: product.id,
+          name: product.name,
+          partner: product.company.name,
+          price: parseFloat(product.price),
+          discount: parseFloat(product.discount || 0),
+          category: product.category.slug,
+          image: product.images && product.images.length > 0 
+            ? `http://localhost:8000${product.images[0]}` 
+            : 'https://via.placeholder.com/400',
+          description: product.description,
+          slug: product.slug
+        }));
 
-      allProducts = products;
-      console.log('Products loaded:', products.length);
-      skeleton.classList.add('hidden');
-      renderProducts(allProducts);
+        allProducts = products;
+        console.log('Products loaded from API:', products.length);
+        skeleton.classList.add('hidden');
+        renderProducts(allProducts);
+      } catch (error) {
+        console.error('Error loading products:', error);
+        skeleton.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        document.getElementById('empty-message').textContent = 'Failed to load products. Please try again later.';
+      }
     }
 
     function renderProducts(products) {
@@ -313,15 +329,33 @@
       const sortValue = document.getElementById('sort-select').value;
 
       let filtered = allProducts.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(query) || (p.partner && p.partner.toLowerCase().includes(query));
+        const matchesSearch = p.name.toLowerCase().includes(query) || 
+                             (p.partner && p.partner.toLowerCase().includes(query)) ||
+                             (p.description && p.description.toLowerCase().includes(query));
         const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
         return matchesSearch && matchesCategory;
       });
 
       // Sorting
-      if (sortValue === 'price-low') filtered.sort((a,b) => (a.price*(1-(a.discount/100))) - (b.price*(1-(b.discount/100))));
-      if (sortValue === 'price-high') filtered.sort((a,b) => (b.price*(1-(b.discount/100))) - (a.price*(1-(a.discount/100))));
+      if (sortValue === 'price-low') {
+        filtered.sort((a,b) => {
+          const priceA = a.price * (1 - (a.discount / 100));
+          const priceB = b.price * (1 - (b.discount / 100));
+          return priceA - priceB;
+        });
+      }
+      if (sortValue === 'price-high') {
+        filtered.sort((a,b) => {
+          const priceA = a.price * (1 - (a.discount / 100));
+          const priceB = b.price * (1 - (b.discount / 100));
+          return priceB - priceA;
+        });
+      }
+      if (sortValue === 'newest') {
+        filtered.sort((a,b) => b.id - a.id);
+      }
 
+      currentPage = 1; // Reset to first page when filtering
       renderProducts(filtered);
     }
 
@@ -366,18 +400,23 @@
       if (!product) return;
 
       const salePrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
+      const productImage = product.image || 'https://via.placeholder.com/600';
 
       modalContent.innerHTML = `
         <div class="grid md:grid-cols-2 gap-8">
           <div>
             <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-              <img src="${product.image || 'https://via.placeholder.com/600'}" alt="${product.name}" class="w-full h-full object-cover">
+              <img src="${productImage}" alt="${product.name}" class="w-full h-full object-cover">
             </div>
           </div>
           
           <div class="flex flex-col">
             <div class="mb-6">
               <h2 class="text-3xl font-bold text-gray-900 mb-4">${product.name}</h2>
+              
+              ${product.partner ? `
+                <p class="text-sm text-gray-500 mb-2">by ${product.partner}</p>
+              ` : ''}
               
               ${product.discount > 0 ? `
                 <div class="inline-flex items-center gap-2 bg-brand-50 px-3 py-1 rounded-full mb-4">
@@ -393,7 +432,7 @@
             
             <div class="mb-6">
               <h3 class="text-sm font-bold text-gray-900 mb-2">Product Details</h3>
-              <p class="text-gray-600">High-quality ${product.category} product from Mindanao. Contact seller for detailed specifications and availability.</p>
+              <p class="text-gray-600">${product.description || `High-quality ${product.category} product from Mindanao. Contact seller for detailed specifications and availability.`}</p>
             </div>
             
             <div class="mt-auto flex gap-3">
@@ -442,21 +481,23 @@
 
       if (existingItem) {
         existingItem.quantity += 1;
+        showToast(`${product.name} quantity updated!`, 'success');
       } else {
-        const salePrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
         cart.push({
           id: product.id,
           name: product.name,
-          price: salePrice,
+          price: product.price,
           discount_percentage: product.discount || 0,
           quantity: 1,
-          image_url: product.image || 'https://via.placeholder.com/400'
+          stock_quantity: 999, // Default stock for shop page
+          company: product.partner,
+          images: [product.image]
         });
+        showToast(`${product.name} added to cart!`, 'success');
       }
 
       localStorage.setItem('cart', JSON.stringify(cart));
       window.dispatchEvent(new Event('cart-updated'));
-      showToast(`${product.name} added to cart!`, 'success');
     }
 
     loadProducts();

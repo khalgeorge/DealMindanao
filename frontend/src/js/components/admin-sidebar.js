@@ -52,6 +52,13 @@ export function createAdminSidebar(activePage) {
             </svg>
             Settings
           </a>
+          
+          <button id="logout-btn" class="admin-sidebar-link w-full text-left">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Logout
+          </button>
         </div>
       </nav>
     </aside>
@@ -60,18 +67,63 @@ export function createAdminSidebar(activePage) {
 
 // Check authentication
 export function checkAuth() {
-  const token = localStorage.getItem('token');
+  // DEVELOPMENT MODE: Disable auth check for frontend development
+  // TODO: Re-enable this when integrating with backend API
+  return true;
   
-  // Auto-login for local testing/demo if requested or if we are just prototyping
-  if (!token && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    console.info('Auto-login: Setting demo-token for local development');
-    localStorage.setItem('token', 'demo-token');
-    return true;
-  }
-
-  if (!token) {
+  /* PRODUCTION CODE - Uncomment when ready to integrate:
+  const token = localStorage.getItem('auth_token');
+  const userStr = localStorage.getItem('user');
+  
+  if (!token || !userStr) {
     window.location.href = '/admin/login.html';
     return false;
   }
-  return true;
+  
+  try {
+    const user = JSON.parse(userStr);
+    
+    // Check if user is admin
+    if (!user.is_admin) {
+      console.error('Access denied: User is not an admin');
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user');
+      window.location.href = '/admin/login.html';
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Auth check error:', error);
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+    window.location.href = '/admin/login.html';
+    return false;
+  }
+  */
+}
+
+// Initialize logout button
+export function initLogout() {
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      try {
+        // Import auth API
+        const { auth } = await import('/src/js/api.js');
+        
+        // Call logout endpoint
+        await auth.logout();
+      } catch (error) {
+        console.error('Logout API error:', error);
+      } finally {
+        // Clear local storage and redirect regardless of API call result
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        window.location.href = '/admin/login.html';
+      }
+    });
+  }
 }

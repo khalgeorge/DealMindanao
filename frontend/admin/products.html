@@ -166,6 +166,22 @@
                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Description</label>
                        <textarea name="description" rows="3" placeholder="Detailed product description..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900"></textarea>
                     </div>
+
+                    <div class="md:col-span-2">
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Product Images (URLs)</label>
+                       <div id="image-inputs-container" class="space-y-2">
+                          <div class="flex gap-2">
+                             <input type="url" name="image-url-1" placeholder="https://example.com/image1.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                             <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                             </button>
+                          </div>
+                       </div>
+                       <button type="button" onclick="addImageInput()" class="mt-2 text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                          Add Another Image
+                       </button>
+                    </div>
                  </div>
               </div>
               
@@ -181,6 +197,69 @@
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
     import { formatPrice, showToast } from '/src/js/utils.js';
+    import { products as productsAPI, categories, companies } from '/src/js/api.js';
+
+    let allProducts = [];
+    let allCategories = [];
+    let allCompanies = [];
+    let currentPage = 1;
+    let itemsPerPage = 10;
+
+    // Load products from API
+    async function loadProducts() {
+      try {
+        const response = await productsAPI.getAll();
+        allProducts = response.data.map(p => ({
+          id: p.id,
+          name: p.name,
+          cat: p.category?.name || 'Uncategorized',
+          partner: p.company?.name || 'Unknown',
+          price: parseFloat(p.price),
+          stock: p.stock || 0,
+          status: (p.stock || 0) > 10 ? 'Active' : ((p.stock || 0) > 0 ? 'Low' : 'Out'),
+          description: p.description || '',
+          slug: p.slug,
+          images: p.images,
+          category_id: p.category?.id,
+          company_id: p.company?.id
+        }));
+        renderProducts();
+      } catch (error) {
+        console.error('Error loading products:', error);
+        document.getElementById('product-list-body').innerHTML = 
+          '<tr><td colspan="7" class="px-6 py-8 text-center text-red-500 font-bold">Failed to load products</td></tr>';
+      }
+    }
+    
+    // Load categories and companies for form dropdowns
+    async function loadFormData() {
+      try {
+        const [categoriesResponse, companiesResponse] = await Promise.all([
+          categories.getAll(),
+          companies.getAll()
+        ]);
+        
+        allCategories = Array.isArray(categoriesResponse) ? categoriesResponse : categoriesResponse.data || [];
+        allCompanies = Array.isArray(companiesResponse) ? companiesResponse : companiesResponse.data || [];
+        
+        // Update category filter
+        const categoryFilter = document.getElementById('filter-category');
+        categoryFilter.innerHTML = '<option value="">All Categories</option>' + 
+          allCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        
+        // Update form category select
+        const categorySelect = document.querySelector('select[name="category"]');
+        categorySelect.innerHTML = '<option value="">Select Category</option>' + 
+          allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        
+        // Update form company select
+        const companySelect = document.querySelector('select[name="partner"]');
+        companySelect.innerHTML = '<option value="">Select Partner</option>' + 
+          allCompanies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      } catch (error) {
+        console.error('Error loading form data:', error);
+      }
+    }
 
     // Global Modal Functions
     window.openProductModal = () => {
@@ -205,8 +284,64 @@
           document.getElementById('product-id').value = '';
           document.getElementById('modal-title').textContent = 'Add New Product';
           form.querySelector('button[type="submit"]').textContent = 'Save Product';
+          
+          // Reset image inputs to just one
+          const container = document.getElementById('image-inputs-container');
+          container.innerHTML = `
+             <div class="flex gap-2">
+                <input type="url" name="image-url-1" placeholder="https://example.com/image1.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+             </div>
+          `;
        }
     };
+
+    // Image input management
+    window.addImageInput = () => {
+       const container = document.getElementById('image-inputs-container');
+       const currentCount = container.querySelectorAll('input[type="url"]').length;
+       const newIndex = currentCount + 1;
+       
+       const newInput = document.createElement('div');
+       newInput.className = 'flex gap-2';
+       newInput.innerHTML = `
+          <input type="url" name="image-url-${newIndex}" placeholder="https://example.com/image${newIndex}.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+          <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+       `;
+       container.appendChild(newInput);
+    };
+
+    window.removeImageInput = (button) => {
+       const container = document.getElementById('image-inputs-container');
+       const inputGroups = container.querySelectorAll('.flex');
+       
+       // Keep at least one input
+       if (inputGroups.length > 1) {
+          button.closest('.flex').remove();
+       } else {
+          // Just clear the value if it's the last one
+          container.querySelector('input[type="url"]').value = '';
+       }
+    };
+
+    // Collect image URLs from the form
+    function collectImageUrls() {
+       const inputs = document.querySelectorAll('#image-inputs-container input[type="url"]');
+       const urls = [];
+       
+       inputs.forEach(input => {
+          const url = input.value.trim();
+          if (url) {
+             urls.push(url);
+          }
+       });
+       
+       return urls.length > 0 ? urls : null;
+    }
 
     window.editProduct = (id) => {
        const p = allProducts.find(prod => prod.id == id);
@@ -220,15 +355,47 @@
        
        // Populate fields
        form.elements['name'].value = p.name;
-       form.elements['category'].value = p.cat;
-       form.elements['partner'].value = p.partner.replace(/\s+/g, ''); // Simple mapping for demo
+       form.elements['category'].value = p.category_id || '';
+       form.elements['partner'].value = p.company_id || '';
        form.elements['price'].value = p.price;
        form.elements['stock'].value = p.stock;
        form.elements['description'].value = p.description || '';
 
-       openProductModal();
-    };
+       // Populate image URLs
+       const container = document.getElementById('image-inputs-container');
+       const images = p.images || [];
+       
+       if (images.length > 0) {
+          container.innerHTML = images.map((url, index) => `
+             <div class="flex gap-2">
+                <input type="url" name="image-url-${index + 1}" value="${url}" placeholder="https://example.com/image${index + 1}.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+             </div>
+          `).join('');
+       }
 
+       openProductModal();
+    };    
+    window.deleteProduct = async (id) => {
+       const product = allProducts.find(p => p.id == id);
+       if (!product) return;
+       
+       if (!confirm(`Are you sure you want to delete "${product.name}"?\n\nThis action cannot be undone.`)) {
+          return;
+       }
+       
+       try {
+          await productsAPI.delete(id);
+          showToast('Product deleted successfully', 'success');
+          loadProducts(); // Reload list
+       } catch (error) {
+          console.error('Error deleting product:', error);
+          const message = error.response?.data?.message || 'Failed to delete product';
+          showToast(message, 'error');
+       }
+    };
     window.resetFilters = () => {
        document.getElementById('product-search').value = '';
        document.getElementById('filter-category').value = '';
@@ -236,24 +403,6 @@
        currentPage = 1;
        renderProducts();
     };
-
-    const allProducts = [
-       { id: 1, name: 'Durian Pastillas', cat: 'Food', partner: 'Davao Treats', price: 150, stock: 45, status: 'Active', description: 'Sweet durian candy from Davao.' },
-       { id: 2, name: 'Tboli Weave Bag', cat: 'Crafts', partner: 'Lake Sebu Arts', price: 1200, stock: 5, status: 'Low', description: 'Traditional Tboli woven bag.' },
-       { id: 3, name: 'Cagayan Coffee', cat: 'Drinks', partner: 'CDO Roasters', price: 450, stock: 0, status: 'Out', description: 'Freshly roasted coffee beans.' },
-       { id: 4, name: 'Mangosteen Tea', cat: 'Food', partner: 'Mindanao Wellness', price: 320, stock: 120, status: 'Active', description: 'Healthy mangosteen tea.' },
-       { id: 5, name: 'Davao Pearl Earrings', cat: 'Crafts', partner: 'Mindanao Gifts', price: 2500, stock: 15, status: 'Active', description: 'Genuine South Sea pearls.' },
-       { id: 6, name: 'Maranao Brass Band', cat: 'Crafts', partner: 'Mindanao Gifts', price: 1800, stock: 3, status: 'Low', description: 'Traditional brass instruments.' },
-       { id: 7, name: 'Bukidnon Honey', cat: 'Food', partner: 'Davao Treats', price: 350, stock: 60, status: 'Active', description: 'Wild honey from Bukidnon.' },
-       { id: 8, name: 'Coco Sugar', cat: 'Food', partner: 'Mindanao Wellness', price: 200, stock: 85, status: 'Active', description: 'Organic coconut sugar.' },
-       { id: 9, name: 'Dried Santol', cat: 'Food', partner: 'Davao Treats', price: 120, stock: 2, status: 'Low', description: 'Sweet and sour dried fruit.' },
-       { id: 10, name: 'Tribal Beaded Belt', cat: 'Crafts', partner: 'Lake Sebu Arts', price: 850, stock: 12, status: 'Active', description: 'Hand-beaded tribal accessory.' },
-       { id: 11, name: 'Yakan Weave Scarf', cat: 'Crafts', partner: 'Mindanao Gifts', price: 950, stock: 0, status: 'Out', description: 'Traditional Yakan woven scarf.' },
-       { id: 12, name: 'Sulu Coffee Blend', cat: 'Drinks', partner: 'CDO Roasters', price: 550, stock: 30, status: 'Active', description: 'Strong Sulu coffee beans.' }
-    ];
-
-    let currentPage = 1;
-    let itemsPerPage = 10;
 
     function renderProducts() {
        const body = document.getElementById('product-list-body');
@@ -299,7 +448,11 @@
                    <span class="badge-${p.status.toLowerCase()}">${p.status}</span>
                 </td>
                 <td class="px-6 py-4 text-right">
-                   <button onclick="editProduct(${p.id})" class="text-gray-400 hover:text-brand-600 font-bold text-xs uppercase tracking-widest">Edit</button>
+                   <div class="flex items-center justify-end gap-2">
+                      <button onclick="editProduct(${p.id})" class="text-gray-400 hover:text-brand-600 font-bold text-xs uppercase tracking-widest transition-colors">Edit</button>
+                      <span class="text-gray-200">|</span>
+                      <button onclick="deleteProduct(${p.id})" class="text-gray-400 hover:text-red-600 font-bold text-xs uppercase tracking-widest transition-colors">Delete</button>
+                   </div>
                 </td>
              </tr>
           `).join('');
@@ -363,42 +516,60 @@
        }
     });
 
-    setTimeout(renderProducts, 100);
+    // Load data on page load
+    loadProducts();
+    loadFormData();
 
-    document.getElementById('product-form').addEventListener('submit', (e) => {
+    document.getElementById('product-form').addEventListener('submit', async (e) => {
        e.preventDefault();
        const formData = new FormData(e.target);
        const id = formData.get('id');
+       const submitBtn = e.target.querySelector('button[type="submit"]');
+       const originalText = submitBtn.textContent;
        
+       // Prepare product data for API
        const productData = {
           name: formData.get('name'),
-          cat: formData.get('category'),
-          partner: formData.get('partner'), // Note: simplified for demo
+          category_id: parseInt(formData.get('category')),
+          company_id: parseInt(formData.get('partner')),
           price: parseFloat(formData.get('price')),
-          stock: parseInt(formData.get('stock')),
-          description: formData.get('description'),
-          status: parseInt(formData.get('stock')) > 10 ? 'Active' : (parseInt(formData.get('stock')) > 0 ? 'Low' : 'Out')
+          stock_quantity: parseInt(formData.get('stock')) || 0,
+          description: formData.get('description') || null,
+          images: collectImageUrls(), // Collect image URLs
        };
-
-       if (id) {
-          // Update
-          const index = allProducts.findIndex(p => p.id == id);
-          if (index !== -1) {
-             allProducts[index] = { ...allProducts[index], ...productData };
-             showToast('Product updated successfully');
-          }
-       } else {
-          // Add
-          const newProduct = {
-             id: Date.now(),
-             ...productData
-          };
-          allProducts.unshift(newProduct);
-          showToast('Product added successfully');
+       
+       // Validate required fields
+       if (!productData.category_id || !productData.company_id) {
+          showToast('Please select both category and partner', 'error');
+          return;
        }
+       
+       // Disable submit button
+       submitBtn.disabled = true;
+       submitBtn.textContent = id ? 'Updating...' : 'Saving...';
 
-       renderProducts();
-       closeProductModal();
+       try {
+          if (id) {
+             // Update existing product
+             await productsAPI.update(id, productData);
+             showToast('Product updated successfully', 'success');
+          } else {
+             // Create new product
+             await productsAPI.create(productData);
+             showToast('Product created successfully', 'success');
+          }
+          
+          // Reload product list and close modal
+          await loadProducts();
+          closeProductModal();
+       } catch (error) {
+          console.error('Error saving product:', error);
+          const message = error.response?.data?.message || 'Failed to save product';
+          showToast(message, 'error');
+       } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+       }
     });
   </script>
 </body>

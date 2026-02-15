@@ -221,34 +221,53 @@
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
     import { formatPrice, showToast } from '/src/js/utils.js';
+    import { orders as ordersAPI } from '/src/js/api.js';
 
-    const allOrders = [
-       { id: '#DM-1001', customer: 'Juan Dela Cruz', date: 'Feb 10, 2026', total: 2450.00, method: 'GCash', status: 'Pending', timestamp: 1739145600000 },
-       { id: '#DM-1002', customer: 'Maria Santos', date: 'Feb 09, 2026', total: 850.00, method: 'COD', status: 'Shipped', timestamp: 1739059200000 },
-       { id: '#DM-1003', customer: 'Pedro Penduko', date: 'Feb 09, 2026', total: 12000.00, method: 'GCash', status: 'Cancelled', timestamp: 1739059200000 },
-       { id: '#DM-1004', customer: 'Gabriela Silang', date: 'Feb 08, 2026', total: 1550.00, method: 'COD', status: 'Pending', timestamp: 1738972800000 },
-       { id: '#DM-1005', customer: 'Jose Rizal', date: 'Feb 08, 2026', total: 3200.00, method: 'GCash', status: 'Shipped', timestamp: 1738972800000 },
-       { id: '#DM-1006', customer: 'Andres Bonifacio', date: 'Feb 07, 2026', total: 5400.00, method: 'GCash', status: 'Pending', timestamp: 1738886400000 },
-       { id: '#DM-1007', customer: 'Apolinario Mabini', date: 'Feb 07, 2026', total: 1200.00, method: 'COD', status: 'Shipped', timestamp: 1738886400000 },
-       { id: '#DM-1008', customer: 'Melchora Aquino', date: 'Feb 06, 2026', total: 950.00, method: 'GCash', status: 'Pending', timestamp: 1738800000000 },
-       { id: '#DM-1009', customer: 'Marcelo H. Del Pilar', date: 'Feb 06, 2026', total: 4300.00, method: 'GCash', status: 'Shipped', timestamp: 1738800000000 },
-       { id: '#DM-1010', customer: 'Antonio Luna', date: 'Feb 05, 2026', total: 7200.00, method: 'COD', status: 'Pending', timestamp: 1738713600000 },
-       { id: '#DM-1011', customer: 'Emilio Aguinaldo', date: 'Feb 05, 2026', total: 3100.00, method: 'GCash', status: 'Shipped', timestamp: 1738713600000 },
-       { id: '#DM-1012', customer: 'Gregorio del Pilar', date: 'Feb 04, 2026', total: 1800.00, method: 'COD', status: 'Cancelled', timestamp: 1738627200000 }
-    ];
-
-    let currentStatus = 'All';
+    let allOrders = [];
+    let currentStatus = 'all';
     let searchQuery = '';
     let sortOption = 'newest';
     let currentPage = 1;
     let itemsPerPage = parseInt(document.getElementById('rows-per-page')?.value || 5);
+
+    // Load orders from API
+    async function loadOrders() {
+       try {
+          const params = {
+             status: currentStatus,
+             search: searchQuery || undefined,
+             per_page: 100, // Get all for client-side filtering
+          };
+          
+          // Map sort option to API parameters
+          if (sortOption === 'newest') {
+             params.sort_by = 'created_at';
+             params.sort_order = 'desc';
+          } else if (sortOption === 'oldest') {
+             params.sort_by = 'created_at';
+             params.sort_order = 'asc';
+          } else if (sortOption === 'highest') {
+             params.sort_by = 'total';
+             params.sort_order = 'desc';
+          }
+          
+          const response = await ordersAPI.getAllOrders(params);
+          allOrders = response.data || [];
+          renderOrders();
+       } catch (error) {
+          console.error('Error loading orders:', error);
+          showToast('Failed to load orders', 'error');
+          allOrders = [];
+          renderOrders();
+       }
+    }
 
     window.resetFilters = () => {
        document.getElementById('order-search').value = '';
        document.getElementById('sort-order').value = 'newest';
        searchQuery = '';
        sortOption = 'newest';
-       currentStatus = 'All';
+       currentStatus = 'all';
        currentPage = 1;
 
        // Update Tabs
@@ -263,74 +282,79 @@
           }
        });
 
-       renderOrders();
+       loadOrders();
     };
 
-    window.manageOrder = (id) => {
-       const order = allOrders.find(o => o.id === id);
-       if (!order) return;
+    window.manageOrder = async (id) => {
+       try {
+          const order = await ordersAPI.getOne(id);
+          
+          document.getElementById('modal-order-id').innerText = `Order #${order.id}`;
+          document.getElementById('modal-order-date').innerText = new Date(order.created_at).toLocaleDateString('en-PH', {
+             year: 'numeric',
+             month: 'short',
+             day: 'numeric'
+          });
+          document.getElementById('modal-customer-name').innerText = order.user.name;
+          document.getElementById('modal-payment-method').innerText = order.payment_method.toUpperCase();
+          document.getElementById('modal-total-amount').innerText = formatPrice(order.total);
+          document.getElementById('modal-update-status').value = order.status;
 
-       document.getElementById('modal-order-id').innerText = `Order ${order.id}`;
-       document.getElementById('modal-order-date').innerText = order.date;
-       document.getElementById('modal-customer-name').innerText = order.customer;
-       document.getElementById('modal-payment-method').innerText = order.method;
-       document.getElementById('modal-total-amount').innerText = formatPrice(order.total);
-       document.getElementById('modal-update-status').value = order.status;
+          const statusBadge = document.getElementById('modal-order-status');
+          statusBadge.innerText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+          statusBadge.className = `px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border badge-${order.status.toLowerCase()}`;
 
-       const statusBadge = document.getElementById('modal-order-status');
-       statusBadge.innerText = order.status;
-       statusBadge.className = `px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border badge-${order.status.toLowerCase()}`;
+          // Render order items
+          const itemBody = document.getElementById('modal-order-items');
+          itemBody.innerHTML = order.items.map(item => `
+             <tr class="border-b border-gray-50">
+                <td class="px-6 py-4">
+                   <p class="text-xs font-bold text-gray-900">${item.product.name}</p>
+                   <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Product ID: ${item.product_id}</p>
+                </td>
+                <td class="px-6 py-4 text-xs font-bold text-gray-500">${formatPrice(item.price)}</td>
+                <td class="px-6 py-4 text-xs font-bold text-gray-500">${item.quantity}</td>
+                <td class="px-6 py-4 text-right text-xs font-black text-gray-900">${formatPrice(item.price * item.quantity)}</td>
+             </tr>
+          `).join('');
 
-       // Mock items
-       const itemBody = document.getElementById('modal-order-items');
-       itemBody.innerHTML = `
-          <tr class="border-b border-gray-50">
-             <td class="px-6 py-4">
-                <p class="text-xs font-bold text-gray-900">Customized Mindanao Souvenir Set</p>
-                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">SKU: DM-SOUV-001</p>
-             </td>
-             <td class="px-6 py-4 text-xs font-bold text-gray-500">${formatPrice(order.total)}</td>
-             <td class="px-6 py-4 text-xs font-bold text-gray-500">1</td>
-             <td class="px-6 py-4 text-right text-xs font-black text-gray-900">${formatPrice(order.total)}</td>
-          </tr>
-       `;
-
-       document.getElementById('order-modal').classList.remove('hidden');
+          document.getElementById('order-modal').classList.remove('hidden');
+       } catch (error) {
+          console.error('Error loading order details:', error);
+          showToast('Failed to load order details', 'error');
+       }
     };
 
     window.closeOrderModal = () => {
        document.getElementById('order-modal').classList.add('hidden');
     };
 
-    window.updateOrderStatus = () => {
-       const id = document.getElementById('modal-order-id').innerText.replace('Order ', '');
+    window.updateOrderStatus = async () => {
+       const orderIdText = document.getElementById('modal-order-id').innerText;
+       const id = orderIdText.replace('Order #', '');
        const newStatus = document.getElementById('modal-update-status').value;
        
-       const index = allOrders.findIndex(o => o.id === id);
-       if (index !== -1) {
-          allOrders[index].status = newStatus;
-          showToast(`Order ${id} updated to ${newStatus}`);
+       try {
+          await ordersAPI.updateStatus(id, { status: newStatus });
+          showToast(`Order #${id} updated to ${newStatus}`, 'success');
           closeOrderModal();
-          renderOrders();
+          await loadOrders();
+       } catch (error) {
+          console.error('Error updating order status:', error);
+          const message = error.response?.data?.message || 'Failed to update order status';
+          showToast(message, 'error');
        }
     };
 
     window.printInvoice = () => {
-      console.log('Print invoice clicked');
       const orderIdElement = document.getElementById('modal-order-id');
-      console.log('Order ID element:', orderIdElement);
-      
       if (!orderIdElement) {
         alert('Error: Could not find order ID element');
         return;
       }
       
-      // Extract order ID - remove "Order " or "ORDER " prefix (case insensitive)
-      const orderId = orderIdElement.innerText.replace(/order\s+/i, '');
-      console.log('Order ID:', orderId);
-      
-      const order = allOrders.find(o => o.id === orderId);
-      console.log('Found order:', order);
+      const orderId = orderIdElement.innerText.replace(/order\s+#?/i, '');
+      const order = allOrders.find(o => o.id == orderId);
       
       if (!order) {
         alert('Error: Could not find order with ID ' + orderId);
@@ -343,7 +367,6 @@
         day: 'numeric' 
       });
 
-      // Format prices before inserting into template
       const formattedTotal = formatPrice(order.total);
 
       // Create print window content
@@ -352,7 +375,7 @@
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Invoice ${orderId}</title>
+          <title>Invoice #${orderId}</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
@@ -585,13 +608,13 @@
     };
 
     window.filterStatus = (status) => {
-       currentStatus = status;
-       currentPage = 1; // Reset to first page
+       currentStatus = status.toLowerCase();
+       currentPage = 1;
        
        // Update UI
        document.querySelectorAll('.order-tab').forEach(tab => {
           const text = tab.innerText.replace(' Orders', '').trim();
-          if (text === status) {
+          if (text.toLowerCase() === status.toLowerCase()) {
              tab.classList.add('active');
              tab.classList.remove('text-gray-400', 'border-transparent');
           } else {
@@ -600,7 +623,7 @@
           }
        });
 
-       renderOrders();
+       loadOrders();
     };
 
     window.exportCSV = () => {
@@ -614,50 +637,45 @@
        const nextBtn = document.getElementById('next-page');
        if (!body) return;
 
-       // 1. Filter
-       let filtered = allOrders.filter(o => {
-          const matchesStatus = currentStatus === 'All' || o.status === currentStatus;
-          const matchesSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                               o.customer.toLowerCase().includes(searchQuery.toLowerCase());
-          return matchesStatus && matchesSearch;
-       });
-
-       // 2. Sort
-       if (sortOption === 'newest') filtered.sort((a, b) => b.timestamp - a.timestamp);
-       if (sortOption === 'oldest') filtered.sort((a, b) => a.timestamp - b.timestamp);
-       if (sortOption === 'highest') filtered.sort((a, b) => b.total - a.total);
-
-       // 3. Paginate
-       const totalItems = filtered.length;
+       // Paginate (all filtering done server-side)
+       const totalItems = allOrders.length;
        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
        if (currentPage > totalPages) currentPage = totalPages;
 
        const start = (currentPage - 1) * itemsPerPage;
        const end = start + itemsPerPage;
-       const paginatedItems = filtered.slice(start, end);
+       const paginatedItems = allOrders.slice(start, end);
 
-       // 4. Update UI
+       // Update UI
        if (paginatedItems.length === 0) {
           body.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400 font-bold italic">No orders found matching filters</td></tr>`;
        } else {
-          body.innerHTML = paginatedItems.map(o => `
+          body.innerHTML = paginatedItems.map(o => {
+             const orderDate = new Date(o.created_at).toLocaleDateString('en-PH', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+             });
+             
+             return `
              <tr class="hover:bg-gray-50/50 transition-colors">
-                <td class="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">${o.id}</td>
+                <td class="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">#${o.id}</td>
                 <td class="px-6 py-5">
-                   <p class="font-bold text-gray-900">${o.customer}</p>
-                   <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Mindanao Area</p>
+                   <p class="font-bold text-gray-900">${o.user.name}</p>
+                   <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">${o.user.email}</p>
                 </td>
-                <td class="px-6 py-5 text-sm font-bold text-gray-500">${o.date}</td>
+                <td class="px-6 py-5 text-sm font-bold text-gray-500">${orderDate}</td>
                 <td class="px-6 py-5 font-black text-gray-900">${formatPrice(o.total)}</td>
-                <td class="px-6 py-5"><span class="text-[10px] font-bold uppercase py-1 px-2 bg-gray-100 rounded-lg text-gray-600">${o.method}</span></td>
+                <td class="px-6 py-5"><span class="text-[10px] font-bold uppercase py-1 px-2 bg-gray-100 rounded-lg text-gray-600">${o.payment_method.toUpperCase()}</span></td>
                 <td class="px-6 py-5">
-                   <span class="badge-${o.status.toLowerCase()} text-[10px]">${o.status}</span>
+                   <span class="badge-${o.status.toLowerCase()} text-[10px]">${o.status.charAt(0).toUpperCase() + o.status.slice(1)}</span>
                 </td>
                 <td class="px-6 py-5 text-right">
-                   <button onclick="manageOrder('${o.id}')" class="text-brand-600 font-bold text-xs uppercase hover:underline">Manage</button>
+                   <button onclick="manageOrder(${o.id})" class="text-brand-600 font-bold text-xs uppercase hover:underline">Manage</button>
                 </td>
              </tr>
-          `).join('');
+          `;
+          }).join('');
        }
 
        // Update pagination controls
@@ -677,13 +695,13 @@
     document.getElementById('order-search')?.addEventListener('input', (e) => {
        searchQuery = e.target.value;
        currentPage = 1;
-       renderOrders();
+       loadOrders();
     });
 
     document.getElementById('sort-order')?.addEventListener('change', (e) => {
        sortOption = e.target.value;
        currentPage = 1;
-       renderOrders();
+       loadOrders();
     });
 
     document.getElementById('rows-per-page')?.addEventListener('change', (e) => {
@@ -700,14 +718,8 @@
     });
 
     document.getElementById('next-page')?.addEventListener('click', () => {
-       const filteredCount = allOrders.filter(o => {
-          const matchesStatus = currentStatus === 'All' || o.status === currentStatus;
-          const matchesSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                               o.customer.toLowerCase().includes(searchQuery.toLowerCase());
-          return matchesStatus && matchesSearch;
-       }).length;
-
-       if (currentPage < Math.ceil(filteredCount / itemsPerPage)) {
+       const totalPages = Math.ceil(allOrders.length / itemsPerPage);
+       if (currentPage < totalPages) {
           currentPage++;
           renderOrders();
        }
@@ -715,30 +727,25 @@
 
     // Export to CSV function
     window.exportCSV = () => {
-      const filteredOrders = allOrders.filter(o => {
-        const matchesStatus = currentStatus === 'All' || o.status === currentStatus;
-        const matchesSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                             o.customer.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesStatus && matchesSearch;
-      });
-
-      if (filteredOrders.length === 0) {
+      if (allOrders.length === 0) {
         showToast('No orders to export', 'error');
         return;
       }
 
       // CSV Headers
-      const headers = ['Order ID', 'Customer', 'Date', 'Amount', 'Payment Method', 'Status'];
+      const headers = ['Order ID', 'Customer', 'Email', 'Date', 'Amount', 'Payment Method', 'Status'];
       
       // CSV Rows
-      const rows = filteredOrders.map(order => {
+      const rows = allOrders.map(order => {
+        const date = new Date(order.created_at).toLocaleDateString('en-PH');
         return [
-          order.id,
-          order.customer,
-          order.date,
+          `#${order.id}`,
+          order.user.name,
+          order.user.email,
+          date,
           `₱${order.total.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-          order.method,
-          order.status
+          order.payment_method.toUpperCase(),
+          order.status.charAt(0).toUpperCase() + order.status.slice(1)
         ];
       });
 
@@ -751,7 +758,7 @@
       const url = URL.createObjectURL(blob);
       
       const timestamp = new Date().toISOString().split('T')[0];
-      const filename = `dealmindanao_orders_${currentStatus.toLowerCase()}_${timestamp}.csv`;
+      const filename = `dealmindanao_orders_${currentStatus}_${timestamp}.csv`;
       
       link.setAttribute('href', url);
       link.setAttribute('download', filename);
@@ -760,10 +767,11 @@
       link.click();
       document.body.removeChild(link);
 
-      showToast(`Exported ${filteredOrders.length} orders to CSV`);
+      showToast(`Exported ${allOrders.length} orders to CSV`, 'success');
     };
 
-    setTimeout(renderOrders, 100);
+    // Initial load
+    loadOrders();
   </script>
 </body>
 </html>

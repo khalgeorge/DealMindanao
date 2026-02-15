@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,9 @@ Route::get('/products/{product}', [ProductController::class, 'show']);
 // Public category routes
 Route::get('/categories', [CategoryController::class, 'index']);
 
+// Public company routes
+Route::get('/companies', [CompanyController::class, 'index']);
+
 // Protected routes
 Route::middleware('auth:api')->group(function () {
     // User profile
@@ -44,7 +49,16 @@ Route::middleware('auth:api')->group(function () {
     
     // Admin-only routes
     Route::middleware('admin')->group(function () {
+        // Dashboard statistics
+        Route::get('/dashboard/statistics', [DashboardController::class, 'statistics']);
+        Route::get('/dashboard/recent-orders', [DashboardController::class, 'recentOrders']);
+        
+        // Admin orders management (all orders)
+        Route::get('/admin/orders', [OrderController::class, 'adminIndex']);
+        
+        // Product and category management
         Route::apiResource('products', ProductController::class)->except(['index', 'show']);
         Route::apiResource('categories', CategoryController::class)->except(['index']);
+        Route::apiResource('companies', CompanyController::class)->except(['index']);
     });
 });

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account - DealMindanao</title>
+  <link rel="stylesheet" href="/src/css/app.css">
+</head>
+<body class="bg-gray-50">
+  <div id="navbar"></div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">My Account</h1>
+      <p class="text-gray-600 mt-2">Manage your orders and account information</p>
+    </div>
+
+    <!-- Account Info Card -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Account Information</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+          <p id="user-name" class="text-gray-900">-</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <p id="user-email" class="text-gray-900">-</p>
+        </div>
+      </div>
+      <div class="mt-6 flex gap-3">
+        <button onclick="logout()" class="btn-outline">Logout</button>
+      </div>
+    </div>
+
+    <!-- Orders Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">My Orders</h2>
+      
+      <!-- Loading State -->
+      <div id="orders-loading" class="hidden">
+        <div class="animate-pulse space-y-4">
+          <div class="h-24 bg-gray-200 rounded"></div>
+          <div class="h-24 bg-gray-200 rounded"></div>
+          <div class="h-24 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="orders-empty" class="hidden text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No orders yet</h3>
+        <p class="text-gray-600 mb-6">Start shopping to see your orders here</p>
+        <a href="/shop.html" class="btn-primary inline-block">Browse Products</a>
+      </div>
+
+      <!-- Orders List -->
+      <div id="orders-list" class="space-y-4"></div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script type="module">
+    import { auth, orders } from '/src/js/api.js';
+    import { formatPrice, showToast } from '/src/js/utils.js';
+
+    // Check authentication
+    if (!auth.isAuthenticated()) {
+      localStorage.setItem('redirect_after_login', window.location.pathname);
+      window.location.href = '/login.html';
+    }
+
+    const ordersLoading = document.getElementById('orders-loading');
+    const ordersEmpty = document.getElementById('orders-empty');
+    const ordersList = document.getElementById('orders-list');
+
+    // Display user info
+    function displayUserInfo() {
+      const user = auth.getUser();
+      if (user) {
+        document.getElementById('user-name').textContent = user.name || '-';
+        document.getElementById('user-email').textContent = user.email || '-';
+      }
+    }
+
+    // Load user orders
+    async function loadOrders() {
+      ordersLoading.classList.remove('hidden');
+      ordersEmpty.classList.add('hidden');
+      ordersList.innerHTML = '';
+
+      try {
+        const response = await orders.getAll();
+        const userOrders = response.data || [];
+
+        ordersLoading.classList.add('hidden');
+
+        if (userOrders.length === 0) {
+          ordersEmpty.classList.remove('hidden');
+          return;
+        }
+
+        renderOrders(userOrders);
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        ordersLoading.classList.add('hidden');
+        ordersEmpty.classList.remove('hidden');
+        document.querySelector('#orders-empty h3').textContent = 'Failed to load orders';
+        document.querySelector('#orders-empty p').textContent = 'Please try again later';
+      }
+    }
+
+    // Render orders
+    function renderOrders(userOrders) {
+      ordersList.innerHTML = userOrders.map(order => {
+        const orderDate = new Date(order.created_at);
+        const formattedDate = orderDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+
+        const statusColors = {
+          pending: 'bg-yellow-100 text-yellow-800',
+          processing: 'bg-blue-100 text-blue-800',
+          shipped: 'bg-purple-100 text-purple-800',
+          delivered: 'bg-green-100 text-green-800',
+          cancelled: 'bg-red-100 text-red-800'
+        };
+
+        const statusColor = statusColors[order.status] || 'bg-gray-100 text-gray-800';
+
+        return `
+          <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+              <div class="mb-2 md:mb-0">
+                <h3 class="font-semibold text-gray-900">Order #${order.id}</h3>
+                <p class="text-sm text-gray-500">${formattedDate}</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="px-3 py-1 rounded-full text-xs font-medium ${statusColor}">
+                  ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                </span>
+                <span class="text-lg font-bold text-gray-900">${formatPrice(order.total_amount)}</span>
+              </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="space-y-2 mb-4">
+              ${(order.items || []).map(item => `
+                <div class="flex items-center gap-3 text-sm">
+                  <div class="w-12 h-12 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                    ${item.product && item.product.images && item.product.images.length > 0 
+                      ? `<img src="http://localhost:8000${item.product.images[0]}" alt="${item.product.name}" class="w-full h-full object-cover">`
+                      : `<div class="w-full h-full bg-gray-200"></div>`
+                    }
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-gray-900 font-medium">${item.product?.name || 'Product'}</p>
+                    <p class="text-gray-500">Qty: ${item.quantity} × ${formatPrice(item.price)}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Shipping Info -->
+            <div class="text-sm text-gray-600 border-t pt-3">
+              <p><span class="font-medium">Shipping:</span> ${order.shipping_address}, ${order.shipping_city}, ${order.shipping_province}</p>
+              <p><span class="font-medium">Payment:</span> ${order.payment_method.replace('_', ' ').toUpperCase()}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Logout function
+    window.logout = function() {
+      if (confirm('Are you sure you want to logout?')) {
+        auth.logout();
+        window.location.href = '/index.html';
+      }
+    };
+
+    // Initialize
+    displayUserInfo();
+    loadOrders();
+  </script>
+
+  <script type="module" src="/src/js/layout.js"></script>
+</body>
+</html>

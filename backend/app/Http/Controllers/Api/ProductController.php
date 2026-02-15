@@ -93,13 +93,26 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0|lt:price',
+            'discount' => 'nullable|numeric|min:0|lt:price',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
-            'image_url' => 'nullable|url',
-            'stock' => 'nullable|integer|min:0',
+            'images' => 'nullable|array',
             'is_featured' => 'boolean',
+            'is_active' => 'boolean',
         ]);
+
+        // Auto-generate slug from name
+        $slug = \Illuminate\Support\Str::slug($validated['name']);
+        
+        // Ensure slug is unique
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Product::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        $validated['slug'] = $slug;
 
         $product = Product::create($validated);
         $product->load(['category', 'company']);
@@ -116,13 +129,28 @@ class ProductController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'sometimes|required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0|lt:price',
+            'discount' => 'nullable|numeric|min:0|lt:price',
             'category_id' => 'sometimes|required|exists:categories,id',
             'company_id' => 'sometimes|required|exists:companies,id',
-            'image_url' => 'nullable|url',
-            'stock' => 'nullable|integer|min:0',
+            'images' => 'nullable|array',
             'is_featured' => 'boolean',
+            'is_active' => 'boolean',
         ]);
+
+        // If name is being updated, regenerate slug
+        if (isset($validated['name']) && $validated['name'] !== $product->name) {
+            $slug = \Illuminate\Support\Str::slug($validated['name']);
+            
+            // Ensure slug is unique (excluding current product)
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $validated['slug'] = $slug;
+        }
 
         $product->update($validated);
         $product->load(['category', 'company']);

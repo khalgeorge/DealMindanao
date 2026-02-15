@@ -1,65 +1,348 @@
 @extends('layouts.app')
 
-@section('meta_title', 'DealMindanao | Local Deals in Mindanao')
-@section('meta_description', 'Discover local deals from trusted Mindanao partners. Order online, pay offline.')
+@section('meta_title', 'DealMindanao - Authentic Mindanao Hardware & Heavy Equipment')
+@section('meta_description', 'Quality tools and equipment from trusted local sellers — order online, pay offline, delivered with care.')
 
 @section('content')
-<div class="space-y-10">
-    <section class="bg-white rounded-2xl shadow p-8 md:p-12">
-        <h1 class="text-4xl font-bold mb-4">
-            Discover Local Deals in Mindanao
-        </h1>
-        <p class="text-xs text-gray-500 mt-2">
-            Curated deals from trusted local partners.
-            No online payments — order now, pay offline.
-        </p>
-
-        <a href="/shop" class="btn-primary inline-block mt-6">
-            Browse Shop Deals
-        </a>
+    <!-- Hero Banner Carousel Section -->
+    <section class="relative overflow-hidden bg-gray-900">
+       <div class="relative w-full h-[560px] md:h-[640px] lg:h-[720px]">
+          <!-- Hero Banner 1 -->
+          <div class="hero-slide absolute inset-0 transition-opacity duration-1000">
+             <img src="/hero1.png" class="w-full h-full object-cover" alt="DealMindanao - Hardware & Heavy Equipment">
+             <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+             <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+                   <div class="max-w-2xl">
+                      <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6">
+                         Discover Authentic<br/>Mindanao <span class="text-brand-400">Hardware & Heavy Equipment</span>
+                      </h1>
+                      <p class="text-base md:text-lg lg:text-xl text-white/90 font-medium mb-8 max-w-xl leading-relaxed">
+                         Quality tools and equipment from trusted local sellers — order online, pay offline, delivered with care.
+                      </p>
+                      
+                      <!-- CTA Button -->
+                      <div class="mb-8">
+                         <a href="{{ route('shop') }}" class="inline-flex items-center justify-center px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white text-base font-bold rounded-lg shadow-xl transition-all transform hover:scale-105">
+                            Shop Deals
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                         </a>
+                      </div>
+                      
+                      <!-- Categories Pills -->
+                      <div class="flex flex-wrap gap-3 mb-6">
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Power Tools
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Home Improvement
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Outdoor Gear
+                         </span>
+                      </div>
+                      
+                      <!-- Trust Badges -->
+                      <div class="flex flex-wrap items-center gap-6">
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Trusted Sellers</span>
+                         </div>
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Cash on Delivery</span>
+                         </div>
+                      </div>
+                      
+                      <!-- Small Disclaimer -->
+                      <p class="mt-4 text-xs text-white/70 max-w-lg">
+                         Order request only. No online payment required. Our team will contact you to confirm.
+                      </p>
+                   </div>
+                </div>
+             </div>
+          </div>
+          
+          <!-- Hero Banner 2 -->
+          <div class="hero-slide absolute inset-0 opacity-0 transition-opacity duration-1000">
+             <img src="/hero2.png" class="w-full h-full object-cover" alt="Mindanao Hardware Products">
+             <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+             <div class="absolute inset-0 flex items-center">
+                <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+                   <div class="max-w-2xl">
+                      <h2 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6">
+                         Quality <span class="text-accent-400">Hardware</span><br/>From Local Sellers
+                      </h2>
+                      <p class="text-base md:text-lg lg:text-xl text-white/90 font-medium mb-8 max-w-xl leading-relaxed">
+                         Browse curated deals and support Mindanao entrepreneurs with every purchase.
+                      </p>
+                      
+                      <!-- CTA Button -->
+                      <div class="mb-8">
+                         <a href="{{ route('shop') }}" class="inline-flex items-center justify-center px-8 py-4 bg-accent-600 hover:bg-accent-700 text-white text-base font-bold rounded-lg shadow-xl transition-all transform hover:scale-105">
+                            Shop Deals
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                         </a>
+                      </div>
+                      
+                      <!-- Categories Pills -->
+                      <div class="flex flex-wrap gap-3 mb-6">
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Power Tools
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Home Improvement
+                         </span>
+                         <span class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold rounded-full">
+                            Outdoor Gear
+                         </span>
+                      </div>
+                      
+                      <!-- Trust Badges -->
+                      <div class="flex flex-wrap items-center gap-6">
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Trusted Sellers</span>
+                         </div>
+                         <div class="flex items-center gap-2 text-white/90">
+                            <svg class="w-5 h-5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Cash on Delivery</span>
+                         </div>
+                      </div>
+                      
+                      <!-- Small Disclaimer -->
+                      <p class="mt-4 text-xs text-white/70 max-w-lg">
+                         Order request only. No online payment required. Our team will contact you to confirm.
+                      </p>
+                   </div>
+                </div>
+             </div>
+          </div>
+          
+          <!-- Carousel Controls -->
+          <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+             <button onclick="setSlide(0)" class="slide-indicator w-3 h-3 rounded-full bg-white transition-all" aria-label="Slide 1"></button>
+             <button onclick="setSlide(1)" class="slide-indicator w-3 h-3 rounded-full bg-white/50 transition-all" aria-label="Slide 2"></button>
+          </div>
+          
+          <!-- Navigation Arrows -->
+          <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all z-20" aria-label="Previous slide">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+             </svg>
+          </button>
+          <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all z-20" aria-label="Next slide">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+             </svg>
+          </button>
+       </div>
     </section>
 
-    @if($featuredProducts->count())
-        <section>
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-2xl font-bold">Featured Deals</h2>
-                <a href="/shop" class="btn-secondary">View All</a>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                @foreach($featuredProducts as $product)
-                    @php
-                        $imageUrl = $product->images && count($product->images)
-                            ? \Illuminate\Support\Facades\Storage::url($product->images[0])
-                            : null;
-                    @endphp
-                    <div class="card card-hover relative">
-                        <span class="badge badge-success absolute top-4 left-4">Featured</span>
-                        <div class="aspect-[4/3] bg-gray-200 rounded mb-3 overflow-hidden">
-                            @if($imageUrl)
-                                <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                            @endif
-                        </div>
+    <!-- Weekly Highlights -->
+    <section class="py-20 md:py-28 bg-white">
+       <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+          <div class="text-center mb-12 md:mb-16">
+             <span class="inline-block py-1.5 px-4 bg-accent-100 text-accent-700 text-xs font-bold uppercase tracking-wider rounded-full mb-4">This Week</span>
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">Weekly Highlights</h2>
+             <p class="text-gray-600 font-medium text-base md:text-lg max-w-2xl mx-auto">
+                Handpicked deals and exclusive offers from our trusted local partners across Mindanao.
+             </p>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+             @forelse($featuredProducts as $product)
+                @php
+                    $finalPrice = $product->price - $product->discount;
+                    $discountPercent = $product->discount > 0 ? round(($product->discount / $product->price) * 100) : 0;
+                    $imageUrl = !empty($product->images) ? $product->images[0] : 'https://via.placeholder.com/400';
+                @endphp
+                <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-brand-200 transition-all duration-300 hover:shadow-xl">
+                   <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
+                      <img src="{{ $imageUrl }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $product->name }}">
+                      
+                      @if($discountPercent > 0)
+                      <div class="absolute top-4 right-4">
+                         <span class="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg">
+                            -{{ $discountPercent }}%
+                         </span>
+                      </div>
+                      @endif
+                      
+                      <div class="absolute top-4 left-4">
+                         <span class="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow text-gray-900">
+                            {{ $product->category->name }}
+                         </span>
+                      </div>
+                      
+                      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                         <a href="{{ route('product.show', $product->slug) }}" class="px-6 py-3 bg-white text-gray-900 font-black text-sm uppercase tracking-wider rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                            Quick View
+                         </a>
+                      </div>
+                   </div>
+                   
+                   <div class="p-5">
+                      <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">
+                         {{ $product->company->name }}
+                      </p>
+                      
+                      <h3 class="font-black text-gray-900 text-lg mb-3 leading-tight min-h-[56px]">
+                         {{ $product->name }}
+                      </h3>
+                      
+                      <div class="flex items-center gap-2 mb-4">
+                         <p class="font-black text-2xl text-brand-600">₱{{ number_format($finalPrice, 2) }}</p>
+                         @if($discountPercent > 0)
+                         <p class="text-sm text-gray-400 line-through">₱{{ number_format($product->price, 2) }}</p>
+                         @endif
+                      </div>
+                      
+                      <a href="{{ route('product.show', $product->slug) }}" class="block w-full py-3 bg-gray-900 hover:bg-brand-600 text-white text-center font-bold uppercase tracking-wider rounded-lg transition-all text-sm">
+                         View Details
+                      </a>
+                   </div>
+                </div>
+             @empty
+                <div class="col-span-full text-center py-12">
+                   <p class="text-gray-500">No featured products available at the moment.</p>
+                </div>
+             @endforelse
+          </div>
+          
+          <!-- View All Button -->
+          <div class="text-center mt-12 md:mt-16">
+             <a href="{{ route('shop') }}" class="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 hover:bg-brand-600 text-white font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
+                View All Products
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+             </a>
+          </div>
+       </div>
+    </section>
 
-                        <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
-                        <p class="text-sm text-gray-500">{{ $product->company->name ?? 'Partner' }}</p>
+    <!-- Why Shop on Deal Mindanao -->
+    <section class="py-20 md:py-28 bg-gray-50">
+       <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+          <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">Why Shop on DealMindanao?</h2>
+             <p class="text-base md:text-lg text-gray-600">Experience the best of Mindanao with confidence and convenience.</p>
+          </div>
+          
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+             <!-- Benefit 1 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-brand-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">100% Authentic</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">All products are verified and sourced from trusted local sellers</p>
+             </div>
 
-                        <div class="flex items-center gap-2 mt-2">
-                            <p class="font-bold text-brand text-lg">
-                                ₱{{ number_format($product->price, 2) }}
-                            </p>
-                        </div>
+             <!-- Benefit 2 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-accent-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Best Deals</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">Curated pricing for great value on quality hardware</p>
+             </div>
 
-                        <div class="flex flex-wrap gap-2 mt-3">
-                            <a href="/shop/{{ $product->slug }}" class="btn-secondary">View Deal</a>
-                            <form action="/cart/add/{{ $product->id }}" method="POST">
-                                @csrf
-                                <button class="btn-primary" type="submit">Add to Cart</button>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </section>
-    @endif
-</div>
+             <!-- Benefit 3 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-brand-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Support Local</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">Every order supports Mindanao communities</p>
+             </div>
+
+             <!-- Benefit 4 -->
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="w-14 h-14 bg-accent-100 rounded-lg flex items-center justify-center mb-5">
+                   <svg class="w-7 h-7 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                   </svg>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Easy Shopping</h3>
+                <p class="text-sm md:text-base text-gray-600 leading-relaxed">Order online, we coordinate payment & delivery</p>
+             </div>
+          </div>
+       </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 md:py-28 bg-gradient-to-br from-brand-600 to-brand-700 relative overflow-hidden">
+       <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
+       
+       <div class="container mx-auto px-6 lg:px-16 max-w-7xl relative z-10">
+          <div class="max-w-3xl mx-auto text-center">
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-5 md:mb-6 leading-tight">
+                Join the Mindanao Movement
+             </h2>
+             <p class="text-brand-100 text-base md:text-lg mb-8 md:mb-10 leading-relaxed font-medium">
+                Become a partner and showcase your quality hardware products across Mindanao.
+             </p>
+             <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ route('partner') }}" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 bg-white text-brand-700 font-bold text-sm uppercase tracking-wider rounded-lg shadow-xl hover:shadow-2xl hover:bg-gray-50 transition-all">
+                   Become a Partner
+                </a>
+                <a href="{{ route('about') }}" class="inline-flex items-center justify-center px-8 md:px-10 py-4 md:py-5 border-2 border-white text-white font-bold text-sm uppercase tracking-wider rounded-lg hover:bg-white/10 transition-all">
+                   Learn More
+                </a>
+             </div>
+          </div>
+       </div>
+    </section>
 @endsection
+
+@push('scripts')
+<script>
+    // Hero carousel functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('.slide-indicator');
+    
+    function setSlide(index) {
+      currentSlide = index;
+      slides.forEach((slide, i) => {
+        slide.style.opacity = i === index ? '1' : '0';
+      });
+      indicators.forEach((indicator, i) => {
+        indicator.style.backgroundColor = i === index ? 'white' : 'rgba(255, 255, 255, 0.5)';
+      });
+    }
+    
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      setSlide(currentSlide);
+    }
+    
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      setSlide(currentSlide);
+    }
+    
+    // Auto-advance slides every 5 seconds
+    setInterval(nextSlide, 5000);
+</script>
+@endpush

@@ -38,6 +38,19 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
         ]);
 
+        // Auto-generate slug from name
+        $slug = \Illuminate\Support\Str::slug($validated['name']);
+        
+        // Ensure slug is unique
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Category::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        $validated['slug'] = $slug;
+
         $category = Category::create($validated);
 
         return response()->json($category, 201);
@@ -52,6 +65,21 @@ class CategoryController extends Controller
             'name' => 'sometimes|required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string',
         ]);
+
+        // If name is being updated, regenerate slug
+        if (isset($validated['name']) && $validated['name'] !== $category->name) {
+            $slug = \Illuminate\Support\Str::slug($validated['name']);
+            
+            // Ensure slug is unique (excluding current category)
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Category::where('slug', $slug)->where('id', '!=', $category->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $validated['slug'] = $slug;
+        }
 
         $category->update($validated);
 

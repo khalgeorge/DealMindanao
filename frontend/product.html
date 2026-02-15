@@ -163,11 +163,12 @@
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
     import { formatPrice, showToast } from '/src/js/utils.js';
-    import api from '/src/js/api.js';
+    import { products } from '/src/js/api.js';
 
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
     let qty = 1;
+    let product = null;
 
     async function initProduct() {
       if (!productId) {
@@ -176,20 +177,12 @@
       }
 
       try {
-        let product;
-        try {
-          const res = await api.get(/products/ + productId);
-          product = res.data;
-        } catch (e) {
-          const demoData = {
-             '1': { id: '1', name: "Bukidnon Highlands Arabica", partner: "Mt. Kitanglad Farms", price: 850, discount: 15, category: "food", stock: 24, description: "Directly sourced from the volcanic soils of Bukidnon. This Arabica coffee offers a complex flavor profile with notes of citrus, caramel, and chocolate.", image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800" },
-             '2': { id: '2', name: "Handwoven T'nalak Wallet", partner: "Lake Sebu Weavers", price: 1200, discount: 0, category: "fashion", stock: 12, description: "Authentic T'nalak fabric hand-woven by the T'boli community in Lake Sebu using traditional abaca fibers and natural dyes.", image: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?q=80&w=800" }
-          };
-          product = demoData[productId] || demoData['1'];
-        }
+        product = await products.getOne(productId);
         render(product);
       } catch (err) {
+        console.error('Failed to load product:', err);
         showToast('Product not found', 'error');
+        setTimeout(() => window.location.href = '/shop.html', 2000);
       }
     }
 
@@ -200,46 +193,93 @@
       document.getElementById('product-content').classList.remove('hidden');
       document.getElementById('breadcrumb-current').textContent = p.name;
       document.getElementById('product-name').textContent = p.name;
-      document.getElementById('product-category').textContent = p.category;
-      document.getElementById('product-description').textContent = p.description;
-      document.getElementById('main-image').src = p.image || p.image_url;
-      document.getElementById('thumb-1').src = p.image || p.image_url;
-      document.getElementById('stock-val').textContent = p.stock || 0;
-
-      const salePrice = p.discount > 0 ? p.price * (1 - p.discount/100) : p.price;
+      
+      // Category name
+      const categoryName = p.category?.name || 'General';
+      document.getElementById('product-category').textContent = categoryName;
+      
+      // Description
+      document.getElementById('product-description').textContent = p.description || 'No description available.';
+      
+      // Images - use first image from images array or placeholder
+      const defaultImage = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800';
+      const productImage = (p.images && p.images.length > 0) ? p.images[0] : defaultImage;
+      document.getElementById('main-image').src = productImage;
+      document.getElementById('main-image').alt = p.name;
+      document.getElementById('thumb-1').src = productImage;
+      
+      // Stock
+      const stock = p.stock_quantity || 0;
+      document.getElementById('stock-val').textContent = stock;
+      
+      // Price calculation
+      const discountPct = parseFloat(p.discount_percentage) || 0;
+      const originalPrice = parseFloat(p.price) || 0;
+      const salePrice = discountPct > 0 ? originalPrice * (1 - discountPct/100) : originalPrice;
+      
       document.getElementById('current-price').textContent = formatPrice(salePrice);
       
-      if (p.discount > 0) {
+      if (discountPct > 0) {
         document.getElementById('discount-area').classList.remove('hidden');
-        document.getElementById('old-price').textContent = formatPrice(p.price);
-        document.getElementById('discount-pct').textContent = p.discount + "% OFF";
+        document.getElementById('old-price').textContent = formatPrice(originalPrice);
+        document.getElementById('discount-pct').textContent = discountPct + "% OFF";
       }
 
-      document.getElementById('plus-qty').onclick = () => { if (qty < (p.stock||100)) { qty++; updateQty(); } };
-      document.getElementById('minus-qty').onclick = () => { if (qty > 1) { qty--; updateQty(); } };
+      // Quantity controls
+      document.getElementById('plus-qty').onclick = () => { 
+        if (qty < stock) { 
+          qty++; 
+          updateQty(); 
+        } else {
+          showToast('Maximum stock reached', 'error');
+        }
+      };
+      document.getElementById('minus-qty').onclick = () => { 
+        if (qty > 1) { 
+          qty--; 
+          updateQty(); 
+        } 
+      };
       const updateQty = () => { document.getElementById('qty-val').textContent = qty; };
 
+      // Add to cart
       document.getElementById('add-to-cart').onclick = () => {
+        if (stock < 1) {
+          showToast('Product is out of stock', 'error');
+          return;
+        }
+        
+        if (qty > stock) {
+          showToast('Not enough stock available', 'error');
+          return;
+        }
+
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         const existingItem = cart.find(item => item.id == p.id);
         
         if (existingItem) {
-          existingItem.quantity += qty;
+          const newQty = existingItem.quantity + qty;
+          if (newQty > stock) {
+            showToast('Cannot add more than available stock', 'error');
+            return;
+          }
+          existingItem.quantity = newQty;
         } else {
           cart.push({
             id: p.id,
             name: p.name,
-            price: p.price,
-            discount_percentage: p.discount || 0,
+            price: originalPrice,
+            discount_percentage: discountPct,
             quantity: qty,
-            partner: p.partner || 'Mindanao Artisan',
-            image_url: p.image || p.image_url
+            stock_quantity: stock,
+            company: p.company?.name || 'Mindanao Partner',
+            images: p.images || [defaultImage]
           });
         }
         
         localStorage.setItem('cart', JSON.stringify(cart));
         window.dispatchEvent(new Event('cart-updated'));
-        showToast(qty + " x " + p.name + " added to cart!", 'success');
+        showToast(`${qty} x ${p.name} added to cart!`, 'success');
         
         // Reset quantity
         qty = 1;

@@ -27,7 +27,7 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        $token = $user->createToken('auth-token')->accessToken;
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -53,7 +53,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('auth-token')->accessToken;
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -66,7 +66,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Successfully logged out',
