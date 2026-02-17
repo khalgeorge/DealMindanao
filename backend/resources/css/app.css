@@ -236,6 +236,31 @@
   @apply badge bg-accent-100 text-accent-800;
 }
 
+/* Status-specific badges for orders */
+@utility badge-pending {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-yellow-200 bg-yellow-50 text-yellow-800;
+}
+
+@utility badge-processing {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-200 bg-blue-50 text-blue-800;
+}
+
+@utility badge-completed {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-green-200 bg-green-50 text-green-800;
+}
+
+@utility badge-cancelled {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-red-200 bg-red-50 text-red-800;
+}
+
+@utility badge-contacted {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-gray-200 bg-gray-50 text-gray-700;
+}
+
+@utility badge-shipped {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-green-200 bg-green-50 text-green-700;
+}
+
 /* Alerts */
 @utility alert {
   @apply p-4 rounded-lg border;

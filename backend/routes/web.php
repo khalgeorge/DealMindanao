@@ -73,8 +73,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // Orders
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/json', [AdminOrderController::class, 'showJson'])->name('orders.showJson');
     Route::put('/orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
-    Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::match(['post', 'patch'], '/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
     
     // Categories
     Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');

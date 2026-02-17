@@ -32,10 +32,15 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear token and redirect to login
+      // DEVELOPMENT MODE: Just log the error, don't redirect
+      // TODO: Re-enable redirect when integrating with backend API
+      console.warn('API returned 401 Unauthorized - auth required but disabled for development');
+      
+      /* PRODUCTION CODE - Uncomment when ready to integrate:
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user');
       window.location.href = '/auth/login.html';
+      */
     }
     return Promise.reject(error);
   }

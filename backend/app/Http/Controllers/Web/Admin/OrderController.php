@@ -11,7 +11,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with(['user', 'items.product']);
+        $query = Order::with(['user', 'items']);
         
         if ($request->filled('search')) {
             $search = $request->search;
@@ -33,8 +33,10 @@ class OrderController extends Controller
         }
         
         $orders = $query->latest()->paginate(15);
+        $statuses = ['pending', 'contacted', 'processing', 'completed', 'cancelled'];
+        $search = $request->search ?? '';
         
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.index', compact('orders', 'statuses', 'search'));
     }
     
     public function show(Order $order)
@@ -42,6 +44,13 @@ class OrderController extends Controller
         $order->load(['user', 'items.product.company', 'items.product.category']);
         
         return view('admin.orders.show', compact('order'));
+    }
+    
+    public function showJson(Order $order)
+    {
+        $order->load(['user', 'items.product']);
+        
+        return response()->json($order);
     }
     
     public function update(OrderUpdateRequest $request, Order $order)
@@ -56,10 +65,19 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled',
+            'status' => 'required|in:pending,contacted,processing,completed,cancelled',
         ]);
         
         $order->update(['status' => $request->status]);
+        
+        // Return JSON for AJAX requests
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Order status updated to ' . $request->status,
+                'order' => $order->load(['items'])
+            ]);
+        }
         
         return back()->with('success', 'Order status updated to ' . $request->status . '!');
     }

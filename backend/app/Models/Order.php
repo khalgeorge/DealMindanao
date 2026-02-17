@@ -21,6 +21,8 @@ class Order extends Model
         'notes',
         'tracking_number',
     ];
+    
+    protected $appends = ['customer_name', 'email'];
 
     public function items(): HasMany
     {
@@ -30,5 +32,17 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    
+    // Accessor for customer_name
+    public function getCustomerNameAttribute()
+    {
+        return $this->user?->name ?? 'Guest';
+    }
+    
+    // Accessor for email
+    public function getEmailAttribute()
+    {
+        return $this->user?->email ?? 'No email';
     }
 }
