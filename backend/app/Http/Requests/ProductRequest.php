@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
@@ -47,6 +47,7 @@ class ProductRequest extends FormRequest
             
             'images' => ['nullable', 'array', 'max:10'],
             'images.*' => ['string', 'max:500'],
+            'uploaded_images' => ['nullable', 'string'],
             
             'is_active' => ['nullable', 'boolean'],
             'is_featured' => ['nullable', 'boolean'],

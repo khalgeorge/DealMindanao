@@ -195,6 +195,86 @@
   </div>
 
   <script type="module" src="/src/js/layout.js"></script>
+  <script>
+    // Global Modal Functions - must be defined before module script
+    window.openProductModal = function() {
+       const modal = document.getElementById('product-modal');
+       if (modal) {
+          modal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+       }
+    };
+
+    window.closeProductModal = function() {
+       const modal = document.getElementById('product-modal');
+       const form = document.getElementById('product-form');
+       if (modal) {
+          modal.classList.add('hidden');
+          document.body.style.overflow = '';
+       }
+       if (form) {
+          form.reset();
+          document.getElementById('product-id').value = '';
+          document.getElementById('modal-title').textContent = 'Add New Product';
+          form.querySelector('button[type="submit"]').textContent = 'Save Product';
+          
+          // Reset image inputs to just one
+          const container = document.getElementById('image-inputs-container');
+          if (container) {
+            container.innerHTML = `
+               <div class="flex gap-2">
+                  <input type="url" name="image-url-1" placeholder="https://example.com/image1.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                  <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+               </div>
+            `;
+          }
+       }
+    };
+
+    // Image input management
+    window.addImageInput = function() {
+       const container = document.getElementById('image-inputs-container');
+       const currentCount = container.querySelectorAll('input[type="url"]').length;
+       const newIndex = currentCount + 1;
+       
+       const newInput = document.createElement('div');
+       newInput.className = 'flex gap-2';
+       newInput.innerHTML = `
+          <input type="url" name="image-url-${newIndex}" placeholder="https://example.com/image${newIndex}.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+          <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+       `;
+       container.appendChild(newInput);
+    };
+
+    window.removeImageInput = function(button) {
+       const container = document.getElementById('image-inputs-container');
+       const inputGroups = container.querySelectorAll('.flex');
+       
+       // Keep at least one input
+       if (inputGroups.length > 1) {
+          button.closest('.flex').remove();
+       } else {
+          // Just clear the value if it's the last one
+          container.querySelector('input[type="url"]').value = '';
+       }
+    };
+
+    window.resetFilters = function() {
+       document.getElementById('product-search').value = '';
+       document.getElementById('filter-category').value = '';
+       document.getElementById('filter-status').value = '';
+       if (window.currentPage !== undefined) {
+         window.currentPage = 1;
+       }
+       if (typeof renderProducts === 'function') {
+         renderProducts();
+       }
+    };
+  </script>
   <script type="module">
     import { formatPrice, showToast } from '/src/js/utils.js';
     import { products as productsAPI, categories, companies } from '/src/js/api.js';
@@ -202,7 +282,7 @@
     let allProducts = [];
     let allCategories = [];
     let allCompanies = [];
-    let currentPage = 1;
+    window.currentPage = 1;
     let itemsPerPage = 10;
 
     // Load products from API
@@ -260,73 +340,6 @@
         console.error('Error loading form data:', error);
       }
     }
-
-    // Global Modal Functions
-    window.openProductModal = () => {
-       const modal = document.getElementById('product-modal');
-       if (modal) {
-          modal.classList.remove('hidden');
-          modal.style.display = 'block';
-          document.body.style.overflow = 'hidden';
-       }
-    };
-
-    window.closeProductModal = () => {
-       const modal = document.getElementById('product-modal');
-       const form = document.getElementById('product-form');
-       if (modal) {
-          modal.classList.add('hidden');
-          modal.style.display = 'none';
-          document.body.style.overflow = '';
-       }
-       if (form) {
-          form.reset();
-          document.getElementById('product-id').value = '';
-          document.getElementById('modal-title').textContent = 'Add New Product';
-          form.querySelector('button[type="submit"]').textContent = 'Save Product';
-          
-          // Reset image inputs to just one
-          const container = document.getElementById('image-inputs-container');
-          container.innerHTML = `
-             <div class="flex gap-2">
-                <input type="url" name="image-url-1" placeholder="https://example.com/image1.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
-                <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
-                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-             </div>
-          `;
-       }
-    };
-
-    // Image input management
-    window.addImageInput = () => {
-       const container = document.getElementById('image-inputs-container');
-       const currentCount = container.querySelectorAll('input[type="url"]').length;
-       const newIndex = currentCount + 1;
-       
-       const newInput = document.createElement('div');
-       newInput.className = 'flex gap-2';
-       newInput.innerHTML = `
-          <input type="url" name="image-url-${newIndex}" placeholder="https://example.com/image${newIndex}.jpg" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
-          <button type="button" onclick="removeImageInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
-             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-          </button>
-       `;
-       container.appendChild(newInput);
-    };
-
-    window.removeImageInput = (button) => {
-       const container = document.getElementById('image-inputs-container');
-       const inputGroups = container.querySelectorAll('.flex');
-       
-       // Keep at least one input
-       if (inputGroups.length > 1) {
-          button.closest('.flex').remove();
-       } else {
-          // Just clear the value if it's the last one
-          container.querySelector('input[type="url"]').value = '';
-       }
-    };
 
     // Collect image URLs from the form
     function collectImageUrls() {
@@ -400,9 +413,14 @@
        document.getElementById('product-search').value = '';
        document.getElementById('filter-category').value = '';
        document.getElementById('filter-status').value = '';
-       currentPage = 1;
+       window.currentPage = 1;
        renderProducts();
     };
+
+    // Make functions globally available
+    window.renderProducts = renderProducts;
+    window.editProduct = editProduct;
+    window.deleteProduct = deleteProduct;
 
     function renderProducts() {
        const body = document.getElementById('product-list-body');
@@ -427,9 +445,9 @@
        // 2. Paginate
        const totalItems = filtered.length;
        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-       if (currentPage > totalPages) currentPage = totalPages;
+       if (window.currentPage > totalPages) window.currentPage = totalPages;
 
-       const start = (currentPage - 1) * itemsPerPage;
+       const start = (window.currentPage - 1) * itemsPerPage;
        const end = start + itemsPerPage;
        const paginatedItems = filtered.slice(start, end);
 
@@ -462,39 +480,39 @@
        const currentEnd = Math.min(end, totalItems);
        paginationInfo.textContent = `Showing ${totalItems === 0 ? 0 : start + 1}-${currentEnd} of ${totalItems} products`;
        
-       prevBtn.disabled = currentPage === 1;
-       prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
-       prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+       prevBtn.disabled = window.currentPage === 1;
+       prevBtn.style.opacity = window.currentPage === 1 ? '0.5' : '1';
+       prevBtn.style.cursor = window.currentPage === 1 ? 'not-allowed' : 'pointer';
        
-       nextBtn.disabled = currentPage === totalPages;
-       nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
-       nextBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
+       nextBtn.disabled = window.currentPage === totalPages;
+       nextBtn.style.opacity = window.currentPage === totalPages ? '0.5' : '1';
+       nextBtn.style.cursor = window.currentPage === totalPages ? 'not-allowed' : 'pointer';
     }
 
     // Event Listeners for searching & filtering
     document.getElementById('product-search').addEventListener('input', () => {
-       currentPage = 1;
+       window.currentPage = 1;
        renderProducts();
     });
     document.getElementById('filter-category').addEventListener('change', () => {
-       currentPage = 1;
+       window.currentPage = 1;
        renderProducts();
     });
     document.getElementById('filter-status').addEventListener('change', () => {
-       currentPage = 1;
+       window.currentPage = 1;
        renderProducts();
     });
 
     // Pagination Listeners
     document.getElementById('rows-per-page')?.addEventListener('change', (e) => {
        itemsPerPage = parseInt(e.target.value);
-       currentPage = 1;
+       window.currentPage = 1;
        renderProducts();
     });
 
     document.getElementById('prev-page')?.addEventListener('click', () => {
-       if (currentPage > 1) {
-          currentPage--;
+       if (window.currentPage > 1) {
+          window.currentPage--;
           renderProducts();
        }
     });
@@ -510,8 +528,8 @@
           return matchesSearch && matchesCat && matchesStatus;
        }).length;
 
-       if (currentPage < Math.ceil(filteredCount / itemsPerPage)) {
-          currentPage++;
+       if (window.currentPage < Math.ceil(filteredCount / itemsPerPage)) {
+          window.currentPage++;
           renderProducts();
        }
     });

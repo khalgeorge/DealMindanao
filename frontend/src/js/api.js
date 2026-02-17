@@ -106,24 +106,6 @@ export const products = {
   },
 };
 
-// Orders API
-export const orders = {
-  async getAll(params = {}) {
-    const response = await api.get('/orders', { params });
-    return response.data;
-  },
-  
-  async getOne(id) {
-    const response = await api.get(`/orders/${id}`);
-    return response.data;
-  },
-  
-  async create(data) {
-    const response = await api.post('/orders', data);
-    return response.data;
-  },
-};
-
 // Categories API
 export const categories = {
   async getAll() {

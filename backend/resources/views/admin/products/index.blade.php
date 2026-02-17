@@ -1,634 +1,738 @@
 @extends('layouts.admin')
 
+@section('title', 'Products - DealMindanao Admin')
+
 @section('content')
-<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-    <div>
-        <h1>Products</h1>
-        <p>Manage listings, prices, and availability.</p>
-    </div>
-    <button type="button" class="btn-primary" onclick="openAddProductModal()">+ Add Product</button>
-</div>
+<header class="admin-header">
+  <div>
+    <h1 class="text-xl font-black text-gray-900">Products</h1>
+    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Manage Store Inventory</p>
+  </div>
+  <div class="flex items-center gap-4">
+    <button onclick="openProductModal()" class="btn-primary flex items-center gap-2">
+       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+       Add Product
+    </button>
+  </div>
+</header>
 
-<form method="GET" action="/admin/products" class="card lg:sticky lg:top-6 z-20">
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-6">
-        <div class="lg:col-span-2">
-            <label>Search</label>
-            <input name="q" value="{{ $search }}" class="input" placeholder="Search products">
-        </div>
-        <div>
-            <label>Company</label>
-            <select name="company" class="select">
-                <option value="">All companies</option>
-                @foreach($companies as $company)
-                    <option value="{{ $company->id }}" @selected((string) $companyId === (string) $company->id)>
-                        {{ $company->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label>Category</label>
-            <select name="category" class="select">
-                <option value="">All categories</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" @selected((string) $categoryId === (string) $category->id)>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label>Sort By</label>
-            <select name="sort" class="select">
-                <option value="latest" @selected($sort === 'latest')>Latest</option>
-                <option value="name" @selected($sort === 'name')>Name (A-Z)</option>
-                <option value="price_asc" @selected($sort === 'price_asc')>Price (Low to High)</option>
-                <option value="price_desc" @selected($sort === 'price_desc')>Price (High to Low)</option>
-            </select>
-        </div>
-    </div>
+<div class="admin-content">
+  <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+     <div class="relative w-full md:w-96">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </span>
+        <input type="text" id="product-search" name="search" placeholder="Search products, SKUs, or partners..." class="input pl-11" autocomplete="off">
+     </div>
+     <div class="flex gap-2 w-full md:w-auto">
+        <select id="filter-category" name="filter-category" class="input py-2 text-xs font-bold uppercase tracking-wider" autocomplete="off">
+           <option value="">All Categories</option>
+        </select>
+        <select id="filter-status" name="filter-status" class="input py-2 text-xs font-bold uppercase tracking-wider" autocomplete="off">
+           <option value="">All Statuses</option>
+           <option value="Active">Active</option>
+           <option value="Low">Low Stock</option>
+           <option value="Out">Out of Stock</option>
+        </select>
+        <button onclick="resetFilters()" class="btn-secondary px-4 py-2 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 whitespace-nowrap">
+           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+           Reset
+        </button>
+     </div>
+  </div>
 
-    <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div>
-            <label>Min Price</label>
-            <input name="min_price" value="{{ request('min_price') }}" class="input" placeholder="0.00" inputmode="decimal">
-        </div>
-        <div>
-            <label>Max Price</label>
-            <input name="max_price" value="{{ request('max_price') }}" class="input" placeholder="0.00" inputmode="decimal">
-        </div>
-        <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
-            <input type="checkbox" name="discount_only" value="1" class="rounded border-gray-300 text-brand shadow-sm focus:ring-brand/30" @checked(request('discount_only'))>
-            Discount only
-        </label>
-    </div>
-
-    <div class="mt-4 flex flex-wrap gap-2">
-        <button class="btn-primary" type="submit">Apply Filters</button>
-        <button class="btn-secondary" type="button" id="adminClearFilters">Clear</button>
-    </div>
-</form>
-
-@php
-    $companyName = $companyId ? optional($companies->firstWhere('id', (int) $companyId))->name : null;
-    $categoryName = $categoryId ? optional($categories->firstWhere('id', (int) $categoryId))->name : null;
-    $sortLabels = [
-        'latest' => 'Latest',
-        'name' => 'Name (A-Z)',
-        'price_asc' => 'Price (Low to High)',
-        'price_desc' => 'Price (High to Low)',
-    ];
-    $minPrice = request('min_price');
-    $maxPrice = request('max_price');
-    $discountOnly = request('discount_only');
-    $minLabel = $minPrice !== null && $minPrice !== '' ? '₱' . number_format((float) $minPrice, 2) : null;
-    $maxLabel = $maxPrice !== null && $maxPrice !== '' ? '₱' . number_format((float) $maxPrice, 2) : null;
-    $priceLabel = null;
-    if ($minLabel && $maxLabel) {
-        $priceLabel = $minLabel . ' - ' . $maxLabel;
-    } elseif ($minLabel) {
-        $priceLabel = $minLabel . '+';
-    } elseif ($maxLabel) {
-        $priceLabel = '≤ ' . $maxLabel;
-    }
-    $hasFilters = $search || $companyId || $categoryId || ($sort && $sort !== 'latest') || $priceLabel || $discountOnly;
-@endphp
-
-<div id="adminActiveFilters" class="mt-4 flex flex-wrap items-center gap-2 {{ $hasFilters ? '' : 'hidden' }}">
-    @if($search)
-        <button type="button" class="pill" data-filter="q">Search: {{ $search }} ×</button>
-    @endif
-    @if($companyId)
-        <button type="button" class="pill" data-filter="company">Company: {{ $companyName ?? 'Selected' }} ×</button>
-    @endif
-    @if($categoryId)
-        <button type="button" class="pill" data-filter="category">Category: {{ $categoryName ?? 'Selected' }} ×</button>
-    @endif
-    @if($sort && $sort !== 'latest')
-        <button type="button" class="pill" data-filter="sort">Sort: {{ $sortLabels[$sort] ?? 'Custom' }} ×</button>
-    @endif
-    @if($priceLabel)
-        <button type="button" class="pill" data-filter="price">Price: {{ $priceLabel }} ×</button>
-    @endif
-    @if($discountOnly)
-        <button type="button" class="pill" data-filter="discount">Discount only ×</button>
-    @endif
-    @if($hasFilters)
-        <button type="button" class="btn-secondary" data-filter="all">Clear all</button>
-    @endif
-</div>
-
-<div id="addProductModal" class="modal-overlay">
-    <div class="modal-panel">
-        <div class="card p-0 overflow-hidden">
-            <div class="flex items-center justify-between px-6 py-4 border-b">
-                <h2 class="text-lg font-semibold">Add Product</h2>
-                <button type="button" class="text-gray-400 hover:text-gray-700" onclick="closeAddProductModal()">&times;</button>
-            </div>
-
-            <form action="/admin/products" method="POST" enctype="multipart/form-data" class="p-6">
-            @csrf
-
-            <div class="grid md:grid-cols-2 gap-4">
-                <div>
-                    <label class="text-sm">Product Name</label>
-                    <input name="name" class="input" required>
-                    @if(!app()->environment('production'))
-                        @error('name')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
-
-                <div>
-                    <label class="text-sm">Meta Title</label>
-                    <input name="meta_title" class="input">
-                    <p class="text-xs text-gray-500 mt-1">Optional. Falls back to the product name.</p>
-                    @if(!app()->environment('production'))
-                        @error('meta_title')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
-
-                <div>
-                    <label class="text-sm">Price</label>
-                    <input name="price" type="number" step="0.01" class="input" required>
-                    @if(!app()->environment('production'))
-                        @error('price')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
-
-                <div>
-                    <label class="text-sm">Discount</label>
-                    <input name="discount" type="number" step="0.01" class="input">
-                    @if(!app()->environment('production'))
-                        @error('discount')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
-
-                <div>
-                    <label class="text-sm">Company</label>
-                    <select name="company_id" class="select" required>
-                        @foreach($companies as $company)
-                            <option value="{{ $company->id }}">{{ $company->name }}</option>
-                        @endforeach
-                    </select>
-                    @if(!app()->environment('production'))
-                        @error('company_id')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
-
-                <div>
-                    <label class="text-sm">Category</label>
-                    <select name="category_id" class="select" required>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                    @if(!app()->environment('production'))
-                        @error('category_id')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
-            </div>
-
-            <div class="mt-4">
-                <label class="text-sm">Description</label>
-                <textarea name="description" class="textarea" rows="4"></textarea>
-                @if(!app()->environment('production'))
-                    @error('description')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                @endif
-            </div>
-
-            <div class="mt-4">
-                <label class="text-sm">Meta Description</label>
-                <textarea name="meta_description" class="textarea" rows="3"></textarea>
-                <p class="text-xs text-gray-500 mt-1">Optional. Used for search and sharing.</p>
-                @if(!app()->environment('production'))
-                    @error('meta_description')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                @endif
-            </div>
-
-            <div class="mt-4">
-                <label class="text-sm">Images</label>
-                <input type="file" name="images[]" multiple class="input">
-                @if(!app()->environment('production'))
-                    @error('images')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                    @error('images.*')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                @endif
-            </div>
-
-            <div class="mt-4 flex gap-4">
-                <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" name="is_featured" value="1">
-                    Featured
-                </label>
-                <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" name="is_active" value="1" checked>
-                    Active
-                </label>
-            </div>
-
-                <div class="mt-6 flex gap-3">
-                    <button class="btn-primary" type="submit">Save Product</button>
-                    <button class="btn-secondary" type="button" onclick="closeAddProductModal()">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="space-y-6">
-    @if(session('success'))
-        <div class="alert-success">{{ session('success') }}</div>
-    @endif
-
-    <div id="adminProducts" data-csrf="{{ csrf_token() }}">
-        <div class="table-wrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            <span class="inline-flex items-center gap-1">
-                                Name
-                                <span class="text-xs text-gray-400">↕</span>
-                            </span>
-                        </th>
-                        <th>
-                            <span class="inline-flex items-center gap-1">
-                                Price
-                                <span class="text-xs text-gray-400">↕</span>
-                            </span>
-                        </th>
-                        <th>
-                            <span class="inline-flex items-center gap-1">
-                                Company
-                                <span class="text-xs text-gray-400">↕</span>
-                            </span>
-                        </th>
-                        <th>Status</th>
-                        <th class="text-right pr-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="adminProductsBody">
-                    @forelse($products as $product)
-                        <tr>
-                            <td class="font-medium py-4">{{ $product->name }}</td>
-                            <td class="py-4 text-brand font-semibold">₱{{ number_format($product->price, 2) }}</td>
-                            <td class="py-4">{{ $product->company->name ?? '-' }}</td>
-                            <td class="py-4">
-                                @if($product->is_active)
-                                    <span class="badge-success">Active</span>
-                                @else
-                                    <span class="badge-gray">Inactive</span>
-                                @endif
-                            </td>
-                            <td class="text-right pr-4 py-4 space-x-3">
-                                <a href="/admin/products/{{ $product->id }}/edit" class="btn-secondary">Edit</a>
-                                <form action="/admin/products/{{ $product->id }}" method="POST" class="inline" onsubmit="return confirm('Delete this product?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn-danger" type="submit">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="p-6 text-center text-gray-500">
-                                <div class="space-y-2">
-                                    <p>No products found.</p>
-                                    @if($hasFilters)
-                                        <a href="/admin/products" class="btn-secondary">Clear filters</a>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <div data-server-pagination>
-            {{ $products->links() }}
-        </div>
-    </div>
-
-    <div id="adminProductsPagination"></div>
-</div>
-
-<div id="adminProductsOverlay" class="page-overlay">
-    <div class="card flex items-center gap-3">
-        <div class="h-6 w-6 rounded-full border-2 border-brand border-t-transparent animate-spin"></div>
-        <p class="text-sm font-semibold text-gray-700">Loading products...</p>
-    </div>
-</div>
-
-<div id="adminProductsSkeleton" class="hidden mt-6 fade-in">
-    <div class="table-wrap">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Company</th>
-                    <th>Status</th>
-                    <th class="text-right pr-4">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for ($i = 0; $i < 4; $i++)
-                    <tr>
-                        <td class="py-4">
-                            <div class="h-4 w-32 rounded bg-gray-100 animate-pulse"></div>
-                        </td>
-                        <td class="py-4">
-                            <div class="h-4 w-16 rounded bg-gray-100 animate-pulse"></div>
-                        </td>
-                        <td class="py-4">
-                            <div class="h-4 w-24 rounded bg-gray-100 animate-pulse"></div>
-                        </td>
-                        <td class="py-4">
-                            <div class="h-4 w-14 rounded bg-gray-100 animate-pulse"></div>
-                        </td>
-                        <td class="py-4 text-right pr-4">
-                            <div class="h-8 w-24 rounded bg-gray-100 animate-pulse ml-auto"></div>
-                        </td>
-                    </tr>
-                @endfor
-            </tbody>
+  <div class="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+     <div class="overflow-x-auto">
+        <table class="data-table">
+           <thead>
+              <tr>
+                 <th>Product</th>
+                 <th>Category</th>
+                 <th>Partner</th>
+                 <th>Price</th>
+                 <th>Stock</th>
+                 <th>Status</th>
+                 <th class="text-right">Actions</th>
+              </tr>
+           </thead>
+           <tbody id="product-list-body">
+              <tr class="animate-pulse">
+                 <td class="px-6 py-4"><div class="h-10 bg-gray-100 rounded-lg w-40"></div></td>
+                 <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-20"></div></td>
+                 <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-24"></div></td>
+                 <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-16"></div></td>
+                 <td class="px-6 py-4"><div class="h-4 bg-gray-50 rounded-lg w-12"></div></td>
+                 <td class="px-6 py-4"><div class="h-6 bg-gray-50 rounded-full w-16"></div></td>
+                 <td class="px-6 py-4 text-right"><div class="ml-auto h-8 bg-gray-50 rounded-lg w-20"></div></td>
+              </tr>
+           </tbody>
         </table>
-    </div>
+     </div>
+     
+     <div class="p-6 border-t border-gray-50 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+           <span id="pagination-info" class="text-xs font-bold text-gray-400 uppercase tracking-widest">Loading...</span>
+           <div class="h-4 w-px bg-gray-200"></div>
+           <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Rows:</span>
+              <select id="rows-per-page" class="bg-transparent border-none text-xs font-black text-gray-900 focus:ring-0 cursor-pointer">
+                 <option value="5">5</option>
+                 <option value="10" selected>10</option>
+                 <option value="20">20</option>
+                 <option value="50">50</option>
+              </select>
+           </div>
+        </div>
+        <div class="flex gap-2">
+           <button id="prev-page" class="btn-secondary btn-sm">Previous</button>
+           <button id="next-page" class="btn-secondary btn-sm">Next</button>
+        </div>
+     </div>
+  </div>
 </div>
-
-<script>
-    function openAddProductModal() {
-        const modal = document.getElementById('addProductModal');
-        if (modal) {
-            modal.classList.add('is-open');
-        }
-    }
-
-    function closeAddProductModal() {
-        const modal = document.getElementById('addProductModal');
-        if (modal) {
-            modal.classList.remove('is-open');
-        }
-    }
-
-    (() => {
-        const form = document.querySelector('form[action="/admin/products"]');
-        const container = document.getElementById('adminProducts');
-        const body = document.getElementById('adminProductsBody');
-        const pagination = document.getElementById('adminProductsPagination');
-        const overlay = document.getElementById('adminProductsOverlay');
-        const activeFilters = document.getElementById('adminActiveFilters');
-        if (!form || !container || !body || !pagination || !overlay) return;
-
-        const csrfToken = container.dataset.csrf;
-        const searchInput = form.querySelector('input[name="q"]');
-        const selects = form.querySelectorAll('select');
-        const clearButton = document.getElementById('adminClearFilters');
-        let timer;
-
-        const formatCurrency = (value) => {
-            return new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-        };
-
-        const renderChips = () => {
-            if (!activeFilters) return;
-            const searchValue = searchInput?.value?.trim() ?? '';
-            const companySelect = form.querySelector('select[name="company"]');
-            const categorySelect = form.querySelector('select[name="category"]');
-            const sortSelect = form.querySelector('select[name="sort"]');
-            const minPriceInput = form.querySelector('input[name="min_price"]');
-            const maxPriceInput = form.querySelector('input[name="max_price"]');
-            const discountOnlyInput = form.querySelector('input[name="discount_only"]');
-            const minPrice = minPriceInput?.value?.trim() ?? '';
-            const maxPrice = maxPriceInput?.value?.trim() ?? '';
-            const discountOnly = !!discountOnlyInput?.checked;
-
-            const chips = [];
-            if (searchValue) {
-                chips.push(`<button type="button" class="pill" data-filter="q">Search: ${searchValue} ×</button>`);
-            }
-            if (companySelect && companySelect.value) {
-                chips.push(`<button type="button" class="pill" data-filter="company">Company: ${companySelect.selectedOptions[0].text} ×</button>`);
-            }
-            if (categorySelect && categorySelect.value) {
-                chips.push(`<button type="button" class="pill" data-filter="category">Category: ${categorySelect.selectedOptions[0].text} ×</button>`);
-            }
-            if (sortSelect && sortSelect.value && sortSelect.value !== 'latest') {
-                chips.push(`<button type="button" class="pill" data-filter="sort">Sort: ${sortSelect.selectedOptions[0].text} ×</button>`);
-            }
-            if (minPrice || maxPrice) {
-                const minValue = Number(minPrice);
-                const maxValue = Number(maxPrice);
-                const minLabel = Number.isFinite(minValue) && minPrice ? `₱${formatCurrency(minValue)}` : minPrice;
-                const maxLabel = Number.isFinite(maxValue) && maxPrice ? `₱${formatCurrency(maxValue)}` : maxPrice;
-                let priceLabel = '';
-                if (minLabel && maxLabel) {
-                    priceLabel = `${minLabel} - ${maxLabel}`;
-                } else if (minLabel) {
-                    priceLabel = `${minLabel}+`;
-                } else {
-                    priceLabel = `≤ ${maxLabel}`;
-                }
-                chips.push(`<button type="button" class="pill" data-filter="price">Price: ${priceLabel} ×</button>`);
-            }
-            if (discountOnly) {
-                chips.push('<button type="button" class="pill" data-filter="discount">Discount only ×</button>');
-            }
-            if (chips.length) {
-                chips.push('<button type="button" class="btn-secondary" data-filter="all">Clear all</button>');
-            }
-
-            activeFilters.innerHTML = chips.join('');
-            activeFilters.classList.toggle('hidden', chips.length === 0);
-        };
-
-        const toggleLoading = (isLoading) => {
-            const skeleton = document.getElementById('adminProductsSkeleton');
-            if (!skeleton) return;
-            if (isLoading) {
-                container.classList.add('hidden');
-                pagination.classList.add('hidden');
-                skeleton.classList.remove('hidden');
-                skeleton.classList.add('is-visible');
-                overlay.classList.add('is-active');
-            } else {
-                container.classList.remove('hidden');
-                pagination.classList.remove('hidden');
-                skeleton.classList.add('hidden');
-                skeleton.classList.remove('is-visible');
-                overlay.classList.remove('is-active');
-            }
-        };
-
-        const renderRows = (items) => {
-            if (!items.length) {
-                const clearButton = ${$hasFilters ? 'true' : 'false'}
-                    ? '<div class="mt-2"><a href="/admin/products" class="btn-secondary">Clear filters</a></div>'
-                    : '';
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="p-6 text-center text-gray-500">
-                            <div class="space-y-1">
-                                <p>No products found.</p>
-                                ${clearButton}
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            body.innerHTML = items.map((item) => {
-                const status = item.is_active
-                    ? '<span class="badge-success">Active</span>'
-                    : '<span class="badge-gray">Inactive</span>';
-
-                return `
-                    <tr>
-                        <td class="font-medium py-4">${item.name}</td>
-                        <td class="py-4 text-brand font-semibold">₱${formatCurrency(item.price)}</td>
-                        <td class="py-4">${item.company ?? '-'}</td>
-                        <td class="py-4">${status}</td>
-                        <td class="text-right pr-4 py-4 space-x-3">
-                            <a href="/admin/products/${item.id}/edit" class="btn-secondary">Edit</a>
-                            <form action="/admin/products/${item.id}" method="POST" class="inline" onsubmit="return confirm('Delete this product?')">
-                                <input type="hidden" name="_token" value="${csrfToken}">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button class="btn-danger" type="submit">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        };
-
-        const renderPagination = (meta) => {
-            if (!meta || meta.last_page <= 1) {
-                pagination.innerHTML = '';
-                return;
-            }
-
-            let buttons = '';
-            for (let page = 1; page <= meta.last_page; page += 1) {
-                const isActive = page === meta.current_page;
-                buttons += `
-                    <button type="button" data-page="${page}" class="btn-secondary ${isActive ? 'opacity-60 cursor-default' : ''}" ${isActive ? 'disabled' : ''}>
-                        ${page}
-                    </button>
-                `;
-            }
-
-            pagination.innerHTML = `<div class="flex flex-wrap gap-2">${buttons}</div>`;
-        };
-
-        const fetchProducts = async (page = 1) => {
-            const params = new URLSearchParams(new FormData(form));
-            params.set('page', page);
-
-            toggleLoading(true);
-            const response = await fetch(`/admin/products/search?${params.toString()}`);
-            if (!response.ok) {
-                toggleLoading(false);
-                return;
-            }
-
-            const payload = await response.json();
-            renderRows(payload.data || []);
-            renderPagination(payload.meta || {});
-            renderChips();
-            toggleLoading(false);
-        };
-
-        const serverPagination = container.querySelector('[data-server-pagination]');
-        if (serverPagination) {
-            serverPagination.classList.add('hidden');
-        }
-
-        if (searchInput) {
-            searchInput.addEventListener('input', () => {
-                clearTimeout(timer);
-                timer = setTimeout(() => fetchProducts(1), 500);
-            });
-        }
-
-        selects.forEach((select) => {
-            select.addEventListener('change', () => fetchProducts(1));
-        });
-
-        if (clearButton) {
-            clearButton.addEventListener('click', () => {
-                form.reset();
-                history.replaceState(null, '', window.location.pathname);
-                renderChips();
-                fetchProducts(1);
-            });
-        }
-
-        if (activeFilters) {
-            activeFilters.addEventListener('click', (event) => {
-                const target = event.target;
-                if (!(target instanceof HTMLElement)) return;
-                const filter = target.dataset.filter;
-                if (!filter) return;
-
-                if (filter === 'q' && searchInput) {
-                    searchInput.value = '';
-                } else if (filter === 'company') {
-                    const select = form.querySelector('select[name="company"]');
-                    if (select) select.value = '';
-                } else if (filter === 'category') {
-                    const select = form.querySelector('select[name="category"]');
-                    if (select) select.value = '';
-                } else if (filter === 'sort') {
-                    const select = form.querySelector('select[name="sort"]');
-                    if (select) select.value = 'latest';
-                } else if (filter === 'price') {
-                    const minInput = form.querySelector('input[name="min_price"]');
-                    const maxInput = form.querySelector('input[name="max_price"]');
-                    if (minInput) minInput.value = '';
-                    if (maxInput) maxInput.value = '';
-                } else if (filter === 'discount') {
-                    const discountInput = form.querySelector('input[name="discount_only"]');
-                    if (discountInput) discountInput.checked = false;
-                } else if (filter === 'all') {
-                    form.reset();
-                }
-
-                fetchProducts(1);
-            });
-        }
-
-        pagination.addEventListener('click', (event) => {
-            const target = event.target;
-            if (!(target instanceof HTMLElement)) return;
-            const page = target.dataset.page;
-            if (page) {
-                fetchProducts(Number(page));
-            }
-        });
-
-        renderChips();
-        fetchProducts(Number(new URLSearchParams(window.location.search).get('page') || 1));
-    })();
-</script>
 @endsection
+
+@push('modals')
+<div id="product-modal" class="fixed inset-0 z-[999] hidden" role="dialog" aria-modal="true" style="opacity: 0; transition: opacity 0.3s ease-in-out;">
+   <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300" onclick="closeProductModal()"></div>
+   <div class="fixed inset-0 pointer-events-none flex items-center justify-center p-4">
+      <div class="pointer-events-auto bg-white w-full max-w-2xl rounded-lg shadow-2xl overflow-hidden transform transition-all duration-300" style="transform: scale(0.95); opacity: 0;">
+         <form id="product-form" class="flex flex-col max-h-[90vh]">
+            <input type="hidden" name="id" id="product-id">
+            <div class="p-8 overflow-y-auto">
+               <div class="flex justify-between items-center mb-8">
+                  <h3 id="modal-title" class="text-2xl font-black text-gray-900 uppercase tracking-tighter">Add New Product</h3>
+                  <button type="button" onclick="closeProductModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+               </div>
+               
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-4">
+                  <div class="md:col-span-2">
+                     <label for="product-name" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Product Name</label>
+                     <input type="text" id="product-name" name="name" required placeholder="e.g. Premium Davao Durian" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900" autocomplete="off">
+                  </div>
+                  <div>
+                     <label for="product-category" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Category</label>
+                     <select id="product-category" name="category" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900" autocomplete="off">
+                        <option value="">Select Category</option>
+                     </select>
+                  </div>
+                  <div>
+                     <label for="product-partner" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Partner / Vendor</label>
+                     <select id="product-partner" name="partner" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900" autocomplete="off">
+                        <option value="">Select Partner</option>
+                     </select>
+                  </div>
+                  <div>
+                     <label for="product-price" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Price (₱)</label>
+                     <input type="number" id="product-price" name="price" required step="0.01" placeholder="250.00" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900" autocomplete="off">
+                  </div>
+                  <div>
+                     <label for="product-stock" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Stock Level</label>
+                     <input type="number" id="product-stock" name="stock_quantity" required placeholder="100" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900" autocomplete="off">
+                  </div>
+                  <div class="md:col-span-2">
+                     <label for="product-description" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Description</label>
+                     <textarea id="product-description" name="description" rows="3" placeholder="Detailed product description..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900" autocomplete="off"></textarea>
+                  </div>
+                  <div class="md:col-span-2">
+                     <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-3">Product Images</label>
+                     
+                     <!-- Image Upload Area -->
+                     <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-brand-500 transition-colors mb-4">
+                        <input type="file" id="image-file-input" accept="image/jpeg,image/jpg,image/png,image/webp" multiple class="hidden">
+                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" stroke="currentColor" fill="none" viewBox="0 0 48 48"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                        <button type="button" onclick="document.getElementById('image-file-input').click()" class="btn-primary mb-2">Choose Images</button>
+                        <p class="text-xs text-gray-500">or drag and drop images here</p>
+                        <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP up to 2MB each</p>
+                     </div>
+                     
+                     <!-- Image Preview Grid -->
+                     <div id="image-preview-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4"></div>
+                     
+                     <!-- Optional: URL Input -->
+                     <div class="border-t border-gray-200 pt-4">
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">Or enter image URL</label>
+                        <div id="image-url-container" class="space-y-2">
+                           <div class="flex gap-2">
+                              <input type="url" name="image-url-1" placeholder="https://example.com/image.jpg" class="flex-1 px-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                              <button type="button" onclick="removeUrlInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                              </button>
+                           </div>
+                        </div>
+                        <button type="button" onclick="addUrlInput()" class="mt-2 text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                           Add Another URL
+                        </button>
+                     </div>
+                     
+                     <!-- Hidden input to store uploaded image paths -->
+                     <input type="hidden" id="uploaded-images" name="uploaded_images" value="">
+                  </div>
+               </div>
+            </div>
+            
+            <div class="bg-gray-50 px-8 py-6 flex flex-row-reverse gap-3 border-t border-gray-100">
+               <button type="submit" class="btn-primary px-8 py-3 rounded-lg font-bold">Save Product</button>
+               <button type="button" onclick="closeProductModal()" class="px-8 py-3 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors">Cancel</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+@endpush
+
+@push('scripts')
+<script>
+// Uploaded images array
+let uploadedImages = [];
+
+// File upload handling
+document.getElementById('image-file-input').addEventListener('change', async function(e) {
+   const files = Array.from(e.target.files);
+   await uploadImages(files);
+   this.value = ''; // Reset input for re-upload
+});
+
+// Drag and drop
+const dropZone = document.querySelector('.border-dashed');
+dropZone.addEventListener('dragover', (e) => {
+   e.preventDefault();
+   dropZone.classList.add('border-brand-500', 'bg-brand-50');
+});
+dropZone.addEventListener('dragleave', () => {
+   dropZone.classList.remove('border-brand-500', 'bg-brand-50');
+});
+dropZone.addEventListener('drop', async (e) => {
+   e.preventDefault();
+   dropZone.classList.remove('border-brand-500', 'bg-brand-50');
+   const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+   await uploadImages(files);
+});
+
+async function uploadImages(files) {
+   const previewGrid = document.getElementById('image-preview-grid');
+   
+   for (const file of files) {
+      // Create preview container
+      const previewDiv = document.createElement('div');
+      previewDiv.className = 'relative group';
+      previewDiv.innerHTML = `
+         <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+            <img src="" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+               <div class="text-white text-sm">Uploading...</div>
+            </div>
+         </div>
+      `;
+      previewGrid.appendChild(previewDiv);
+      
+      // Show local preview
+      const img = previewDiv.querySelector('img');
+      const reader = new FileReader();
+      reader.onload = (e) => img.src = e.target.result;
+      reader.readAsDataURL(file);
+      
+      try {
+         // Upload to server
+         const formData = new FormData();
+         formData.append('image', file);
+         
+         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+         if (!csrfToken) {
+            throw new Error('CSRF token not found');
+         }
+         
+         const response = await fetch('{{ route("admin.products.uploadImage") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+               'X-CSRF-TOKEN': csrfToken,
+               'Accept': 'application/json'
+            },
+            credentials: 'same-origin'
+         });
+         
+         // Get response text first to check what we received
+         const responseText = await response.text();
+         
+         if (!response.ok) {
+            console.error('Server response:', responseText);
+            
+            // Try to parse error as JSON for validation errors
+            try {
+               const errorData = JSON.parse(responseText);
+               if (errorData.errors) {
+                  const errorMessages = Object.values(errorData.errors).flat().join(', ');
+                  throw new Error(errorMessages);
+               }
+               if (errorData.message) {
+                  throw new Error(errorData.message);
+               }
+            } catch (parseError) {
+               // Not JSON, use generic error
+            }
+            
+            throw new Error(`HTTP error! status: ${response.status}`);
+         }
+         
+         // Try to parse as JSON
+         let result;
+         try {
+            result = JSON.parse(responseText);
+         } catch (e) {
+            console.error('Invalid JSON response:', responseText);
+            throw new Error('Server returned invalid response (not JSON)');
+         }
+         
+         if (result.success) {
+            uploadedImages.push(result.path);
+            document.getElementById('uploaded-images').value = uploadedImages.join(',');
+            
+            // Update preview with delete button
+            previewDiv.innerHTML = `
+               <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 relative">
+                  <img src="${result.path}" class="w-full h-full object-cover">
+                  <button type="button" onclick="removeUploadedImage(this, '${result.path}')" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+               </div>
+            `;
+         } else {
+            previewDiv.remove();
+            console.error('Upload failed:', result);
+            const errorMsg = result.errors ? Object.values(result.errors).flat().join(', ') : (result.message || 'Unknown error');
+            alert('Failed to upload image: ' + errorMsg);
+         }
+      } catch (error) {
+         previewDiv.remove();
+         console.error('Upload error:', error);
+         alert('Failed to upload image: ' + error.message);
+      }
+   }
+}
+
+window.removeUploadedImage = function(button, path) {
+   uploadedImages = uploadedImages.filter(p => p !== path);
+   document.getElementById('uploaded-images').value = uploadedImages.join(',');
+   button.closest('.relative.group').remove();
+};
+
+window.addUrlInput = function() {
+   const container = document.getElementById('image-url-container');
+   const currentCount = container.querySelectorAll('input[type="url"]').length;
+   const newIndex = currentCount + 1;
+   
+   const newInput = document.createElement('div');
+   newInput.className = 'flex gap-2';
+   newInput.innerHTML = `
+      <input type="url" name="image-url-${newIndex}" placeholder="https://example.com/image${newIndex}.jpg" class="flex-1 px-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+      <button type="button" onclick="removeUrlInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+   `;
+   container.appendChild(newInput);
+};
+
+window.removeUrlInput = function(button) {
+   const container = document.getElementById('image-url-container');
+   const inputGroups = container.querySelectorAll('.flex');
+   
+   if (inputGroups.length > 1) {
+      button.closest('.flex').remove();
+   } else {
+      container.querySelector('input[type="url"]').value = '';
+   }
+};
+
+window.openProductModal = function() {
+   const modal = document.getElementById('product-modal');
+   if (modal) {
+      modal.classList.remove('hidden');
+      // Trigger reflow to enable transition
+      modal.offsetHeight;
+      modal.style.opacity = '1';
+      document.body.style.overflow = 'hidden';
+      
+      // Animate modal content
+      const modalContent = modal.querySelector('.pointer-events-auto');
+      if (modalContent) {
+         modalContent.style.transform = 'scale(1)';
+         modalContent.style.opacity = '1';
+      }
+   }
+};
+
+window.closeProductModal = function() {
+   const modal = document.getElementById('product-modal');
+   const form = document.getElementById('product-form');
+   
+   if (modal) {
+      modal.style.opacity = '0';
+      const modalContent = modal.querySelector('.pointer-events-auto');
+      if (modalContent) {
+         modalContent.style.transform = 'scale(0.95)';
+         modalContent.style.opacity = '0';
+      }
+      
+      // Wait for animation before hiding
+      setTimeout(() => {
+         modal.classList.add('hidden');
+         document.body.style.overflow = '';
+      }, 300);
+   }
+   
+   if (form) {
+      form.reset();
+      document.getElementById('product-id').value = '';
+      document.getElementById('modal-title').textContent = 'Add New Product';
+      form.querySelector('button[type="submit"]').textContent = 'Save Product';
+      
+      // Reset uploaded images
+      uploadedImages = [];
+      document.getElementById('uploaded-images').value = '';
+      document.getElementById('image-preview-grid').innerHTML = '';
+      
+      // Reset URL inputs to just one
+      const container = document.getElementById('image-url-container');
+      if (container) {
+        container.innerHTML = `
+           <div class="flex gap-2">
+              <input type="url" name="image-url-1" placeholder="https://example.com/image.jpg" class="flex-1 px-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+              <button type="button" onclick="removeUrlInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+           </div>
+        `;
+      }
+   }
+};
+
+window.addImageInput = function() {
+   // Deprecated - use addUrlInput instead
+   addUrlInput();
+};
+
+window.removeImageInput = function(button) {
+   // Deprecated - use removeUrlInput instead
+   removeUrlInput(button);
+};
+
+window.resetFilters = function() {
+   document.getElementById('product-search').value = '';
+   document.getElementById('filter-category').value = '';
+   document.getElementById('filter-status').value = '';
+   if (window.currentPage !== undefined) {
+     window.currentPage = 1;
+   }
+   if (typeof renderProducts === 'function') {
+     renderProducts();
+   }
+};
+</script>
+<script type="module">
+const API_URL = '{{ config("app.url") }}/api';
+const api = {
+  async get(url) {
+    const token = localStorage.getItem('auth_token');
+    const r = await fetch(API_URL+url, { headers: { 'Authorization': 'Bearer '+token, 'Accept': 'application/json' }});
+    return await r.json();
+  },
+  async post(url, data) {
+    const token = localStorage.getItem('auth_token');
+    const r = await fetch(API_URL+url, { method: 'POST', headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    return await r.json();
+  },
+  async put(url, data) {
+    const token = localStorage.getItem('auth_token');
+    const r = await fetch(API_URL+url, { method: 'PUT', headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    return await r.json();
+  },
+  async delete(url) {
+    const token = localStorage.getItem('auth_token');
+    const r = await fetch(API_URL+url, { method: 'DELETE', headers: { 'Authorization': 'Bearer '+token }});
+    return await r.json();
+  }
+};
+
+let allProducts = [];
+window.currentPage = 1;
+let itemsPerPage = 10;
+
+async function loadProducts() {
+  try {
+    const r = await api.get('/products');
+    const data = Array.isArray(r) ? r : (r.data || []);
+    allProducts = data.map(p => ({
+      id: p.id,
+      name: p.name,
+      cat: p.category?.name || 'Uncategorized',
+      partner: p.company?.name || 'Unknown',
+      price: parseFloat(p.price),
+      stock: p.stock_quantity || 0,
+      stock_quantity: p.stock_quantity || 0,
+      status: (p.stock_quantity||0) > 10 ? 'Active' : ((p.stock_quantity||0) > 0 ? 'Low' : 'Out'),
+      description: p.description || '',
+      images: p.images,
+      category_id: p.category?.id,
+      company_id: p.company?.id
+    }));
+    renderProducts();
+  } catch (e) {
+    document.getElementById('product-list-body').innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-red-500">Failed to load products</td></tr>';
+  }
+}
+
+async function loadFormData() {
+  try {
+    const [cats, comps] = await Promise.all([api.get('/categories'), api.get('/companies')]);
+    const categories = Array.isArray(cats) ? cats : (cats.data || []);
+    const companies = Array.isArray(comps) ? comps : (comps.data || []);
+    
+    document.getElementById('filter-category').innerHTML = '<option value="">All Categories</option>' + categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    document.querySelector('select[name="category"]').innerHTML = '<option value="">Select Category</option>' + categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    document.querySelector('select[name="partner"]').innerHTML = '<option value="">Select Partner</option>' + companies.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  } catch (e) {}
+}
+
+function collectImageUrls() {
+  const inputs = document.querySelectorAll('#image-inputs-container input[type="url"]');
+  const urls = [];
+  inputs.forEach(inp => { if (inp.value.trim()) urls.push(inp.value.trim()); });
+  return urls.length > 0 ? urls : null;
+}
+
+window.editProduct = (id) => {
+  const p = allProducts.find(pr => pr.id == id);
+  if (!p) return;
+  document.getElementById('product-id').value = p.id;
+  document.getElementById('modal-title').textContent = 'Edit Product';
+  const form = document.getElementById('product-form');
+  form.elements['name'].value = p.name;
+  form.elements['category'].value = p.category_id || '';
+  form.elements['partner'].value = p.company_id || '';
+  form.elements['price'].value = p.price;
+  form.elements['stock_quantity'].value = p.stock_quantity || p.stock || 0;
+  form.elements['description'].value = p.description || '';
+  
+  // Handle existing images
+  const imgs = p.images || [];
+  const previewGrid = document.getElementById('image-preview-grid');
+  const urlContainer = document.getElementById('image-url-container');
+  
+  // Reset
+  previewGrid.innerHTML = '';
+  urlContainer.innerHTML = '';
+  uploadedImages = [];
+  
+  if (imgs.length > 0) {
+    imgs.forEach((url, i) => {
+      // Check if it's an uploaded image (starts with /storage/) or external URL
+      if (url.startsWith('/storage/')) {
+        // Show in preview grid as uploaded image
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'relative group';
+        previewDiv.innerHTML = `
+          <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 relative">
+            <img src="${url}" class="w-full h-full object-cover">
+            <button type="button" onclick="removeUploadedImage(this, '${url}')" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+        `;
+        previewGrid.appendChild(previewDiv);
+        uploadedImages.push(url);
+      } else {
+        // Show in URL container
+        const urlDiv = document.createElement('div');
+        urlDiv.className = 'flex gap-2';
+        urlDiv.innerHTML = `
+          <input type="url" name="image-url-${i+1}" value="${url}" class="flex-1 px-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+          <button type="button" onclick="removeUrlInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        `;
+        urlContainer.appendChild(urlDiv);
+      }
+    });
+  }
+  
+  // If no URL inputs, add one empty one
+  if (urlContainer.children.length === 0) {
+    urlContainer.innerHTML = `
+      <div class="flex gap-2">
+        <input type="url" name="image-url-1" placeholder="https://example.com/image.jpg" class="flex-1 px-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+        <button type="button" onclick="removeUrlInput(this)" class="text-red-500 hover:text-red-700 transition-colors px-3">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+    `;
+  }
+  
+  // Update hidden input
+  document.getElementById('uploaded-images').value = uploadedImages.join(',');
+  
+  openProductModal();
+};
+
+window.deleteProduct = async (id) => {
+  const p = allProducts.find(pr => pr.id == id);
+  if (!p || !confirm(`Delete "${p.name}"?`)) return;
+  try {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const response = await fetch('{{ url("/admin/products") }}/' + id, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: '_method=DELETE',
+      credentials: 'same-origin'
+    });
+    
+    if (response.ok) {
+      alert('Product deleted successfully!');
+      loadProducts();
+    } else {
+      throw new Error('Delete failed');
+    }
+  } catch (e) {
+    console.error('Delete error:', e);
+    alert('Failed to delete: ' + e.message);
+  }
+};
+
+window.renderProducts = () => {
+  const body = document.getElementById('product-list-body');
+  const search = document.getElementById('product-search').value.toLowerCase();
+  const catFilter = document.getElementById('filter-category').value;
+  const statusFilter = document.getElementById('filter-status').value;
+  
+  const filtered = allProducts.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(search) || p.partner.toLowerCase().includes(search);
+    const matchesCat = !catFilter || p.cat === catFilter;
+    const matchesStatus = !statusFilter || p.status === statusFilter;
+    return matchesSearch && matchesCat && matchesStatus;
+  });
+  
+  const total = filtered.length;
+  const totalPages = Math.ceil(total / itemsPerPage) || 1;
+  if (window.currentPage > totalPages) window.currentPage = totalPages;
+  const start = (window.currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const items = filtered.slice(start, end);
+  
+  if (items.length === 0) {
+    body.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">No products found</td></tr>';
+  } else {
+    body.innerHTML = items.map(p => `<tr><td class="px-6 py-4 font-bold">${p.name}</td><td class="px-6 py-4">${p.cat}</td><td class="px-6 py-4 text-xs font-bold text-brand-600 uppercase">${p.partner}</td><td class="px-6 py-4 font-mono">₱${p.price}</td><td class="px-6 py-4">${p.stock}</td><td class="px-6 py-4"><span class="badge-${p.status.toLowerCase()}">${p.status}</span></td><td class="px-6 py-4 text-right"><button onclick="editProduct(${p.id})" class="text-gray-400 hover:text-brand-600 font-bold text-xs uppercase">Edit</button> | <button onclick="deleteProduct(${p.id})" class="text-gray-400 hover:text-red-600 font-bold text-xs uppercase">Delete</button></td></tr>`).join('');
+  }
+  
+  document.getElementById('pagination-info').textContent = `Showing ${total === 0 ? 0 : start+1}-${Math.min(end, total)} of ${total} products`;
+  const prevBtn = document.getElementById('prev-page');
+  const nextBtn = document.getElementById('next-page');
+  prevBtn.disabled = window.currentPage === 1;
+  prevBtn.style.opacity = window.currentPage === 1 ? '0.5' : '1';
+  nextBtn.disabled = window.currentPage === totalPages;
+  nextBtn.style.opacity = window.currentPage === totalPages ? '0.5' : '1';
+};
+
+document.getElementById('product-search').addEventListener('input', () => { window.currentPage=1; renderProducts(); });
+document.getElementById('filter-category').addEventListener('change', () => { window.currentPage=1; renderProducts(); });
+document.getElementById('filter-status').addEventListener('change', () => { window.currentPage=1; renderProducts(); });
+document.getElementById('rows-per-page').addEventListener('change', e => { itemsPerPage=parseInt(e.target.value); window.currentPage=1; renderProducts(); });
+document.getElementById('prev-page').addEventListener('click', () => { if (window.currentPage > 1) { window.currentPage--; renderProducts(); }});
+document.getElementById('next-page').addEventListener('click', () => { 
+  const search = document.getElementById('product-search').value.toLowerCase();
+  const catFilter = document.getElementById('filter-category').value;
+  const statusFilter = document.getElementById('filter-status').value;
+  const filtered = allProducts.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(search) || p.partner.toLowerCase().includes(search);
+    const matchesCat = !catFilter || p.cat === catFilter;
+    const matchesStatus = !statusFilter || p.status === statusFilter;
+    return matchesSearch && matchesCat && matchesStatus;
+  });
+  if (window.currentPage < Math.ceil(filtered.length / itemsPerPage)) { window.currentPage++; renderProducts(); }
+});
+
+loadProducts();
+loadFormData();
+
+document.getElementById('product-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const id = form.elements['id']?.value;
+  
+  // Collect form data
+  const formData = new FormData();
+  formData.append('name', form.elements['name'].value);
+  formData.append('category_id', form.elements['category'].value);
+  formData.append('company_id', form.elements['partner'].value);
+  formData.append('price', form.elements['price'].value);
+  formData.append('stock_quantity', form.elements['stock_quantity'].value || '0');
+  formData.append('description', form.elements['description'].value || '');
+  
+  // Add uploaded images
+  const uploadedImagesPaths = document.getElementById('uploaded-images').value;
+  if (uploadedImagesPaths) {
+    formData.append('uploaded_images', uploadedImagesPaths);
+  }
+  
+  // Add URL images
+  const urlInputs = document.querySelectorAll('#image-url-container input[type="url"]');
+  urlInputs.forEach((input, index) => {
+    if (input.value.trim()) {
+      formData.append(`images[${index}]`, input.value.trim());
+    }
+  });
+  
+  // Add CSRF token
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  if (csrfToken) {
+    formData.append('_token', csrfToken);
+  }
+  
+  if (!formData.get('category_id') || !formData.get('company_id')) {
+    alert('Please select category and partner');
+    return;
+  }
+  
+  try {
+    let url, method;
+    if (id) {
+      url = '{{ url("/admin/products") }}/' + id;
+      method = 'POST';
+      formData.append('_method', 'PUT');
+    } else {
+      url = '{{ route("admin.products.store") }}';
+      method = 'POST';
+    }
+    
+    const response = await fetch(url, {
+      method: method,
+      body: formData,
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+        'Accept': 'application/json'
+      },
+      credentials: 'same-origin'
+    });
+    
+    if (response.ok) {
+      alert(id ? 'Product updated successfully!' : 'Product created successfully!');
+      window.location.reload();
+    } else {
+      const error = await response.text();
+      console.error('Server error:', error);
+      throw new Error('Failed to save');
+    }
+  } catch (e) {
+    console.error('Save error:', e);
+    alert('Failed to save product: ' + e.message);
+  }
+});
+</script>
+@endpush

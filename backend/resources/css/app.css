@@ -148,6 +148,46 @@
          disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed;
 }
 
+@utility select {
+  @apply block w-full px-3.5 py-2.5
+         bg-white border border-gray-300 rounded-lg
+         text-gray-900 text-sm
+         shadow-sm
+         transition-colors duration-150
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-0 focus-visible:border-brand-500
+         disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed;
+}
+
+@utility textarea {
+  @apply block w-full px-3.5 py-2.5
+         bg-white border border-gray-300 rounded-lg
+         text-gray-900 text-sm
+         placeholder:text-gray-400
+         shadow-sm
+         transition-colors duration-150
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-0 focus-visible:border-brand-500
+         disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed;
+}
+
+@utility pill {
+  @apply inline-flex items-center gap-1 px-3 py-1
+         bg-gray-100 text-gray-700 text-sm rounded-full
+         hover:bg-gray-200 transition-colors duration-150;
+}
+
+@utility modal-overlay {
+  @apply fixed inset-0 z-50
+         bg-black/50
+         flex items-center justify-center
+         transition-opacity duration-200;
+}
+
+@utility modal-panel {
+  @apply w-full max-w-2xl mx-4
+         bg-white rounded-lg shadow-xl
+         max-h-[90vh] overflow-y-auto;
+}
+
 /* Base Form Elements */
 @layer base {
   input[type="text"],
