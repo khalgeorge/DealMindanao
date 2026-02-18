@@ -30,7 +30,11 @@ class CompanyController extends Controller
     
     public function store(CompanyRequest $request)
     {
-        Company::create($request->validated());
+        $company = Company::create($request->validated());
+        
+        if ($request->wantsJson()) {
+            return response()->json(['company' => $company], 201);
+        }
         
         return redirect()
             ->route('admin.companies.index')
@@ -46,6 +50,10 @@ class CompanyController extends Controller
     {
         $company->update($request->validated());
         
+        if ($request->wantsJson()) {
+            return response()->json(['company' => $company]);
+        }
+        
         return redirect()
             ->route('admin.companies.index')
             ->with('success', 'Company updated successfully!');
@@ -54,10 +62,17 @@ class CompanyController extends Controller
     public function destroy(Company $company)
     {
         if ($company->products()->count() > 0) {
+            if (request()->wantsJson()) {
+                return response()->json(['error' => 'Cannot delete company with existing products!'], 400);
+            }
             return back()->with('error', 'Cannot delete company with existing products!');
         }
         
         $company->delete();
+        
+        if (request()->wantsJson()) {
+            return response()->json(['message' => 'Company deleted successfully!']);
+        }
         
         return redirect()
             ->route('admin.companies.index')
@@ -67,6 +82,14 @@ class CompanyController extends Controller
     public function toggleStatus(Company $company)
     {
         $company->update(['is_active' => !$company->is_active]);
+        
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'is_active' => $company->is_active,
+                'message' => 'Company status updated!'
+            ]);
+        }
         
         return back()->with('success', 'Company status updated!');
     }

@@ -250,105 +250,105 @@
 
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
-    import { showToast } from '/src/js/utils.js';
-    import { companies } from '/src/js/api.js';
+import { showToast } from '/src/js/utils.js';
+import { companies } from '/src/js/api.js';
 
-    let currentSearch = '';
-    let companiesData = [];
+let currentSearch = '';
+let companiesData = [];
 
-    // Load companies from API
-    async function loadCompanies() {
-       try {
-          const data = await companies.getAll();
-          companiesData = Array.isArray(data) ? data : [];
-          renderCompanies();
-       } catch (error) {
-          console.error('Failed to load companies:', error);
-          showToast('Failed to load companies. Please try again.', 'error');
-          companiesData = [];
-       }
-    }
+// Load companies from API
+async function loadCompanies() {
+  try {
+    const data = await companies.getAll();
+    companiesData = Array.isArray(data) ? data : [];
+    renderCompanies();
+  } catch (error) {
+    console.error('Failed to load companies:', error);
+    showToast('Failed to load companies. Please try again.', 'error');
+    companiesData = [];
+  }
+}
 
-    window.openPartnerModal = () => {
-       const form = document.getElementById('partner-form');
-       if (form) form.reset();
-       document.getElementById('partner-id').value = '';
-       document.getElementById('partner-modal-title').innerText = 'New Partner';
-       document.getElementById('partner-submit-btn').innerText = 'Register Partner';
+window.openPartnerModal = () => {
+  const form = document.getElementById('partner-form');
+  if (form) form.reset();
+  document.getElementById('partner-id').value = '';
+  document.getElementById('partner-modal-title').innerText = 'New Partner';
+  document.getElementById('partner-submit-btn').innerText = 'Register Partner';
 
-       document.getElementById('partner-modal').classList.remove('hidden');
-       document.body.classList.add('overflow-hidden');
-    };
+  document.getElementById('partner-modal').classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+};
 
-    window.closePartnerModal = () => {
-       document.getElementById('partner-modal').classList.add('hidden');
-       document.body.classList.remove('overflow-hidden');
-    };
+window.closePartnerModal = () => {
+  document.getElementById('partner-modal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+};
 
-    window.quickEdit = (id) => {
-       const p = companiesData.find(comp => comp.id == id);
-       if (!p) return;
+window.quickEdit = (id) => {
+  const p = companiesData.find(comp => comp.id == id);
+  if (!p) return;
 
-       document.getElementById('partner-id').value = p.id;
-       document.getElementById('partner-name').value = p.name || '';
-       
-       // Backend fields: city and province, frontend shows as "location"
-       const location = [p.city, p.province].filter(Boolean).join(', ');
-       document.getElementById('partner-location').value = location;
-       
-       // Optional fields
-       document.getElementById('partner-email').value = p.contact_email || '';
-       document.getElementById('partner-phone').value = p.contact_phone || '';
-       document.getElementById('partner-description').value = p.description || '';
-       
-       document.getElementById('partner-modal-title').innerText = 'Edit Partner';
-       document.getElementById('partner-submit-btn').innerText = 'Update Partner';
-       document.getElementById('partner-modal').classList.remove('hidden');
-       document.body.classList.add('overflow-hidden');
-    };
+  document.getElementById('partner-id').value = p.id;
+  document.getElementById('partner-name').value = p.name || '';
+  
+  // Backend fields: city and province, frontend shows as "location"
+  const location = [p.city, p.province].filter(Boolean).join(', ');
+  document.getElementById('partner-location').value = location;
+  
+  // Optional fields
+  document.getElementById('partner-email').value = p.contact_email || '';
+  document.getElementById('partner-phone').value = p.contact_phone || '';
+  document.getElementById('partner-description').value = p.description || '';
+  
+  document.getElementById('partner-modal-title').innerText = 'Edit Partner';
+  document.getElementById('partner-submit-btn').innerText = 'Update Partner';
+  document.getElementById('partner-modal').classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+};
 
-    window.resetFilters = () => {
-       document.getElementById('company-search').value = '';
-       currentSearch = '';
-       renderCompanies();
-    };
+window.resetFilters = () => {
+  document.getElementById('company-search').value = '';
+  currentSearch = '';
+  renderCompanies();
+};
 
-    // Search Logic
-    const companySearchInput = document.getElementById('company-search');
-    if (companySearchInput) {
-       companySearchInput.addEventListener('input', (e) => {
-          currentSearch = e.target.value.toLowerCase();
-          renderCompanies();
-       });
-    }
+// Search Logic
+const companySearchInput = document.getElementById('company-search');
+if (companySearchInput) {
+  companySearchInput.addEventListener('input', (e) => {
+    currentSearch = e.target.value.toLowerCase();
+    renderCompanies();
+  });
+}
 
-    function renderCompanies() {
-       const grid = document.getElementById('company-grid');
-       if (!grid) return;
-       
-       let filtered = companiesData;
+function renderCompanies() {
+  const grid = document.getElementById('company-grid');
+  if (!grid) return;
+  
+  let filtered = companiesData;
 
-       // Filter by Search
-       if (currentSearch) {
-          filtered = filtered.filter(p => {
-             const location = [p.city, p.province].filter(Boolean).join(', ');
-             return p.name?.toLowerCase().includes(currentSearch) || 
-                    location.toLowerCase().includes(currentSearch);
-          });
-       }
+  // Filter by Search
+  if (currentSearch) {
+    filtered = filtered.filter(p => {
+      const location = [p.city, p.province].filter(Boolean).join(', ');
+      return p.name?.toLowerCase().includes(currentSearch) || 
+             location.toLowerCase().includes(currentSearch);
+    });
+  }
 
-       if (filtered.length === 0) {
-          grid.innerHTML = `
-             <div class="col-span-full py-20 text-center">
-                <p class="text-gray-400 font-black text-xs uppercase tracking-widest">No vendors found matching your criteria</p>
-             </div>
-          `;
-          return;
-       }
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full py-20 text-center">
+        <p class="text-gray-400 font-black text-xs uppercase tracking-widest">No vendors found matching your criteria</p>
+      </div>
+    `;
+    return;
+  }
 
-       grid.innerHTML = filtered.map(p => {
-          const location = [p.city, p.province].filter(Boolean).join(', ') || 'N/A';
-          const initials = p.name?.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || '?';
+  grid.innerHTML = filtered.map(p => {
+    const location = [p.city, p.province].filter(Boolean).join(', ') || 'N/A';
+    const initials = p.name?.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || '?';
           
           return `
           <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-300 transition-all duration-300 group relative flex flex-col overflow-hidden">
@@ -404,100 +404,100 @@
              </div>
           </div>
        `;
-       }).join('');
+    }).join('');
+}
+
+window.viewCompanyProfile = (id) => {
+  const p = companiesData.find(comp => comp.id == id);
+  if (!p) return;
+
+  const initials = p.name?.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || '?';
+  const location = [p.city, p.province].filter(Boolean).join(', ') || 'N/A';
+
+  const modalLogo = document.getElementById('profile-logo');
+  modalLogo.textContent = initials;
+
+  document.getElementById('profile-name').textContent = p.name || 'Unnamed Company';
+  document.getElementById('profile-location').textContent = location + ', Philippines';
+  document.getElementById('profile-desc').textContent = p.description || 'No description provided.';
+  document.getElementById('profile-email').textContent = p.contact_email || 'N/A';
+  document.getElementById('profile-phone').textContent = p.contact_phone || 'N/A';
+  
+  // Hide status badge and products count (not in backend)
+  const statusBadge = document.getElementById('profile-status');
+  const productsEl = document.getElementById('profile-products');
+  if (statusBadge) statusBadge.style.display = 'none';
+  if (productsEl && productsEl.parentElement) productsEl.parentElement.style.display = 'none';
+
+  document.getElementById('profile-modal').classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+};
+
+window.closeProfileModal = () => {
+  document.getElementById('profile-modal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+};
+
+// Close modals on ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    window.closePartnerModal();
+    window.closeProfileModal();
+  }
+});
+
+window.deleteCompany = async (id) => {
+  if (!confirm('Are you sure you want to delete this company? This action cannot be undone.')) {
+    return;
+  }
+
+  try {
+    await companies.delete(id);
+    showToast('Company deleted successfully!');
+    await loadCompanies();
+  } catch (error) {
+    console.error('Failed to delete company:', error);
+    showToast('Failed to delete company. It may have associated products.', 'error');
+  }
+};
+
+document.getElementById('partner-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const pid = document.getElementById('partner-id').value;
+  
+  // Parse location into city and province (format: "City, Province")
+  const location = formData.get('location') || '';
+  const [city, province] = location.split(',').map(s => s.trim());
+
+  const companyData = {
+    name: formData.get('name'),
+    city: city || null,
+    province: province || null,
+    contact_email: formData.get('email') || null,
+    contact_phone: formData.get('phone') || null,
+    description: formData.get('description') || null
+  };
+
+  try {
+    if (pid) {
+      await companies.update(pid, companyData);
+      showToast('Company updated successfully!');
+    } else {
+      await companies.create(companyData);
+      showToast('Company created successfully!');
     }
 
-    window.viewCompanyProfile = (id) => {
-       const p = companiesData.find(comp => comp.id == id);
-       if (!p) return;
+    await loadCompanies();
+    closePartnerModal();
+  } catch (error) {
+    console.error('Failed to save company:', error);
+    showToast('Failed to save company. Please try again.', 'error');
+  }
+});
 
-       const initials = p.name?.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || '?';
-       const location = [p.city, p.province].filter(Boolean).join(', ') || 'N/A';
-
-       const modalLogo = document.getElementById('profile-logo');
-       modalLogo.textContent = initials;
-
-       document.getElementById('profile-name').textContent = p.name || 'Unnamed Company';
-       document.getElementById('profile-location').textContent = location + ', Philippines';
-       document.getElementById('profile-desc').textContent = p.description || 'No description provided.';
-       document.getElementById('profile-email').textContent = p.contact_email || 'N/A';
-       document.getElementById('profile-phone').textContent = p.contact_phone || 'N/A';
-       
-       // Hide status badge and products count (not in backend)
-       const statusBadge = document.getElementById('profile-status');
-       const productsEl = document.getElementById('profile-products');
-       if (statusBadge) statusBadge.style.display = 'none';
-       if (productsEl && productsEl.parentElement) productsEl.parentElement.style.display = 'none';
-
-       document.getElementById('profile-modal').classList.remove('hidden');
-       document.body.classList.add('overflow-hidden');
-    };
-
-    window.closeProfileModal = () => {
-       document.getElementById('profile-modal').classList.add('hidden');
-       document.body.classList.remove('overflow-hidden');
-    };
-
-    // Close modals on ESC
-    document.addEventListener('keydown', (e) => {
-       if (e.key === 'Escape') {
-          window.closePartnerModal();
-          window.closeProfileModal();
-       }
-    });
-
-    document.getElementById('partner-form').addEventListener('submit', (e) => {
-       e.preventDefault();
-       const formData = new FormData(e.target);
-    window.deleteCompany = async (id) => {
-       if (!confirm('Are you sure you want to delete this company? This action cannot be undone.')) {
-          return;
-       }
-
-       try {
-          await companies.delete(id);
-          showToast('Company deleted successfully!');
-          await loadCompanies();
-       } catch (error) {
-          console.error('Failed to delete company:', error);
-          showToast('Failed to delete company. It may have associated products.', 'error');
-       }
-    };
-
-    document.getElementById('partner-form').addEventListener('submit', async (e) => {
-       e.preventDefault();
-       const formData = new FormData(e.target);
-       const pid = document.getElementById('partner-id').value;
-       
-       // Parse location into city and province (format: "City, Province")
-       const location = formData.get('location') || '';
-       const [city, province] = location.split(',').map(s => s.trim());
-
-       const companyData = {
-          name: formData.get('name'),
-          city: city || null,
-          province: province || null,
-          contact_email: formData.get('email') || null,
-          contact_phone: formData.get('phone') || null,
-          description: formData.get('description') || null
-       };
-
-       try {
-          if (pid) {
-             await companies.update(pid, companyData);
-             showToast('Company updated successfully!');
-          } else {
-             await companies.create(companyData);
-             showToast('Company created successfully!');
-          }
-
-          await loadCompanies();
-          closePartnerModal();
-       } catch (error) {
-          console.error('Failed to save company:', error);
-          showToast('Failed to save company. Please try again.', 'error');
-       }
-    });
-
-    // Initial load
-    load
+// Initial load
+loadCompanies();
+</script>
+</body>
+</html>

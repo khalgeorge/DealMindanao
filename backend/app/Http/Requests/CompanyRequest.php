@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CompanyRequest extends FormRequest
 {
@@ -20,23 +19,15 @@ class CompanyRequest extends FormRequest
      */
     public function rules(): array
     {
-        $companyId = $this->route('company');
-        
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('companies', 'slug')->ignore($companyId),
-            ],
-            'description' => ['nullable', 'string', 'max:2000'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'address' => ['nullable', 'string', 'max:500'],
-            'website' => ['nullable', 'url', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_phone' => ['nullable', 'string', 'max:20'],
+            'messenger_link' => ['nullable', 'string', 'max:500'],
             'logo' => ['nullable', 'string', 'max:500'],
+            'description' => ['nullable', 'string', 'max:2000'],
             'is_active' => ['nullable', 'boolean'],
         ];
     }
@@ -47,7 +38,8 @@ class CompanyRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'is_active' => 'active status',
+            'contact_email' => 'email',
+            'contact_phone' => 'phone',
         ];
     }
 
