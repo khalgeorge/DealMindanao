@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ShopController;
 use App\Http\Controllers\Web\CartController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Web\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Web\Admin\CompanyController as AdminCompanyController;
+use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +96,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/companies/{company}', [AdminCompanyController::class, 'update'])->name('companies.update');
     Route::delete('/companies/{company}', [AdminCompanyController::class, 'destroy'])->name('companies.destroy');
     Route::post('/companies/{company}/toggle-status', [AdminCompanyController::class, 'toggleStatus'])->name('companies.toggleStatus');
+
+    // Settings
+    Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings/general', [AdminSettingsController::class, 'updateGeneral'])->name('settings.general.update');
+    Route::post('/settings/regional', [AdminSettingsController::class, 'updateRegional'])->name('settings.regional.update');
+    Route::post('/settings/notifications', [AdminSettingsController::class, 'updateNotifications'])->name('settings.notifications.update');
+    Route::put('/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('password.update');
+    Route::get('/settings/pages', [AdminSettingsController::class, 'pagesIndex'])->name('settings.pages.index');
+    Route::get('/settings/pages/{slug}/edit', [AdminSettingsController::class, 'pagesEdit'])->name('settings.pages.edit');
+    Route::put('/settings/pages/{slug}', [AdminSettingsController::class, 'pagesUpdate'])->name('settings.pages.update');
 });
 
 // Admin Login (separate from user login)
@@ -107,12 +119,12 @@ Route::post('/admin/login', function (\Illuminate\Http\Request $request) {
         'password' => ['required'],
     ]);
 
-    if (auth()->attempt($credentials)) {
+    if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
         
         // Check if user is admin
-        if (!auth()->user()->is_admin) {
-            auth()->logout();
+        if (!Auth::user()->is_admin) {
+            Auth::logout();
             return back()->withErrors([
                 'email' => 'Access denied. Admin privileges required.',
             ]);
@@ -127,7 +139,7 @@ Route::post('/admin/login', function (\Illuminate\Http\Request $request) {
 })->name('admin.login.post')->middleware('guest');
 
 Route::match(['get', 'post'], '/admin/logout', function () {
-    auth()->logout();
+    Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect()->route('admin.login');

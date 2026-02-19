@@ -173,6 +173,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PageSeeder::class,
             NavigationSeeder::class,
+            SettingsSeeder::class,
         ]);
     }
 }

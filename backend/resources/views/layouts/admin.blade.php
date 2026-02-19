@@ -9,6 +9,7 @@
     @endunless
     
     <title>@yield('title', 'Admin') - DealMindanao</title>
+    <link rel="icon" type="image/png" href="/favicon.png?v={{ file_exists(public_path('favicon.png')) ? filemtime(public_path('favicon.png')) : '0' }}">
     
     {{-- Vite Assets --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])

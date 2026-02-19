@@ -26,6 +26,9 @@
     <meta property="og:url" content="{{ $metaUrl }}">
     <meta property="og:type" content="website">
     
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="/favicon.png?v={{ file_exists(public_path('favicon.png')) ? filemtime(public_path('favicon.png')) : '0' }}">
+
     {{-- Vite Assets --}}
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     

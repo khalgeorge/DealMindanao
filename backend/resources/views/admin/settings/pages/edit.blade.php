@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+<header class="admin-header">
     <div>
-        <h1 class="text-2xl font-bold">Edit {{ $label }} Page</h1>
-        <p class="text-sm text-gray-500">Update content and upload assets.</p>
+        <h1 class="text-xl font-black text-gray-900 uppercase tracking-tighter">Edit Page</h1>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">{{ $label }}</p>
     </div>
-    <a href="/admin/settings/pages" class="btn-secondary">Back</a>
-</div>
+    <a href="{{ route('admin.settings.pages.index') }}" class="btn-secondary btn-sm">← Back</a>
+</header>
 
 @if($errors->any())
     <div class="alert-error mb-4">
@@ -19,7 +19,7 @@
     </div>
 @endif
 
-<form action="/admin/settings/pages/{{ $page->slug }}" method="POST" enctype="multipart/form-data" class="card max-w-4xl">
+<form action="{{ route('admin.settings.pages.update', $page->slug) }}" method="POST" enctype="multipart/form-data" class="card max-w-4xl">
     @csrf
     @method('PUT')
 
@@ -91,7 +91,7 @@
 
     <div class="mt-6 flex gap-3">
         <button class="btn-primary" type="submit">Save Changes</button>
-        <a href="/admin/settings/pages" class="btn-secondary">Cancel</a>
+        <a href="{{ route('admin.settings.pages.index') }}" class="btn-secondary">Cancel</a>
     </div>
 </form>
 @endsection
