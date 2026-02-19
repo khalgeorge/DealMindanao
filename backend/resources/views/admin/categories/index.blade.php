@@ -68,7 +68,7 @@
                             <td class="px-6 py-4 text-right space-x-2">
                                 <button onclick="editCategory({{ $category->id }})" class="text-brand-600 font-bold text-xs uppercase hover:underline">Edit</button>
                                 <span class="text-gray-300">|</span>
-                                <button onclick="deleteCategory({{ $category->id }})" class="text-red-600 font-bold text-xs uppercase hover:underline" @disabled($category->products_count > 0)>Delete</button>
+                                <button onclick="deleteCategory({{ $category->id }})" class="text-red-600 font-bold text-xs uppercase hover:underline">Delete</button>
                             </td>
                         </tr>
                     @empty
@@ -199,8 +199,13 @@ window.editCategory = (id) => {
 window.deleteCategory = async (id) => {
     const category = allCategories.find(c => c.id === id);
     if (!category) return;
+
+    if (category.products_count > 0) {
+        alert(`Cannot delete "${category.name}". It has ${category.products_count} product(s) linked to it. Please reassign or delete those products first.`);
+        return;
+    }
     
-    if (!confirm(`Delete category "${category.name}"? This will fail if products exist in this category.`)) {
+    if (!confirm(`Are you sure you want to delete "${category.name}"? This cannot be undone.`)) {
         return;
     }
     
@@ -334,7 +339,7 @@ function renderCategories() {
                 <td class="px-6 py-4 text-right space-x-2">
                     <button onclick="editCategory(${cat.id})" class="text-brand-600 font-bold text-xs uppercase hover:underline">Edit</button>
                     <span class="text-gray-300">|</span>
-                    <button onclick="deleteCategory(${cat.id})" class="text-red-600 font-bold text-xs uppercase hover:underline" ${cat.products_count > 0 ? 'disabled' : ''}>Delete</button>
+                    <button onclick="deleteCategory(${cat.id})" class="text-red-600 font-bold text-xs uppercase hover:underline">Delete</button>
                 </td>
             </tr>
         `).join('');
