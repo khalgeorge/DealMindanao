@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Mail\OrderConfirmationMail;
 use App\Mail\AdminNewOrderMail;
 use App\Http\Requests\CheckoutRequest;
@@ -32,7 +34,7 @@ class CheckoutController extends Controller
         
         // Create order
         $order = Order::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'order_number' => $orderNumber,
             'total_amount' => $total,
             'status' => 'pending',
@@ -59,13 +61,16 @@ class CheckoutController extends Controller
         
         // Send emails
         try {
-            Mail::to(auth()->user()->email)->send(new OrderConfirmationMail($order));
+            $user = Auth::user();
+            if ($user) {
+                Mail::to($user->email)->send(new OrderConfirmationMail($order));
+            }
             
             if ($adminEmail = config('mail.admin_email')) {
                 Mail::to($adminEmail)->send(new AdminNewOrderMail($order));
             }
         } catch (\Exception $e) {
-            \Log::error('Failed to send order emails: ' . $e->getMessage());
+            Log::error('Failed to send order emails: ' . $e->getMessage());
         }
         
         return redirect()->route('checkout.success', $order->id)
@@ -74,9 +79,11 @@ class CheckoutController extends Controller
     
     public function success($orderId)
     {
+        $user = Auth::user();
+        
         $order = Order::with(['items.product'])
             ->where('id', $orderId)
-            ->where('user_id', auth()->id())
+            ->where('user_id', $user->id)
             ->firstOrFail();
         
         return view('checkout-success', compact('order'));

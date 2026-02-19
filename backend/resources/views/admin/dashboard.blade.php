@@ -30,9 +30,6 @@
        <h2 class="text-3xl font-black text-gray-900">Welcome back, {{ auth()->user()->name }}</h2>
        <p class="text-gray-500 mt-1">Here is what is happening with DealMindanao today.</p>
     </div>
-    <div class="flex gap-2">
-       <a href="{{ route('admin.products.create') }}" class="btn-primary btn-sm px-4">Add Product</a>
-    </div>
   </div>
 
   <!-- Stats Grid -->

@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -244,7 +245,7 @@ class ProductController extends Controller
                 'errors' => $errors
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Image upload error: ' . $e->getMessage());
+            Log::error('Image upload error: ' . $e->getMessage());
             
             return response()->json([
                 'success' => false,
