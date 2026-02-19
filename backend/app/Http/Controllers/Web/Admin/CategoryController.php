@@ -13,11 +13,17 @@ class CategoryController extends Controller
     {
         $query = Category::withCount('products');
         
-        if ($request->filled('search')) {
-            $query->where('name', 'like', "%{$request->search}%");
-        }
+        // Get all categories for client-side pagination
+        $allCategories = $query->latest()->get();
         
-        $categories = $query->latest()->paginate(15);
+        // Create a mock paginator for Blade compatibility
+        $categories = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allCategories,
+            $allCategories->count(),
+            $allCategories->count(),
+            1,
+            ['path' => $request->url()]
+        );
         
         return view('admin.categories.index', compact('categories'));
     }
@@ -29,7 +35,15 @@ class CategoryController extends Controller
     
     public function store(CategoryRequest $request)
     {
-        Category::create($request->validated());
+        $category = Category::create($request->validated());
+        
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Category created successfully!',
+                'category' => $category
+            ]);
+        }
         
         return redirect()
             ->route('admin.categories.index')
@@ -45,6 +59,14 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
         
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Category updated successfully!',
+                'category' => $category
+            ]);
+        }
+        
         return redirect()
             ->route('admin.categories.index')
             ->with('success', 'Category updated successfully!');
@@ -53,10 +75,23 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         if ($category->products()->count() > 0) {
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot delete category with existing products!'
+                ], 422);
+            }
             return back()->with('error', 'Cannot delete category with existing products!');
         }
         
         $category->delete();
+        
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Category deleted successfully!'
+            ]);
+        }
         
         return redirect()
             ->route('admin.categories.index')
