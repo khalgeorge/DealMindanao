@@ -19,6 +19,10 @@ use App\Http\Controllers\Web\Admin\AboutPageController as AdminAboutPageControll
 use App\Http\Controllers\Web\Admin\PartnerPageController as AdminPartnerPageController;
 use App\Http\Controllers\Web\Admin\ContactPageController as AdminContactPageController;
 use App\Http\Controllers\Web\Admin\HelpPageController as AdminHelpPageController;
+use App\Http\Controllers\Web\Admin\TrustSafetyPageController as AdminTrustSafetyPageController;
+use App\Http\Controllers\Web\Admin\PrivacyPageController as AdminPrivacyPageController;
+use App\Http\Controllers\Web\Admin\RefundPolicyPageController as AdminRefundPolicyPageController;
+use App\Http\Controllers\Web\Admin\TermsPageController as AdminTermsPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +132,42 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/help-page/faqs/{faq}', [AdminHelpPageController::class, 'updateFaq'])->name('help_page.faqs.update');
     Route::delete('/help-page/faqs/{faq}', [AdminHelpPageController::class, 'destroyFaq'])->name('help_page.faqs.destroy');
     Route::post('/help-page/faqs/{faq}/toggle', [AdminHelpPageController::class, 'toggleFaq'])->name('help_page.faqs.toggle');
+
+    // Trust & Safety Page Editor
+    Route::get('/trust-safety-page', [AdminTrustSafetyPageController::class, 'index'])->name('trust_safety.index');
+    Route::post('/trust-safety-page', [AdminTrustSafetyPageController::class, 'update'])->name('trust_safety.update');
+    Route::post('/trust-safety-page/items/reorder', [AdminTrustSafetyPageController::class, 'reorderItems'])->name('trust_safety.items.reorder');
+    Route::post('/trust-safety-page/items', [AdminTrustSafetyPageController::class, 'storeItem'])->name('trust_safety.items.store');
+    Route::put('/trust-safety-page/items/{item}', [AdminTrustSafetyPageController::class, 'updateItem'])->name('trust_safety.items.update');
+    Route::delete('/trust-safety-page/items/{item}', [AdminTrustSafetyPageController::class, 'destroyItem'])->name('trust_safety.items.destroy');
+    Route::post('/trust-safety-page/items/{item}/toggle', [AdminTrustSafetyPageController::class, 'toggleItem'])->name('trust_safety.items.toggle');
+
+    // Privacy Policy Page Editor
+    Route::get('/privacy-page', [AdminPrivacyPageController::class, 'index'])->name('privacy_page.index');
+    Route::post('/privacy-page', [AdminPrivacyPageController::class, 'update'])->name('privacy_page.update');
+    Route::post('/privacy-page/sections/reorder', [AdminPrivacyPageController::class, 'reorderSections'])->name('privacy_page.sections.reorder');
+    Route::post('/privacy-page/sections', [AdminPrivacyPageController::class, 'storeSection'])->name('privacy_page.sections.store');
+    Route::put('/privacy-page/sections/{section}', [AdminPrivacyPageController::class, 'updateSection'])->name('privacy_page.sections.update');
+    Route::delete('/privacy-page/sections/{section}', [AdminPrivacyPageController::class, 'destroySection'])->name('privacy_page.sections.destroy');
+    Route::post('/privacy-page/sections/{section}/toggle', [AdminPrivacyPageController::class, 'toggleSection'])->name('privacy_page.sections.toggle');
+
+    // Refund Policy Page Editor
+    Route::get('/refund-policy-page', [AdminRefundPolicyPageController::class, 'index'])->name('refund_policy.index');
+    Route::post('/refund-policy-page', [AdminRefundPolicyPageController::class, 'update'])->name('refund_policy.update');
+    Route::post('/refund-policy-page/sections/reorder', [AdminRefundPolicyPageController::class, 'reorderSections'])->name('refund_policy.sections.reorder');
+    Route::post('/refund-policy-page/sections', [AdminRefundPolicyPageController::class, 'storeSection'])->name('refund_policy.sections.store');
+    Route::put('/refund-policy-page/sections/{section}', [AdminRefundPolicyPageController::class, 'updateSection'])->name('refund_policy.sections.update');
+    Route::delete('/refund-policy-page/sections/{section}', [AdminRefundPolicyPageController::class, 'destroySection'])->name('refund_policy.sections.destroy');
+    Route::post('/refund-policy-page/sections/{section}/toggle', [AdminRefundPolicyPageController::class, 'toggleSection'])->name('refund_policy.sections.toggle');
+
+    // Terms of Service Page Editor
+    Route::get('/terms-page', [AdminTermsPageController::class, 'index'])->name('terms_page.index');
+    Route::post('/terms-page', [AdminTermsPageController::class, 'update'])->name('terms_page.update');
+    Route::post('/terms-page/sections/reorder', [AdminTermsPageController::class, 'reorderSections'])->name('terms_page.sections.reorder');
+    Route::post('/terms-page/sections', [AdminTermsPageController::class, 'storeSection'])->name('terms_page.sections.store');
+    Route::put('/terms-page/sections/{section}', [AdminTermsPageController::class, 'updateSection'])->name('terms_page.sections.update');
+    Route::delete('/terms-page/sections/{section}', [AdminTermsPageController::class, 'destroySection'])->name('terms_page.sections.destroy');
+    Route::post('/terms-page/sections/{section}/toggle', [AdminTermsPageController::class, 'toggleSection'])->name('terms_page.sections.toggle');
 
     // Home Page Editor
     Route::get('/home-page', [AdminHomePageController::class, 'index'])->name('home_page.index');

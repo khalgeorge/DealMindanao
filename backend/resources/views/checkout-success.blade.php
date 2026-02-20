@@ -38,3 +38,11 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+  // Clear the cart from localStorage now that the order is placed
+  localStorage.removeItem('cart');
+  window.dispatchEvent(new Event('cart-updated'));
+</script>
+@endpush

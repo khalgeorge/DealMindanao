@@ -34,16 +34,16 @@ class CheckoutController extends Controller
         
         // Create order
         $order = Order::create([
-            'user_id' => Auth::id(),
-            'order_number' => $orderNumber,
-            'total_amount' => $total,
-            'status' => 'pending',
+            'user_id'          => Auth::id(),
+            'order_number'     => $orderNumber,
+            'total'            => $total,
+            'status'           => 'pending',
             'shipping_address' => $validated['shipping_address'],
-            'shipping_city' => $validated['shipping_city'],
-            'shipping_province' => $validated['shipping_province'],
-            'phone' => $validated['phone'],
-            'notes' => $validated['notes'] ?? null,
-            'payment_method' => $validated['payment_method'],
+            'shipping_city'    => $validated['shipping_city'],
+            'shipping_province'=> $validated['shipping_province'],
+            'phone'            => $validated['shipping_phone'],
+            'notes'            => $validated['notes'] ?? null,
+            'payment_method'   => $validated['payment_method'],
         ]);
         
         // Create order items

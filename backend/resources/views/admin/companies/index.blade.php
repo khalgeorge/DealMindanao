@@ -141,7 +141,7 @@
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
               <h2 id="profile-name" class="text-2xl font-black text-gray-900 uppercase tracking-tighter">Davao Fruit Corp</h2>
-              <span id="profile-status-badge" class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"></span>
+              <div id="profile-status" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100 text-[10px] font-black uppercase tracking-widest"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active</div>
             </div>
             <div class="flex items-center gap-2 text-gray-400 font-black text-[10px] uppercase tracking-widest leading-none">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
@@ -157,7 +157,24 @@
 
       <!-- Content -->
       <div class="px-8 py-10 overflow-y-auto custom-scrollbar space-y-10">
-        
+
+        <div class="grid grid-cols-3 gap-6">
+          <div class="p-5 rounded-lg border border-gray-100 bg-gray-50/50 text-center">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Products</p>
+            <p id="profile-products" class="text-2xl font-black text-gray-900 leading-none">—</p>
+          </div>
+          <div class="p-5 rounded-lg border border-gray-100 bg-gray-50/50 text-center">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Joined</p>
+            <p id="profile-joined" class="text-2xl font-black text-gray-900 leading-none">—</p>
+          </div>
+          <div class="p-5 rounded-lg border border-gray-100 bg-gray-50/50 text-center">
+            <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Tier</div>
+            <div class="flex items-center justify-center gap-1">
+              <p id="profile-tier" class="text-2xl font-black text-gray-900 leading-none">—</p>
+            </div>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <section>
             <h3 class="text-[11px] font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
@@ -201,13 +218,13 @@
 
         <section class="pt-8 border-t border-gray-100">
           <h3 class="text-[11px] font-black text-gray-900 uppercase tracking-widest mb-4">Management</h3>
-          <div id="profile-management-section" class="p-6 rounded-xl border flex items-center justify-between">
-            <div id="profile-management-text">
-              <h4 class="text-sm font-black mb-1">Account Status</h4>
-              <p class="text-xs font-bold uppercase tracking-wide">Manage vendor store access</p>
+          <div id="profile-management-section" class="bg-red-50 p-6 rounded-xl border border-red-100 flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-black text-red-900 mb-1">Account Restriction</h4>
+              <p class="text-xs text-red-600/80 font-bold uppercase tracking-wide">Disable vendor store access</p>
             </div>
-            <button id="profile-toggle-btn" onclick="window.toggleFromProfile()" class="px-6 py-2.5 bg-white border rounded-lg font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">
-              Toggle Status
+            <button id="profile-toggle-btn" onclick="window.toggleFromProfile()" class="px-6 py-2.5 bg-white border border-red-200 text-red-600 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all shadow-sm">
+              Suspend
             </button>
           </div>
         </section>
@@ -263,8 +280,7 @@ function renderCompanies() {
     const initials = p.name?.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || '?';
     
     return `
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-300 transition-all duration-300 group relative flex flex-col overflow-hidden ${!p.is_active ? 'opacity-60' : ''}">
-        ${!p.is_active ? '<div class="absolute top-3 right-3 z-10"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-amber-100 text-amber-700 border border-amber-200">Suspended</span></div>' : ''}
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-300 transition-all duration-300 group relative flex flex-col overflow-hidden">
         <div class="p-6">
           <div class="flex items-start gap-5 mb-6">
             <div class="w-14 h-14 shrink-0 bg-brand-50 flex items-center justify-center rounded-xl border border-brand-100 font-black text-brand-600 text-lg group-hover:bg-brand-600 group-hover:text-white transition-all overflow-hidden">
@@ -410,39 +426,27 @@ window.viewCompanyProfile = (id) => {
   document.getElementById('profile-phone').textContent = p.contact_phone || 'N/A';
 
   // Update status badge
-  const badge = document.getElementById('profile-status-badge');
-  if (p.is_active) {
-    badge.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-green-100 text-green-700 border border-green-200';
-    badge.textContent = 'Active';
-  } else {
-    badge.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-amber-100 text-amber-700 border border-amber-200';
-    badge.textContent = 'Suspended';
+  const statusBadge = document.getElementById('profile-status');
+  if (statusBadge) {
+    if (p.is_active) {
+      statusBadge.className = 'flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100 text-[10px] font-black uppercase tracking-widest';
+      statusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active';
+    } else {
+      statusBadge.className = 'flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-[10px] font-black uppercase tracking-widest';
+      statusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Suspended';
+    }
   }
 
-  // Update management section
+  // Populate stats
+  const joined = p.created_at ? new Date(p.created_at).getFullYear() : '—';
+  const joinedEl = document.getElementById('profile-joined');
+  if (joinedEl) joinedEl.textContent = joined;
+
+  // Store company id on management section for toggle action
   const managementSection = document.getElementById('profile-management-section');
-  const managementText = document.getElementById('profile-management-text');
   const toggleBtn = document.getElementById('profile-toggle-btn');
-  
   managementSection.dataset.companyId = p.id;
-  
-  if (p.is_active) {
-    managementSection.className = 'p-6 rounded-xl border bg-green-50 border-green-100 flex items-center justify-between';
-    managementText.innerHTML = `
-      <h4 class="text-sm font-black text-green-900 mb-1">Account Active</h4>
-      <p class="text-xs text-green-600/80 font-bold uppercase tracking-wide">Vendor has full store access</p>
-    `;
-    toggleBtn.className = 'px-6 py-2.5 bg-white border border-amber-200 text-amber-600 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-amber-600 hover:text-white transition-all shadow-sm';
-    toggleBtn.textContent = 'Suspend';
-  } else {
-    managementSection.className = 'p-6 rounded-xl border bg-amber-50 border-amber-100 flex items-center justify-between';
-    managementText.innerHTML = `
-      <h4 class="text-sm font-black text-amber-900 mb-1">Account Suspended</h4>
-      <p class="text-xs text-amber-600/80 font-bold uppercase tracking-wide">Vendor store access disabled</p>
-    `;
-    toggleBtn.className = 'px-6 py-2.5 bg-white border border-green-200 text-green-600 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-green-600 hover:text-white transition-all shadow-sm';
-    toggleBtn.textContent = 'Activate';
-  }
+  toggleBtn.textContent = p.is_active ? 'Suspend' : 'Activate';
 
   document.getElementById('profile-modal').classList.remove('hidden');
   document.body.classList.add('overflow-hidden');

@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use App\Models\Page;
+use App\Models\PrivacySection;
+use App\Models\RefundSection;
 use App\Models\Setting;
+use App\Models\TermsSection;
+use App\Models\TrustSafetyItem;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -102,14 +106,57 @@ class PageController extends Controller
 
     public function privacy()
     {
-        $page = $this->loadStaticPage('privacy', 'Privacy Policy', 'Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.');
-        return view('static-page', compact('page'));
+        $allKeys = [
+            'pp_header_enabled',
+            'pp_title',
+            'pp_subtitle',
+            'pp_footer_enabled',
+            'pp_footer_text',
+            'pp_footer_link_label',
+            'pp_footer_link_url',
+            'pp_last_updated',
+            'pp_last_updated_auto',
+        ];
+        $defaults = [
+            'pp_header_enabled'    => '1',
+            'pp_title'             => 'Privacy Policy',
+            'pp_subtitle'          => 'Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.',
+            'pp_footer_enabled'    => '1',
+            'pp_footer_text'       => 'For questions about your privacy or to exercise your rights, please',
+            'pp_footer_link_label' => 'contact our support team',
+            'pp_footer_link_url'   => '/contact',
+            'pp_last_updated'      => 'February 14, 2026',
+            'pp_last_updated_auto' => '0',
+        ];
+        $raw = Setting::getMany($allKeys);
+        $s   = [];
+        foreach ($allKeys as $key) {
+            $s[$key] = $raw[$key] ?? $defaults[$key];
+        }
+        $sections = PrivacySection::active()->get();
+        return view('privacy', compact('s', 'sections'));
     }
 
     public function terms()
     {
-        $page = $this->loadStaticPage('terms', 'Terms of Service', 'Please read these terms carefully before using DealMindanao.');
-        return view('static-page', compact('page'));
+        $defaults = [
+            'tos_header_enabled'    => '1',
+            'tos_title'             => 'Terms of Service',
+            'tos_subtitle'          => 'Please read these terms carefully before using DealMindanao.',
+            'tos_footer_enabled'    => '1',
+            'tos_footer_text'       => 'For questions about these terms, please',
+            'tos_footer_link_label' => 'contact our support team',
+            'tos_footer_link_url'   => '/contact',
+            'tos_last_updated'      => 'February 14, 2026',
+            'tos_auto_update_date'  => '0',
+        ];
+        $keys = array_keys($defaults);
+        $raw  = Setting::whereIn('key', $keys)->pluck('value', 'key');
+        $s    = array_merge($defaults, $raw->toArray());
+
+        $sections = TermsSection::active()->get();
+
+        return view('terms', compact('s', 'sections'));
     }
 
     public function help()
@@ -141,14 +188,60 @@ class PageController extends Controller
 
     public function refunds()
     {
-        $page = $this->loadStaticPage('refunds', 'Refund & Returns Policy', 'We want you to be satisfied with your purchase. Please review our return policy below.');
-        return view('static-page', compact('page'));
+        $defaults = [
+            'rp_header_enabled'    => '1',
+            'rp_title'             => 'Refund & Returns Policy',
+            'rp_subtitle'          => 'We want you to be satisfied with your purchase. Please review our return policy below.',
+            'rp_footer_enabled'    => '1',
+            'rp_footer_text'       => 'For questions about returns or to initiate a return, please',
+            'rp_footer_link_label' => 'contact our support team',
+            'rp_footer_link_url'   => '/contact',
+        ];
+        $keys = array_keys($defaults);
+        $raw  = Setting::whereIn('key', $keys)->pluck('value', 'key');
+        $s    = array_merge($defaults, $raw->toArray());
+
+        $sections = RefundSection::active()->get();
+
+        return view('refunds', compact('s', 'sections'));
     }
 
     public function trustSafety()
     {
-        $page = $this->loadStaticPage('trust-safety', 'Trust & Safety', 'Your confidence and security are our top priorities at DealMindanao.');
-        return view('static-page', compact('page'));
+        $allKeys = [
+            'ts_header_enabled', 'ts_title', 'ts_subtitle',
+            'ts_footer_enabled', 'ts_footer_prefix', 'ts_footer_contact_label',
+            'ts_footer_contact_url', 'ts_footer_suffix',
+            'ts_footer_link1_label', 'ts_footer_link1_url',
+            'ts_footer_link2_label', 'ts_footer_link2_url',
+            'ts_footer_link3_label', 'ts_footer_link3_url',
+            'ts_footer_link4_label', 'ts_footer_link4_url',
+        ];
+        $defaults = [
+            'ts_header_enabled'       => '1',
+            'ts_title'                => 'Trust & Safety',
+            'ts_subtitle'             => 'Your confidence and security are our top priorities at DealMindanao.',
+            'ts_footer_enabled'       => '1',
+            'ts_footer_prefix'        => 'For questions about our trust and safety measures, please',
+            'ts_footer_contact_label' => 'contact our support team',
+            'ts_footer_contact_url'   => '/contact',
+            'ts_footer_suffix'        => 'or explore our policies:',
+            'ts_footer_link1_label'   => 'Help Center →',
+            'ts_footer_link1_url'     => '/help',
+            'ts_footer_link2_label'   => 'Privacy Policy →',
+            'ts_footer_link2_url'     => '/privacy',
+            'ts_footer_link3_label'   => 'Refund Policy →',
+            'ts_footer_link3_url'     => '/refunds',
+            'ts_footer_link4_label'   => 'Terms of Service →',
+            'ts_footer_link4_url'     => '/terms',
+        ];
+        $raw = Setting::getMany($allKeys);
+        $s   = [];
+        foreach ($allKeys as $key) {
+            $s[$key] = $raw[$key] ?? $defaults[$key];
+        }
+        $items = TrustSafetyItem::active()->get();
+        return view('trust-safety', compact('s', 'items'));
     }
 
     public function partner()
