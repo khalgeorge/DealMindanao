@@ -116,11 +116,11 @@
             @php
                 $finalPrice = $product->price - $product->discount;
                 $discountPercent = $product->discount > 0 ? round(($product->discount / $product->price) * 100) : 0;
-                $imageUrl = !empty($product->images) ? $product->images[0] : 'https://via.placeholder.com/400';
+                $imageUrl = product_image_url($product->images ?? []);
             @endphp
             <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-brand-200 transition-all duration-300 hover:shadow-xl">
                 <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
-                    <img src="{{ $imageUrl }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $product->name }}">
+                    <img src="{{ $imageUrl }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $product->name }}" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                     @if($discountPercent > 0)
                     <div class="absolute top-4 right-4"><span class="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg">-{{ $discountPercent }}%</span></div>
                     @endif

@@ -34,7 +34,7 @@
     
     @stack('styles')
 </head>
-<body class="bg-white">
+<body class="bg-gray-50">
     {{-- Navbar --}}
     @include('partials.navbar')
     

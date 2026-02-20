@@ -14,6 +14,7 @@
         <a href="{{ route('shop') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('shop') ? 'text-brand-600' : '' }}">Shop</a>
         <a href="{{ route('about') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('about') ? 'text-brand-600' : '' }}">About</a>
         <a href="{{ route('partner') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('partner') ? 'text-brand-600' : '' }}">Partner</a>
+        <a href="/help" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('help') ? 'text-brand-600' : '' }}">Help</a>
         <a href="{{ route('contact') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('contact') ? 'text-brand-600' : '' }}">Contact</a>
       </div>
       
@@ -54,6 +55,7 @@
       <a href="{{ route('shop') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Shop</a>
       <a href="{{ route('about') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">About</a>
       <a href="{{ route('partner') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Partner</a>
+      <a href="/help" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Help</a>
       <a href="{{ route('contact') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Contact</a>
     </div>
   </div>

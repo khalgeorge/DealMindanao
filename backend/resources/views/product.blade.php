@@ -3,7 +3,7 @@
 @php
     $finalPrice = $product->price - $product->discount;
     $discountPercent = $product->discount > 0 ? round(($product->discount / $product->price) * 100) : 0;
-    $imageUrl = !empty($product->images) ? \Illuminate\Support\Facades\Storage::url($product->images[0]) : 'https://via.placeholder.com/800';
+    $imageUrl = product_image_url($product->images ?? []);
     $metaTitle = $product->meta_title ?: ($product->name . ' | DealMindanao');
     $metaDescription = $product->meta_description
         ?: \Illuminate\Support\Str::limit($product->description ?? 'Discover this deal from DealMindanao.', 160);
@@ -42,7 +42,7 @@
         <!-- Image Section -->
         <div class="sticky top-24">
             <div class="aspect-square bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100 mb-6">
-                <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
             </div>
             
             <!-- Image Gallery -->
@@ -51,7 +51,7 @@
                 @foreach($product->images as $index => $image)
                     @if($index < 4)
                     <div class="aspect-square bg-gray-100 rounded-lg border {{ $index === 0 ? 'border-brand-500' : 'border-gray-100' }} overflow-hidden cursor-pointer hover:border-brand-200 transition-all">
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($image) }}" alt="{{ $product->name }} - Image {{ $index + 1 }}" class="w-full h-full object-cover">
+                        <img src="{{ product_image_url($product->images ?? [], $index) }}" alt="{{ $product->name }} - Image {{ $index + 1 }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                     </div>
                     @endif
                 @endforeach
@@ -59,7 +59,7 @@
             @else
             <div class="grid grid-cols-4 gap-4">
                 <div class="aspect-square bg-gray-100 rounded-lg border-2 border-brand-500 overflow-hidden">
-                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                 </div>
                 @for($i = 1; $i < 4; $i++)
                 <div class="aspect-square bg-gray-200 rounded-lg border border-gray-100 overflow-hidden flex items-center justify-center text-gray-400">

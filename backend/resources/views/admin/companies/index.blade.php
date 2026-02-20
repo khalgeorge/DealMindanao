@@ -304,12 +304,6 @@ function renderCompanies() {
               </button>
               
               <div class="flex items-center gap-1">
-                <button onclick="window.toggleCompanyStatus(${p.id}, ${p.is_active ? 'true' : 'false'})" title="${p.is_active ? 'Suspend' : 'Activate'} Company" class="p-3 ${p.is_active ? 'text-green-600 hover:text-amber-600' : 'text-gray-400 hover:text-green-600'} hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition-all">
-                  ${p.is_active ? 
-                    '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' : 
-                    '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
-                  }
-                </button>
                 <button onclick="window.quickEdit(${p.id})" title="Edit Company" class="p-3 text-gray-400 hover:text-brand-600 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 transition-all">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                 </button>
