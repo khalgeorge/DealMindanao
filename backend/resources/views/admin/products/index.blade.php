@@ -185,6 +185,41 @@
                </div>
             </div>
             
+                  <div class="md:col-span-2 mt-2">
+                     <div class="border border-gray-200 rounded-lg p-5 bg-gray-50">
+                        <div class="flex items-center justify-between mb-4">
+                           <h4 class="text-xs font-black text-gray-500 uppercase tracking-widest">Promo / Discount Settings</h4>
+                           <span id="modal-promo-chip" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-200 text-gray-500">&mdash; No Promo</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div>
+                              <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Discount Amount (₱)</label>
+                              <input type="number" id="product-discount" name="discount" step="0.01" min="0"
+                                     placeholder="0.00" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                              <p class="text-xs text-gray-400 mt-1">Must be less than the product price.</p>
+                           </div>
+                           <div>
+                              <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Promo Label <span class="font-normal normal-case">(optional)</span></label>
+                              <input type="text" id="product-promo-label" name="promo_label" maxlength="60"
+                                     placeholder="e.g. Flash Sale, Clearance" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                              <p class="text-xs text-gray-400 mt-1">Short badge text on the product card.</p>
+                           </div>
+                           <div>
+                              <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Starts At <span class="font-normal normal-case">(optional)</span></label>
+                              <input type="datetime-local" id="product-promo-starts" name="promo_starts_at"
+                                     class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                              <p class="text-xs text-gray-400 mt-1">Leave blank to activate immediately.</p>
+                           </div>
+                           <div>
+                              <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Ends At <span class="font-normal normal-case">(optional)</span></label>
+                              <input type="datetime-local" id="product-promo-ends" name="promo_ends_at"
+                                     class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                              <p class="text-xs text-gray-400 mt-1">Leave blank for no expiry.</p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
             <div class="bg-gray-50 px-8 py-6 flex flex-row-reverse gap-3 border-t border-gray-100">
                <button type="submit" class="btn-primary px-8 py-3 rounded-lg font-bold">Save Product</button>
                <button type="button" onclick="closeProductModal()" class="px-8 py-3 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors">Cancel</button>
@@ -407,6 +442,7 @@ window.closeProductModal = function() {
       document.getElementById('image-preview-grid').innerHTML = '';
       document.getElementById('product-is-active').checked   = true;
       document.getElementById('product-is-featured').checked = false;
+      if (typeof updatePromoStatus === 'function') updatePromoStatus();
       
       // Reset URL inputs to just one
       const container = document.getElementById('image-url-container');
@@ -488,6 +524,10 @@ async function loadProducts() {
       stock_quantity: p.stock_quantity || 0,
       is_active: p.is_active !== false,
       is_featured: p.is_featured === true,
+      discount: parseFloat(p.discount || 0),
+      promo_label: p.promo_label || '',
+      promo_starts_at: p.promo_starts_at || '',
+      promo_ends_at: p.promo_ends_at || '',
       status: (p.stock_quantity||0) > 10 ? 'Active' : ((p.stock_quantity||0) > 0 ? 'Low' : 'Out'),
       description: p.description || '',
       images: p.images,
@@ -533,6 +573,11 @@ window.editProduct = (id) => {
   form.elements['description'].value = p.description || '';
   document.getElementById('product-is-active').checked   = p.is_active !== false;
   document.getElementById('product-is-featured').checked = p.is_featured === true;
+  form.elements['discount'].value        = p.discount     || '';
+  form.elements['promo_label'].value     = p.promo_label  || '';
+  form.elements['promo_starts_at'].value = p.promo_starts_at ? p.promo_starts_at.substring(0, 16).replace(' ', 'T') : '';
+  form.elements['promo_ends_at'].value   = p.promo_ends_at   ? p.promo_ends_at.substring(0, 16).replace(' ', 'T')   : '';
+  if (typeof updatePromoStatus === 'function') updatePromoStatus();
   
   // Handle existing images
   const imgs = p.images || [];
@@ -724,6 +769,47 @@ window.toggleFeatured = async (id) => {
   } catch(e) { alert('Failed to toggle featured'); }
 };
 
+// Live promo status chip
+function updatePromoStatus() {
+   const discountInput = document.getElementById('product-discount');
+   const startsInput   = document.getElementById('product-promo-starts');
+   const endsInput     = document.getElementById('product-promo-ends');
+   const chip          = document.getElementById('modal-promo-chip');
+   if (!chip) return;
+
+   const CHIP = {
+      none:      'bg-gray-200 text-gray-500',
+      active:    'bg-green-100 text-green-700',
+      scheduled: 'bg-blue-100 text-blue-700',
+      expired:   'bg-red-100 text-red-500',
+   };
+
+   const discount = parseFloat(discountInput?.value);
+   if (!discount || discount <= 0) {
+      chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.none}`;
+      chip.textContent = '\u2014 No Promo';
+      return;
+   }
+
+   const now    = new Date();
+   const starts = startsInput?.value ? new Date(startsInput.value) : null;
+   const ends   = endsInput?.value   ? new Date(endsInput.value)   : null;
+
+   if (ends && now > ends) {
+      chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.expired}`;
+      chip.textContent = '\u2715 Expired';
+   } else if (starts && now < starts) {
+      chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.scheduled}`;
+      chip.textContent = '\u23F3 Scheduled';
+   } else {
+      chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.active}`;
+      chip.textContent = '\u25CF Active';
+   }
+}
+document.getElementById('product-discount')?.addEventListener('input', updatePromoStatus);
+document.getElementById('product-promo-starts')?.addEventListener('change', updatePromoStatus);
+document.getElementById('product-promo-ends')?.addEventListener('change', updatePromoStatus);
+
 loadProducts();
 loadFormData();
 
@@ -740,8 +826,12 @@ document.getElementById('product-form').addEventListener('submit', async e => {
   formData.append('price', form.elements['price'].value);
   formData.append('stock_quantity', form.elements['stock_quantity'].value || '0');
   formData.append('description', form.elements['description'].value || '');
-  formData.append('is_active',   document.getElementById('product-is-active').checked   ? '1' : '0');
-  formData.append('is_featured', document.getElementById('product-is-featured').checked ? '1' : '0');
+  formData.append('is_active',        document.getElementById('product-is-active').checked   ? '1' : '0');
+  formData.append('is_featured',       document.getElementById('product-is-featured').checked ? '1' : '0');
+  formData.append('discount',          form.elements['discount']?.value        || '');
+  formData.append('promo_label',       form.elements['promo_label']?.value     || '');
+  formData.append('promo_starts_at',   form.elements['promo_starts_at']?.value || '');
+  formData.append('promo_ends_at',     form.elements['promo_ends_at']?.value   || '');
   
   // Add uploaded images
   const uploadedImagesPaths = document.getElementById('uploaded-images').value;

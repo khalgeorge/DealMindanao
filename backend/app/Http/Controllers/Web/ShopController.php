@@ -22,17 +22,21 @@ class ShopController extends Controller
                 $image = product_image_url($p->images ?? []);
 
                 return [
-                    'id'          => $p->id,
-                    'name'        => $p->name,
-                    'slug'        => $p->slug,
-                    'price'       => (float) $p->price,
-                    'discount'    => (float) ($p->discount ?? 0),
-                    'description' => $p->description,
-                    'image'       => $image,
-                    'category_id' => $p->category_id,
-                    'category'    => $p->category?->slug ?? '',
-                    'company_id'  => $p->company_id,
-                    'company'     => $p->company?->name ?? '',
+                    'id'               => $p->id,
+                    'name'             => $p->name,
+                    'slug'             => $p->slug,
+                    'price'            => (float) $p->price,
+                    'discount'         => (float) ($p->discount ?? 0),
+                    'is_on_promo'      => $p->isOnPromo(),
+                    'display_price'    => $p->displayPrice(),
+                    'discount_percent' => $p->discountPercent(),
+                    'promo_label'      => $p->promo_label,
+                    'description'      => $p->description,
+                    'image'            => $image,
+                    'category_id'      => $p->category_id,
+                    'category'         => $p->category?->slug ?? '',
+                    'company_id'       => $p->company_id,
+                    'company'          => $p->company?->name ?? '',
                 ];
             })
             ->values();

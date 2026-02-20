@@ -219,8 +219,8 @@
         document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
 
         grid.innerHTML = pageProducts.map(p => {
-            const salePrice       = p.price - p.discount;
-            const discountPercent = p.discount > 0 ? Math.round((p.discount / p.price) * 100) : 0;
+            const salePrice       = p.display_price;
+            const discountPercent = p.discount_percent;
             const imageUrl        = p.image || '/images/unknown-product.svg';
 
             return `
@@ -230,9 +230,9 @@
                         <img src="${imageUrl}" alt="${p.name}"
                              onerror="this.onerror=null;this.src='/images/unknown-product.svg'"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                        ${discountPercent > 0 ? `
+                        ${p.is_on_promo ? `
                         <div class="absolute top-3 left-3 bg-brand-600 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm">
-                            ${discountPercent}% OFF
+                            ${p.promo_label || discountPercent + '% OFF'}
                         </div>` : ''}
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
                     </div>
@@ -243,7 +243,7 @@
                         <div class="mt-4 flex flex-col gap-2">
                             <div class="flex items-center gap-2">
                                 <span class="text-lg font-bold text-gray-900">${formatPrice(salePrice)}</span>
-                                ${discountPercent > 0 ? `<span class="text-xs text-gray-400 line-through">${formatPrice(p.price)}</span>` : ''}
+                                ${p.is_on_promo ? `<span class="text-xs text-gray-400 line-through">${formatPrice(p.price)}</span>` : ''}
                             </div>
                             <div class="flex gap-2">
                                 <button onclick="window.viewProductModal(${p.id})"
@@ -283,8 +283,8 @@
             return matchesSearch && matchesCategory;
         });
 
-        if (sortValue === 'price-low')  filtered.sort((a, b) => (a.price - a.discount) - (b.price - b.discount));
-        if (sortValue === 'price-high') filtered.sort((a, b) => (b.price - b.discount) - (a.price - a.discount));
+        if (sortValue === 'price-low')  filtered.sort((a, b) => a.display_price - b.display_price);
+        if (sortValue === 'price-high') filtered.sort((a, b) => b.display_price - a.display_price);
         if (sortValue === 'newest')     filtered.sort((a, b) => b.id - a.id);
 
         currentPage = 1;
@@ -332,8 +332,8 @@
         const p = allProducts.find(p => p.id === productId);
         if (!p) return;
 
-        const salePrice       = p.price - p.discount;
-        const discountPercent = p.discount > 0 ? Math.round((p.discount / p.price) * 100) : 0;
+        const salePrice       = p.display_price;
+        const discountPercent = p.discount_percent;
         const imageUrl        = p.image || '/images/unknown-product.svg';
 
         modalContent.innerHTML = `
@@ -347,13 +347,13 @@
                     <div class="mb-6">
                         <h2 class="text-3xl font-bold text-gray-900 mb-4">${p.name}</h2>
                         ${p.company ? `<p class="text-sm text-gray-500 mb-2">by ${p.company}</p>` : ''}
-                        ${discountPercent > 0 ? `
+                        ${p.is_on_promo ? `
                         <div class="inline-flex items-center gap-2 bg-brand-50 px-3 py-1 rounded-full mb-4">
-                            <span class="text-brand-600 font-bold text-sm">${discountPercent}% OFF</span>
+                            <span class="text-brand-600 font-bold text-sm">${p.promo_label || discountPercent + '% OFF'}</span>
                         </div>` : ''}
                         <div class="flex items-baseline gap-3 mb-6">
                             <span class="text-4xl font-bold text-gray-900">${formatPrice(salePrice)}</span>
-                            ${discountPercent > 0 ? `<span class="text-xl text-gray-400 line-through">${formatPrice(p.price)}</span>` : ''}
+                            ${p.is_on_promo ? `<span class="text-xl text-gray-400 line-through">${formatPrice(p.price)}</span>` : ''}
                         </div>
                     </div>
                     <div class="mb-6">
@@ -403,7 +403,7 @@
             existing.quantity += 1;
             showToast(`${p.name} quantity updated!`);
         } else {
-            const discountPercent = p.discount > 0 ? Math.round((p.discount / p.price) * 100) : 0;
+            const discountPercent = p.discount_percent;
             cart.push({
                 id:                  p.id,
                 name:                p.name,

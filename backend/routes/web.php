@@ -15,6 +15,7 @@ use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController
 use App\Http\Controllers\Web\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Web\Admin\HomePageController as AdminHomePageController;
+use App\Http\Controllers\Web\Admin\AboutPageController as AdminAboutPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Shop
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
-Route::get('/products/{slug}', [ShopController::class, 'show'])->name('product.show');
+Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product.show');
+Route::get('/products/{slug}', fn($slug) => redirect()->route('product.show', $slug), 301);
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -97,6 +99,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/companies/{company}', [AdminCompanyController::class, 'update'])->name('companies.update');
     Route::delete('/companies/{company}', [AdminCompanyController::class, 'destroy'])->name('companies.destroy');
     Route::post('/companies/{company}/toggle-status', [AdminCompanyController::class, 'toggleStatus'])->name('companies.toggleStatus');
+
+    // About Page Editor
+    Route::get('/about-page', [AdminAboutPageController::class, 'index'])->name('about_page.index');
+    Route::post('/about-page', [AdminAboutPageController::class, 'update'])->name('about_page.update');
 
     // Home Page Editor
     Route::get('/home-page', [AdminHomePageController::class, 'index'])->name('home_page.index');

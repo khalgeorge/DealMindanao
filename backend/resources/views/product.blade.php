@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @php
-    $finalPrice = $product->price - $product->discount;
-    $discountPercent = $product->discount > 0 ? round(($product->discount / $product->price) * 100) : 0;
-    $imageUrl = product_image_url($product->images ?? []);
+    $finalPrice      = $product->displayPrice();
+    $discountPercent = $product->discountPercent();
+    $isOnPromo       = $product->isOnPromo();
+    $imageUrl        = product_image_url($product->images ?? []);
     $metaTitle = $product->meta_title ?: ($product->name . ' | DealMindanao');
     $metaDescription = $product->meta_description
         ?: \Illuminate\Support\Str::limit($product->description ?? 'Discover this deal from DealMindanao.', 160);
@@ -16,7 +17,7 @@
 @endif
 
 @section('content')
-<div class="container mx-auto px-6 lg:px-16 max-w-7xl py-12">
+<div class="page-shell py-12">
     <!-- Breadcrumb -->
     <nav class="mb-8 hidden md:block">
         <ol class="flex items-center space-x-2 text-sm text-gray-500">
@@ -42,7 +43,7 @@
         <!-- Image Section -->
         <div class="sticky top-24">
             <div class="aspect-square bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100 mb-6">
-                <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                <img id="main-product-image" src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
             </div>
             
             <!-- Image Gallery -->
@@ -50,16 +51,16 @@
             <div class="grid grid-cols-4 gap-4">
                 @foreach($product->images as $index => $image)
                     @if($index < 4)
-                    <div class="aspect-square bg-gray-100 rounded-lg border {{ $index === 0 ? 'border-brand-500' : 'border-gray-100' }} overflow-hidden cursor-pointer hover:border-brand-200 transition-all">
-                        <img src="{{ product_image_url($product->images ?? [], $index) }}" alt="{{ $product->name }} - Image {{ $index + 1 }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                    <div data-src="{{ product_image_url($product->images ?? [], $index) }}" class="product-thumb aspect-square bg-gray-100 rounded-lg border {{ $index === 0 ? 'border-2 border-brand-500' : 'border border-gray-100' }} overflow-hidden cursor-pointer hover:border-brand-400 transition-all">
+                        <img src="{{ product_image_url($product->images ?? [], $index) }}" alt="{{ $product->name }} - Image {{ $index + 1 }}" class="w-full h-full object-cover pointer-events-none" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                     </div>
                     @endif
                 @endforeach
             </div>
             @else
             <div class="grid grid-cols-4 gap-4">
-                <div class="aspect-square bg-gray-100 rounded-lg border-2 border-brand-500 overflow-hidden">
-                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                <div data-src="{{ $imageUrl }}" class="product-thumb aspect-square bg-gray-100 rounded-lg border-2 border-brand-500 overflow-hidden cursor-pointer">
+                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover pointer-events-none" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                 </div>
                 @for($i = 1; $i < 4; $i++)
                 <div class="aspect-square bg-gray-200 rounded-lg border border-gray-100 overflow-hidden flex items-center justify-center text-gray-400">
@@ -79,14 +80,18 @@
                     {{ $product->category->name }}
                 </span>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight mb-2">{{ $product->name }}</h1>
-                <p class="text-gray-500 text-sm">by <span class="font-semibold">{{ $product->company->name }}</span></p>
             </div>
 
             <!-- Price Section -->
             <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-8">
+                @if($isOnPromo && $product->promo_label)
+                <div class="inline-flex items-center gap-1.5 bg-brand-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg mb-3">
+                    {{ $product->promo_label }}
+                </div>
+                @endif
                 <div class="flex items-center gap-4">
                     <span class="text-4xl font-black text-brand-600">₱{{ number_format($finalPrice, 2) }}</span>
-                    @if($discountPercent > 0)
+                    @if($isOnPromo)
                     <div class="flex flex-col">
                         <span class="text-lg text-gray-400 line-through decoration-brand-200">₱{{ number_format($product->price, 2) }}</span>
                         <span class="text-xs font-bold text-accent-600">Save {{ $discountPercent }}%</span>
@@ -105,7 +110,7 @@
             <!-- Description -->
             <div class="mb-10">
                 <h3 class="font-bold text-gray-900 mb-4 text-lg">About this deal</h3>
-                <div class="text-gray-600 leading-relaxed text-base prose max-w-none">
+                <div class="text-gray-600 leading-relaxed text-lg prose">
                     {{ $product->description ?? 'No description available.' }}
                 </div>
             </div>
@@ -127,28 +132,23 @@
                         </button>
                     </div>
                     <p class="text-sm text-gray-500">
-                        <span class="font-bold text-gray-900">{{ $product->stock }}</span> units available
+                        <span id="stock-val" class="font-bold text-gray-900">{{ $product->stock_quantity }}</span> units available
                     </p>
                 </div>
 
-                <form action="{{ route('cart.add', $product->id) }}" method="POST" id="add-to-cart-form">
-                    @csrf
-                    <input type="hidden" name="quantity" id="quantity-input" value="1">
-                    
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <button type="submit" class="flex-1 inline-flex items-center justify-center px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                            </svg>
-                            Add to Cart
-                        </button>
-                        <button type="button" class="px-6 py-4 border-2 border-gray-300 hover:border-brand-500 rounded-lg transition-all flex items-center justify-center">
-                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </form>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button id="add-to-cart" type="button" class="btn-primary btn-lg flex-1 shadow-brand-200/50 shadow-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        Add to Cart
+                    </button>
+                    <button id="wishlist" type="button" class="btn-secondary btn-lg px-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </button>
+                </div>
                 
                 <!-- Disclaimer -->
                 <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
@@ -158,6 +158,7 @@
                         </svg>
                         This is an order request only. No online payment is required. Our team will contact you to confirm payment and delivery.
                     </p>
+                    <a href="/trust-safety" class="text-xs font-semibold text-amber-800 hover:text-amber-900 underline">Learn about our Trust &amp; Safety practices &rarr;</a>
                 </div>
             </div>
 
@@ -181,6 +182,13 @@
                 </div>
             </div>
 
+            <div class="mt-6 flex items-center justify-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                </svg>
+                Trustworthy Mindanao Platform &bull; Verified Partners Only
+            </div>
+
             <!-- Back to Shop -->
             <div class="mt-8">
                 <a href="{{ route('shop') }}" class="inline-flex items-center text-brand-600 hover:text-brand-700 font-semibold">
@@ -197,22 +205,132 @@
 
 @push('scripts')
 <script>
-    // Quantity controls
-    const minusBtn = document.getElementById('minus-qty');
-    const plusBtn = document.getElementById('plus-qty');
-    const qtyVal = document.getElementById('qty-val');
-    const quantityInput = document.getElementById('quantity-input');
-    const maxStock = {{ $product->stock }};
-    
+    const maxStock  = {{ (int) $product->stock_quantity }};
+    const productId = {{ $product->id }};
     let quantity = 1;
-    
+
+    // --- Quantity controls ---
+    const minusBtn = document.getElementById('minus-qty');
+    const plusBtn  = document.getElementById('plus-qty');
+    const qtyVal   = document.getElementById('qty-val');
+
     function updateQuantity(newQty) {
         quantity = Math.max(1, Math.min(newQty, maxStock));
         qtyVal.textContent = quantity;
-        quantityInput.value = quantity;
     }
-    
+
     minusBtn.addEventListener('click', () => updateQuantity(quantity - 1));
-    plusBtn.addEventListener('click', () => updateQuantity(quantity + 1));
+    plusBtn.addEventListener('click',  () => updateQuantity(quantity + 1));
+
+    // --- Thumbnail gallery ---
+    const mainImage = document.getElementById('main-product-image');
+    document.querySelectorAll('.product-thumb').forEach(thumb => {
+        thumb.addEventListener('click', function () {
+            if (mainImage) mainImage.src = this.dataset.src;
+            document.querySelectorAll('.product-thumb').forEach(t => {
+                t.classList.remove('border-2', 'border-brand-500');
+                t.classList.add('border', 'border-gray-100');
+            });
+            this.classList.remove('border', 'border-gray-100');
+            this.classList.add('border-2', 'border-brand-500');
+        });
+    });
+
+    // --- Wishlist toggle ---
+    (function () {
+        const btn      = document.getElementById('wishlist');
+        const svg      = btn ? btn.querySelector('svg') : null;
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+        function setWishlistState(active) {
+            if (!svg) return;
+            if (active) {
+                svg.setAttribute('fill', 'currentColor');
+                btn.classList.add('text-red-500');
+                btn.classList.remove('text-gray-600');
+            } else {
+                svg.setAttribute('fill', 'none');
+                btn.classList.remove('text-red-500');
+                btn.classList.add('text-gray-600');
+            }
+        }
+
+        setWishlistState(wishlist.includes(productId));
+
+        if (btn) {
+            btn.addEventListener('click', function () {
+                const list = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                const idx  = list.indexOf(productId);
+                if (idx === -1) {
+                    list.push(productId);
+                    setWishlistState(true);
+                } else {
+                    list.splice(idx, 1);
+                    setWishlistState(false);
+                }
+                localStorage.setItem('wishlist', JSON.stringify(list));
+            });
+        }
+    })();
+
+    // --- Add to cart ---
+    document.getElementById('add-to-cart').addEventListener('click', () => {
+        if (maxStock < 1) {
+            alert('This product is out of stock.');
+            return;
+        }
+        if (quantity > maxStock) {
+            alert('Not enough stock available.');
+            return;
+        }
+
+        const productName   = @json($product->name);
+        const originalPrice = parseFloat('{{ $product->price }}');
+        const discountPct   = {{ $discountPercent }};
+        const images        = @json($product->images ?? []);
+        const companyName   = @json($product->company->name);
+
+        const cart     = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existing = cart.find(item => item.id == productId);
+
+        if (existing) {
+            const newQty = existing.quantity + quantity;
+            if (newQty > maxStock) {
+                alert('Cannot add more than available stock.');
+                return;
+            }
+            existing.quantity = newQty;
+        } else {
+            cart.push({
+                id:                  productId,
+                name:                productName,
+                price:               originalPrice,
+                discount_percentage: discountPct,
+                quantity:            quantity,
+                stock_quantity:      maxStock,
+                company:             companyName,
+                images:              images
+            });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        window.dispatchEvent(new Event('cart-updated'));
+
+        // Decrement displayed stock counter
+        const stockEl = document.getElementById('stock-val');
+        if (stockEl) {
+            const remaining = parseInt(stockEl.textContent, 10) - quantity;
+            stockEl.textContent = Math.max(0, remaining);
+        }
+
+        const btn  = document.getElementById('add-to-cart');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Added!';
+        btn.disabled = true;
+        setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 1500);
+
+        quantity = 1;
+        updateQuantity(1);
+    });
 </script>
 @endpush

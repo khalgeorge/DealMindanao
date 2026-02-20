@@ -99,6 +99,58 @@
             @enderror
           </div>
 
+          {{-- Promo / Discount Settings --}}
+          <div class="md:col-span-2">
+            <div class="border border-gray-200 rounded-lg p-5 bg-gray-50">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-xs font-black text-gray-500 uppercase tracking-widest">Promo / Discount Settings</h4>
+                <span id="promo-status-chip" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-200 text-gray-500">&mdash; No Promo</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Discount Amount (₱)</label>
+                  <input type="number" name="discount" id="promo-discount" step="0.01" min="0"
+                         value="{{ old('discount', $product->discount) }}" placeholder="0.00"
+                         class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                  <p class="text-xs text-gray-400 mt-1">Must be less than the product price. Leave blank to remove discount.</p>
+                  @error('discount')
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                  @enderror
+                </div>
+                <div>
+                  <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Promo Label <span class="font-normal normal-case text-gray-400">(optional)</span></label>
+                  <input type="text" name="promo_label" maxlength="60"
+                         value="{{ old('promo_label', $product->promo_label) }}" placeholder="e.g. Flash Sale, Clearance"
+                         class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                  <p class="text-xs text-gray-400 mt-1">Short badge text shown on the product card.</p>
+                  @error('promo_label')
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                  @enderror
+                </div>
+                <div>
+                  <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Starts At <span class="font-normal normal-case text-gray-400">(optional)</span></label>
+                  <input type="datetime-local" name="promo_starts_at" id="promo-starts"
+                         value="{{ old('promo_starts_at', $product->promo_starts_at ? $product->promo_starts_at->format('Y-m-d\\TH:i') : '') }}"
+                         class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                  <p class="text-xs text-gray-400 mt-1">Leave blank to activate immediately.</p>
+                  @error('promo_starts_at')
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                  @enderror
+                </div>
+                <div>
+                  <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Ends At <span class="font-normal normal-case text-gray-400">(optional)</span></label>
+                  <input type="datetime-local" name="promo_ends_at" id="promo-ends"
+                         value="{{ old('promo_ends_at', $product->promo_ends_at ? $product->promo_ends_at->format('Y-m-d\\TH:i') : '') }}"
+                         class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                  <p class="text-xs text-gray-400 mt-1">Leave blank for no expiry.</p>
+                  @error('promo_ends_at')
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                  @enderror
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="md:col-span-2">
             <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Current Images</label>
             @if($product->images && count($product->images) > 0)
@@ -138,3 +190,51 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    const discountInput = document.getElementById('promo-discount');
+    const startsInput   = document.getElementById('promo-starts');
+    const endsInput     = document.getElementById('promo-ends');
+    const chip          = document.getElementById('promo-status-chip');
+
+    const CHIP = {
+        none:      'bg-gray-200 text-gray-500',
+        active:    'bg-green-100 text-green-700',
+        scheduled: 'bg-blue-100 text-blue-700',
+        expired:   'bg-red-100 text-red-500',
+    };
+
+    function updateStatus() {
+        if (!discountInput || !chip) return;
+        const discount = parseFloat(discountInput.value);
+        if (!discount || discount <= 0) {
+            chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.none}`;
+            chip.textContent = '\u2014 No Promo';
+            return;
+        }
+        const now    = new Date();
+        const starts = startsInput.value ? new Date(startsInput.value) : null;
+        const ends   = endsInput.value   ? new Date(endsInput.value)   : null;
+        if (ends && now > ends) {
+            chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.expired}`;
+            chip.textContent = '\u2715 Expired';
+        } else if (starts && now < starts) {
+            chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.scheduled}`;
+            chip.textContent = '\u23F3 Scheduled';
+        } else {
+            chip.className = `text-xs font-semibold px-2.5 py-1 rounded-full ${CHIP.active}`;
+            chip.textContent = '\u25CF Active';
+        }
+    }
+
+    if (discountInput) {
+        discountInput.addEventListener('input', updateStatus);
+        startsInput.addEventListener('change', updateStatus);
+        endsInput.addEventListener('change', updateStatus);
+        updateStatus(); // initialise from existing values on page load
+    }
+})();
+</script>
+@endpush

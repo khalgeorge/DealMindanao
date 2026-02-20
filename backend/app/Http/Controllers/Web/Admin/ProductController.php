@@ -118,7 +118,14 @@ class ProductController extends Controller
         $data['images'] = array_values(array_unique($images));
         $data['is_active'] = $data['is_active'] ?? true;
         $data['is_featured'] = $data['is_featured'] ?? false;
-        
+
+        // Clear promo metadata when discount is absent or zero
+        if (empty($data['discount']) || (float) $data['discount'] <= 0) {
+            $data['promo_label']     = null;
+            $data['promo_starts_at'] = null;
+            $data['promo_ends_at']   = null;
+        }
+
         $product = Product::create($data);
         
         return redirect()
@@ -167,7 +174,14 @@ class ProductController extends Controller
         }
         
         $data['images'] = array_values(array_unique($images));
-        
+
+        // Clear promo metadata when discount is absent or zero
+        if (empty($data['discount']) || (float) $data['discount'] <= 0) {
+            $data['promo_label']     = null;
+            $data['promo_starts_at'] = null;
+            $data['promo_ends_at']   = null;
+        }
+
         $product->update($data);
         
         return redirect()

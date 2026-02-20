@@ -33,7 +33,7 @@ class ProductRequest extends FormRequest
             ],
             'description' => ['nullable', 'string', 'max:5000'],
             'price' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
-            'discount' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
+            'discount' => ['nullable', 'numeric', 'min:0', 'max:99999999.99', 'lt:price'],
             'stock_quantity' => ['required', 'integer', 'min:0', 'max:999999'],
             'sku' => [
                 'nullable',
@@ -48,7 +48,16 @@ class ProductRequest extends FormRequest
             'images' => ['nullable', 'array', 'max:10'],
             'images.*' => ['string', 'max:500'],
             'uploaded_images' => ['nullable', 'string'],
-            
+
+            'promo_label'     => ['nullable', 'string', 'max:60'],
+            'promo_starts_at' => ['nullable', 'date'],
+            'promo_ends_at'   => ['nullable', 'date', function ($attribute, $value, $fail) {
+                $startsAt = $this->input('promo_starts_at');
+                if ($value && $startsAt && strtotime($value) <= strtotime($startsAt)) {
+                    $fail('The promo end date must be after the start date.');
+                }
+            }],
+
             'is_active' => ['nullable', 'boolean'],
             'is_featured' => ['nullable', 'boolean'],
             
@@ -68,8 +77,11 @@ class ProductRequest extends FormRequest
             'stock_quantity' => 'stock',
             'is_active' => 'active status',
             'is_featured' => 'featured status',
-            'meta_title' => 'SEO title',
+            'meta_title'       => 'SEO title',
             'meta_description' => 'SEO description',
+            'promo_label'      => 'promo label',
+            'promo_starts_at'  => 'promo start date',
+            'promo_ends_at'    => 'promo end date',
         ];
     }
 
@@ -79,8 +91,9 @@ class ProductRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'slug.regex' => 'The slug must be lowercase and contain only letters, numbers, and hyphens.',
-            'images.max' => 'You can upload a maximum of 10 images per product.',
+            'slug.regex'  => 'The slug must be lowercase and contain only letters, numbers, and hyphens.',
+            'images.max'  => 'You can upload a maximum of 10 images per product.',
+            'discount.lt' => 'The discount must be less than the product price.',
         ];
     }
 
@@ -96,9 +109,16 @@ class ProductRequest extends FormRequest
             ]);
         }
 
+        // Nullify empty promo fields so they pass nullable date validation
+        $this->merge([
+            'promo_label'     => $this->promo_label     ?: null,
+            'promo_starts_at' => $this->promo_starts_at ?: null,
+            'promo_ends_at'   => $this->promo_ends_at   ?: null,
+        ]);
+
         // Convert checkboxes to boolean
         $this->merge([
-            'is_active' => $this->boolean('is_active'),
+            'is_active'  => $this->boolean('is_active'),
             'is_featured' => $this->boolean('is_featured'),
         ]);
     }
