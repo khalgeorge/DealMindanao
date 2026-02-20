@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Faq;
+use App\Models\Page;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -40,13 +42,123 @@ class PageController extends Controller
         return view('about', ['s' => $s]);
     }
     
+    private array $partnerDefaults = [
+        'partner_hero_enabled'          => '1',
+        'partner_hero_badge'            => 'Partner Program',
+        'partner_hero_title'            => 'Become a',
+        'partner_hero_title_highlight'  => 'Partner',
+        'partner_hero_description'      => 'Partner with DealMindanao to showcase your products to more customers online. We handle listings, pricing strategy, customer communication, and order coordination — so you can focus on supplying quality products.',
+        'partner_hero_cta_label'        => 'Become a Partner',
+        'partner_hero_cta_link'         => '#apply',
+        'partner_features_enabled'      => '1',
+        'partner_card1_enabled'         => '1',
+        'partner_card1_number'          => '01',
+        'partner_card1_title'           => 'Fast Onboarding',
+        'partner_card1_description'     => 'Get your shop up and running in less than 48 hours with our easy setup process.',
+        'partner_card2_enabled'         => '1',
+        'partner_card2_number'          => '02',
+        'partner_card2_title'           => 'Unified Logistics',
+        'partner_card2_description'     => "We handle the pickup and shipping. Just pack your products and we'll do the rest.",
+        'partner_card3_enabled'         => '1',
+        'partner_card3_number'          => '03',
+        'partner_card3_title'           => 'Growth Insights',
+        'partner_card3_description'     => 'Access detailed analytics and market trends to help you optimize your inventory.',
+        'partner_cta_enabled'           => '1',
+        'partner_cta_title'             => 'Ready to Scale?',
+        'partner_cta_quote'             => '"Our sales doubled within three months of joining DealMindanao. The logistics support is a game-changer for Mindanao farms."',
+        'partner_cta_btn1_label'        => 'Contact Us to Partner',
+        'partner_cta_btn1_link'         => '/contact',
+        'partner_cta_btn2_label'        => 'Learn About Us',
+        'partner_cta_btn2_link'         => '/about',
+    ];
+
+    private array $contactDefaults = [
+        'contact_badge'           => 'Contact Support',
+        'contact_title'           => "We're here to",
+        'contact_title_highlight' => 'help',
+        'contact_description'     => 'Need help with an order or have questions? Contact our support team and include your order number for faster assistance.',
+        'contact_email'           => 'hello@dealmindanao.ph',
+        'contact_address'         => 'Poblacion District, Davao City, 8000',
+    ];
+
     public function contact()
     {
-        return view('contact');
+        $keys = array_keys($this->contactDefaults);
+        $raw  = Setting::getMany($keys);
+        $s    = [];
+        foreach ($keys as $key) {
+            $s[$key] = $raw[$key] ?? $this->contactDefaults[$key];
+        }
+        return view('contact', ['s' => $s]);
     }
-    
+
+    private function loadStaticPage(string $slug, string $defaultTitle, string $defaultSubtitle = ''): Page
+    {
+        return Page::firstOrCreate(
+            ['slug' => $slug],
+            ['title' => $defaultTitle, 'subtitle' => $defaultSubtitle]
+        );
+    }
+
+    public function privacy()
+    {
+        $page = $this->loadStaticPage('privacy', 'Privacy Policy', 'Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.');
+        return view('static-page', compact('page'));
+    }
+
+    public function terms()
+    {
+        $page = $this->loadStaticPage('terms', 'Terms of Service', 'Please read these terms carefully before using DealMindanao.');
+        return view('static-page', compact('page'));
+    }
+
+    public function help()
+    {
+        $defaults = [
+            'help_header_enabled'  => '1',
+            'help_title'           => 'Help Center',
+            'help_subtitle'        => 'Find answers to frequently asked questions about ordering, payment, and delivery.',
+            'help_cta_enabled'     => '1',
+            'help_cta_title'       => 'Still have questions?',
+            'help_cta_description' => 'Our support team is here to help you, or explore our policies for more details.',
+            'help_cta_btn1_label'  => 'Contact Support',
+            'help_cta_btn1_link'   => '/contact',
+            'help_cta_btn2_label'  => 'Browse Deals',
+            'help_cta_btn2_link'   => '/shop',
+        ];
+
+        $keys = array_keys($defaults);
+        $raw  = Setting::getMany($keys);
+        $s    = [];
+        foreach ($keys as $key) {
+            $s[$key] = $raw[$key] ?? $defaults[$key];
+        }
+
+        $faqs = Faq::active()->get();
+
+        return view('help', compact('s', 'faqs'));
+    }
+
+    public function refunds()
+    {
+        $page = $this->loadStaticPage('refunds', 'Refund & Returns Policy', 'We want you to be satisfied with your purchase. Please review our return policy below.');
+        return view('static-page', compact('page'));
+    }
+
+    public function trustSafety()
+    {
+        $page = $this->loadStaticPage('trust-safety', 'Trust & Safety', 'Your confidence and security are our top priorities at DealMindanao.');
+        return view('static-page', compact('page'));
+    }
+
     public function partner()
     {
-        return view('partner');
+        $keys = array_keys($this->partnerDefaults);
+        $raw  = Setting::getMany($keys);
+        $s    = [];
+        foreach ($keys as $key) {
+            $s[$key] = $raw[$key] ?? $this->partnerDefaults[$key];
+        }
+        return view('partner', ['s' => $s]);
     }
 }

@@ -16,6 +16,9 @@ use App\Http\Controllers\Web\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Web\Admin\HomePageController as AdminHomePageController;
 use App\Http\Controllers\Web\Admin\AboutPageController as AdminAboutPageController;
+use App\Http\Controllers\Web\Admin\PartnerPageController as AdminPartnerPageController;
+use App\Http\Controllers\Web\Admin\ContactPageController as AdminContactPageController;
+use App\Http\Controllers\Web\Admin\HelpPageController as AdminHelpPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +53,11 @@ Route::middleware('auth')->group(function () {
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/partner', [PageController::class, 'partner'])->name('partner');
+Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+Route::get('/help', [PageController::class, 'help'])->name('help');
+Route::get('/refunds', [PageController::class, 'refunds'])->name('refunds');
+Route::get('/trust-safety', [PageController::class, 'trustSafety'])->name('trust-safety');
 
 // Auth Routes (Laravel Breeze provides these)
 require __DIR__.'/auth.php';
@@ -103,6 +111,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // About Page Editor
     Route::get('/about-page', [AdminAboutPageController::class, 'index'])->name('about_page.index');
     Route::post('/about-page', [AdminAboutPageController::class, 'update'])->name('about_page.update');
+
+    // Partner Page Editor
+    Route::get('/partner-page', [AdminPartnerPageController::class, 'index'])->name('partner_page.index');
+    Route::post('/partner-page', [AdminPartnerPageController::class, 'update'])->name('partner_page.update');
+
+    // Contact Page Editor
+    Route::get('/contact-page', [AdminContactPageController::class, 'index'])->name('contact_page.index');
+    Route::post('/contact-page', [AdminContactPageController::class, 'update'])->name('contact_page.update');
+
+    // Help Page Editor
+    Route::get('/help-page', [AdminHelpPageController::class, 'index'])->name('help_page.index');
+    Route::post('/help-page', [AdminHelpPageController::class, 'update'])->name('help_page.update');
+    Route::post('/help-page/faqs/reorder', [AdminHelpPageController::class, 'reorderFaqs'])->name('help_page.faqs.reorder');
+    Route::post('/help-page/faqs', [AdminHelpPageController::class, 'storeFaq'])->name('help_page.faqs.store');
+    Route::put('/help-page/faqs/{faq}', [AdminHelpPageController::class, 'updateFaq'])->name('help_page.faqs.update');
+    Route::delete('/help-page/faqs/{faq}', [AdminHelpPageController::class, 'destroyFaq'])->name('help_page.faqs.destroy');
+    Route::post('/help-page/faqs/{faq}/toggle', [AdminHelpPageController::class, 'toggleFaq'])->name('help_page.faqs.toggle');
 
     // Home Page Editor
     Route::get('/home-page', [AdminHomePageController::class, 'index'])->name('home_page.index');
