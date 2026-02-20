@@ -14,6 +14,7 @@ use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Web\Admin\CompanyController as AdminCompanyController;
 use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\Web\Admin\HomePageController as AdminHomePageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +97,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/companies/{company}', [AdminCompanyController::class, 'update'])->name('companies.update');
     Route::delete('/companies/{company}', [AdminCompanyController::class, 'destroy'])->name('companies.destroy');
     Route::post('/companies/{company}/toggle-status', [AdminCompanyController::class, 'toggleStatus'])->name('companies.toggleStatus');
+
+    // Home Page Editor
+    Route::get('/home-page', [AdminHomePageController::class, 'index'])->name('home_page.index');
+    Route::post('/home-page/meta', [AdminHomePageController::class, 'updateMeta'])->name('home_page.meta.update');
+    Route::post('/home-page/hero', [AdminHomePageController::class, 'updateHero'])->name('home_page.hero.update');
+    Route::post('/home-page/highlights', [AdminHomePageController::class, 'updateHighlights'])->name('home_page.highlights.update');
+    Route::post('/home-page/benefits', [AdminHomePageController::class, 'updateBenefits'])->name('home_page.benefits.update');
+    Route::post('/home-page/steps', [AdminHomePageController::class, 'updateSteps'])->name('home_page.steps.update');
+    Route::post('/home-page/cta', [AdminHomePageController::class, 'updateCta'])->name('home_page.cta.update');
 
     // Settings
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');

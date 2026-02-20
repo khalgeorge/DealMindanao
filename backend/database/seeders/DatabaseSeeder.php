@@ -174,6 +174,7 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             NavigationSeeder::class,
             SettingsSeeder::class,
+            HomePageSeeder::class,
         ]);
     }
 }

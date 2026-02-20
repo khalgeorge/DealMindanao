@@ -34,12 +34,12 @@
     
     @stack('styles')
 </head>
-<body class="bg-gray-50">
+<body class="bg-white">
     {{-- Navbar --}}
     @include('partials.navbar')
     
     {{-- Main Content --}}
-    <main class="pt-20">
+    <main>
         @yield('content')
     </main>
     

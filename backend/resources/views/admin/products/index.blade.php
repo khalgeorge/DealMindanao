@@ -51,7 +51,8 @@
                  <th>Partner</th>
                  <th>Price</th>
                  <th>Stock</th>
-                 <th>Status</th>
+                 <th>Active</th>
+                 <th>Featured</th>
                  <th class="text-right">Actions</th>
               </tr>
            </thead>
@@ -135,6 +136,16 @@
                   <div class="md:col-span-2">
                      <label for="product-description" class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Description</label>
                      <textarea id="product-description" name="description" rows="3" placeholder="Detailed product description..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900" autocomplete="off"></textarea>
+                  </div>
+                  <div class="md:col-span-2 flex gap-6">
+                     <label class="inline-flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="product-is-active" name="is_active" value="1" checked class="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                        <span class="text-sm font-semibold text-gray-700">Active <span class="text-gray-400 font-normal">(visible to customers)</span></span>
+                     </label>
+                     <label class="inline-flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="product-is-featured" name="is_featured" value="1" class="w-4 h-4 rounded border-gray-300 text-accent-500 focus:ring-accent-400">
+                        <span class="text-sm font-semibold text-gray-700">Featured <span class="text-gray-400 font-normal">(show on homepage)</span></span>
+                     </label>
                   </div>
                   <div class="md:col-span-2">
                      <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-3">Product Images</label>
@@ -394,6 +405,8 @@ window.closeProductModal = function() {
       uploadedImages = [];
       document.getElementById('uploaded-images').value = '';
       document.getElementById('image-preview-grid').innerHTML = '';
+      document.getElementById('product-is-active').checked   = true;
+      document.getElementById('product-is-featured').checked = false;
       
       // Reset URL inputs to just one
       const container = document.getElementById('image-url-container');
@@ -473,6 +486,8 @@ async function loadProducts() {
       price: parseFloat(p.price),
       stock: p.stock_quantity || 0,
       stock_quantity: p.stock_quantity || 0,
+      is_active: p.is_active !== false,
+      is_featured: p.is_featured === true,
       status: (p.stock_quantity||0) > 10 ? 'Active' : ((p.stock_quantity||0) > 0 ? 'Low' : 'Out'),
       description: p.description || '',
       images: p.images,
@@ -516,6 +531,8 @@ window.editProduct = (id) => {
   form.elements['price'].value = p.price;
   form.elements['stock_quantity'].value = p.stock_quantity || p.stock || 0;
   form.elements['description'].value = p.description || '';
+  document.getElementById('product-is-active').checked   = p.is_active !== false;
+  document.getElementById('product-is-featured').checked = p.is_featured === true;
   
   // Handle existing images
   const imgs = p.images || [];
@@ -626,9 +643,28 @@ window.renderProducts = () => {
   const items = filtered.slice(start, end);
   
   if (items.length === 0) {
-    body.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">No products found</td></tr>';
+    body.innerHTML = '<tr><td colspan="9" class="px-6 py-8 text-center text-gray-400">No products found</td></tr>';
   } else {
-    body.innerHTML = items.map(p => `<tr><td class="px-6 py-4 font-bold">${p.name}</td><td class="px-6 py-4">${p.cat}</td><td class="px-6 py-4 text-xs font-bold text-brand-600 uppercase">${p.partner}</td><td class="px-6 py-4 font-mono">₱${p.price}</td><td class="px-6 py-4">${p.stock}</td><td class="px-6 py-4"><span class="badge-${p.status.toLowerCase()}">${p.status}</span></td><td class="px-6 py-4 text-right"><button onclick="editProduct(${p.id})" class="text-gray-400 hover:text-brand-600 font-bold text-xs uppercase">Edit</button> | <button onclick="deleteProduct(${p.id})" class="text-gray-400 hover:text-red-600 font-bold text-xs uppercase">Delete</button></td></tr>`).join('');
+    body.innerHTML = items.map(p => `<tr>
+      <td class="px-6 py-4 font-bold">${p.name}</td>
+      <td class="px-6 py-4">${p.cat}</td>
+      <td class="px-6 py-4 text-xs font-bold text-brand-600 uppercase">${p.partner}</td>
+      <td class="px-6 py-4 font-mono">₱${p.price}</td>
+      <td class="px-6 py-4">${p.stock}</td>
+      <td class="px-6 py-4">
+        <button onclick="toggleActive(${p.id})" title="Toggle active"
+          class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${p.is_active ? 'bg-brand-600' : 'bg-gray-300'}">
+          <span class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${p.is_active ? 'translate-x-6' : 'translate-x-1'}"></span>
+        </button>
+      </td>
+      <td class="px-6 py-4">
+        <button onclick="toggleFeatured(${p.id})" title="Toggle featured"
+          class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${p.is_featured ? 'bg-accent-500' : 'bg-gray-300'}">
+          <span class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${p.is_featured ? 'translate-x-6' : 'translate-x-1'}"></span>
+        </button>
+      </td>
+      <td class="px-6 py-4 text-right"><button onclick="editProduct(${p.id})" class="text-gray-400 hover:text-brand-600 font-bold text-xs uppercase">Edit</button> | <button onclick="deleteProduct(${p.id})" class="text-gray-400 hover:text-red-600 font-bold text-xs uppercase">Delete</button></td>
+    </tr>`).join('');
   }
   
   document.getElementById('pagination-info').textContent = `Showing ${total === 0 ? 0 : start+1}-${Math.min(end, total)} of ${total} products`;
@@ -658,6 +694,36 @@ document.getElementById('next-page').addEventListener('click', () => {
   if (window.currentPage < Math.ceil(filtered.length / itemsPerPage)) { window.currentPage++; renderProducts(); }
 });
 
+window.toggleActive = async (id) => {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  try {
+    const response = await fetch('{{ url("/admin/products") }}/' + id + '/toggle-status', {
+      method: 'POST',
+      headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+      credentials: 'same-origin'
+    });
+    if (response.ok) {
+      const p = allProducts.find(pr => pr.id == id);
+      if (p) { p.is_active = !p.is_active; renderProducts(); }
+    }
+  } catch(e) { alert('Failed to toggle status'); }
+};
+
+window.toggleFeatured = async (id) => {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  try {
+    const response = await fetch('{{ url("/admin/products") }}/' + id + '/toggle-featured', {
+      method: 'POST',
+      headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+      credentials: 'same-origin'
+    });
+    if (response.ok) {
+      const p = allProducts.find(pr => pr.id == id);
+      if (p) { p.is_featured = !p.is_featured; renderProducts(); }
+    }
+  } catch(e) { alert('Failed to toggle featured'); }
+};
+
 loadProducts();
 loadFormData();
 
@@ -674,6 +740,8 @@ document.getElementById('product-form').addEventListener('submit', async e => {
   formData.append('price', form.elements['price'].value);
   formData.append('stock_quantity', form.elements['stock_quantity'].value || '0');
   formData.append('description', form.elements['description'].value || '');
+  formData.append('is_active',   document.getElementById('product-is-active').checked   ? '1' : '0');
+  formData.append('is_featured', document.getElementById('product-is-featured').checked ? '1' : '0');
   
   // Add uploaded images
   const uploadedImagesPaths = document.getElementById('uploaded-images').value;
