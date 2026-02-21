@@ -32,5 +32,18 @@
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
     
     @stack('scripts')
+
+    {{-- Compact header on scroll: shrinks padding + hides subtitle when scrollY > 30px --}}
+    <script>
+    (function () {
+        var header = document.querySelector('.admin-header');
+        if (!header) return;
+        function syncCompact() {
+            header.classList.toggle('is-compact', window.scrollY > 30);
+        }
+        window.addEventListener('scroll', syncCompact, { passive: true });
+        syncCompact(); // initialise in case page is already scrolled
+    })();
+    </script>
 </body>
 </html>

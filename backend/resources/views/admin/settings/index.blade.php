@@ -14,39 +14,7 @@
         <div class="alert-success mb-6">{{ session('success') }}</div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Sidebar Navigation -->
-        <div class="lg:col-span-1 space-y-2">
-            <nav class="flex flex-col space-y-1">
-                <button onclick="switchTab('general')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg bg-white border border-gray-100 text-brand-600 shadow-sm" id="tab-btn-general">
-                    General Configuration
-                </button>
-                <button onclick="switchTab('regional')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" id="tab-btn-regional">
-                    Regional & Logistics
-                </button>
-                <button onclick="switchTab('security')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" id="tab-btn-security">
-                    Security & Access
-                </button>
-                <button onclick="switchTab('notifications')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" id="tab-btn-notifications">
-                    SMS & Email Alerts
-                </button>
-                <div class="pt-2 mt-2 border-t border-gray-100 space-y-1">
-                    <p class="px-4 pt-1 pb-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">Page Editors</p>
-                    <a href="{{ route('admin.home_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Home</a>
-                    <a href="{{ route('admin.about_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">About</a>
-                    <a href="{{ route('admin.partner_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Partner</a>
-                    <a href="{{ route('admin.contact_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Contact</a>
-                    <a href="{{ route('admin.help_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Help / FAQ</a>
-                    <a href="{{ route('admin.trust_safety.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Trust &amp; Safety</a>
-                    <a href="{{ route('admin.privacy_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Privacy Policy</a>
-                    <a href="{{ route('admin.refund_policy.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Refund Policy</a>
-                    <a href="{{ route('admin.terms_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Terms of Service</a>
-                </div>
-            </nav>
-        </div>
-
-        <!-- Content Area -->
-        <div class="lg:col-span-2 space-y-6">
+    <div class="space-y-6">
 
             <!-- General Tab -->
             <div id="tab-general" class="settings-tab">
@@ -276,7 +244,6 @@
                 </form>
             </div>
 
-        </div>
     </div>
 </div>
 
@@ -396,15 +363,6 @@
 function switchTab(tabId) {
     document.querySelectorAll('.settings-tab').forEach(t => t.classList.add('hidden'));
     document.getElementById('tab-' + tabId).classList.remove('hidden');
-
-    document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => {
-        btn.classList.remove('bg-white', 'border', 'border-gray-100', 'text-brand-600', 'shadow-sm');
-        btn.classList.add('text-gray-600', 'hover:bg-gray-100');
-    });
-
-    const activeBtn = document.getElementById('tab-btn-' + tabId);
-    activeBtn.classList.add('bg-white', 'border', 'border-gray-100', 'text-brand-600', 'shadow-sm');
-    activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-100');
 }
 
 function updateFileName(input, targetId) {
@@ -424,10 +382,17 @@ function updateFileName(input, targetId) {
     }
 }
 
-// Restore active tab from flash session
-@if(session('tab'))
-window.addEventListener('DOMContentLoaded', () => switchTab('{{ session('tab') }}'));
-@endif
+// Restore active tab — URL query param takes priority, then flash session
+window.addEventListener('DOMContentLoaded', function () {
+    var urlTab     = new URLSearchParams(window.location.search).get('tab');
+    @if(session('tab'))
+    var sessionTab = '{{ session('tab') }}';
+    @else
+    var sessionTab = null;
+    @endif
+    var tab = urlTab || sessionTab;
+    if (tab) switchTab(tab);
+});
 
 document.getElementById('save-all-btn').addEventListener('click', () => {
     const activeForm = document.querySelector('.settings-tab:not(.hidden) form');

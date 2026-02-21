@@ -322,7 +322,7 @@
 }
 
 @utility admin-sidebar {
-  @apply w-64 bg-white border-r border-gray-200 min-h-screen flex-shrink-0;
+  @apply w-64 bg-white border-r border-gray-200 flex-shrink-0 sticky top-0 h-screen overflow-y-auto;
 }
 
 @utility admin-main {
@@ -330,7 +330,12 @@
 }
 
 @utility admin-header {
-  @apply bg-white border-b border-gray-200 sticky top-0 z-30 px-6 py-4 flex items-center justify-between;
+  @apply sticky top-0 z-30 px-6 py-4 flex items-center justify-between border-b border-gray-200;
+  background-color: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06);
+  transition: padding 0.2s ease, box-shadow 0.2s ease;
 }
 
 @utility admin-content {
@@ -383,4 +388,22 @@
 
 .admin-sidebar-link.active {
   @apply bg-brand-50 text-brand-700;
+}
+
+/* Admin header compact mode — activated via JS when scrollY > 30 */
+.admin-header > div:first-child > p {
+  max-height: 2rem;
+  overflow: hidden;
+  transition: opacity 0.15s ease, max-height 0.2s ease;
+}
+
+.admin-header.is-compact {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.admin-header.is-compact > div:first-child > p {
+  opacity: 0;
+  max-height: 0;
 }

@@ -3,28 +3,27 @@
 @section('title', 'Terms of Service Editor - DealMindanao Admin')
 
 @section('content')
-<div class="admin-content space-y-6">
-
-    {{-- Page header --}}
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-xl font-black text-gray-900 uppercase tracking-tighter">Terms of Service Editor</h1>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-0.5">Manage sections, header, footer bar, and last updated date</p>
-        </div>
-        <div class="flex items-center gap-3">
-            <a href="{{ route('admin.settings.index') }}" class="btn-secondary btn-sm flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Back to Settings
-            </a>
-            <a href="{{ url('/terms') }}" target="_blank"
-               class="inline-flex items-center gap-2 text-xs font-black text-brand-600 hover:underline uppercase tracking-widest">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-                View Live Page
-            </a>
-        </div>
+<header class="admin-header">
+    <div>
+        <h1 class="text-xl font-black text-gray-900 uppercase tracking-tighter">Terms of Service Editor</h1>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-0.5">Manage sections, header, footer bar, and last updated date</p>
     </div>
+    <div class="flex items-center gap-3">
+        <a href="{{ route('admin.settings.index') }}" class="btn-secondary btn-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Settings
+        </a>
+        <a href="{{ url('/terms') }}" target="_blank"
+           class="inline-flex items-center gap-2 text-xs font-black text-brand-600 hover:underline uppercase tracking-widest">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+            View Live Page
+        </a>
+    </div>
+</header>
+
+<div class="admin-content space-y-6">
 
     {{-- Flash messages --}}
     @if(session('success'))
