@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('meta_title', 'Your Cart | DealMindanao')
-@section('meta_description', 'Review your selected deals before checkout.')
+@section('meta_description', 'No payment is required at checkout. Our team will contact you to confirm your order, payment method, and delivery details.')
 
 @section('content')
 <div class="page-shell py-12">
@@ -66,8 +66,8 @@
             </div>
           </div>
 
-          <button onclick="window.location.href='/checkout'" class="btn-primary btn-lg w-full shadow-lg shadow-brand-200/50 group">
-            Checkout Now
+          <button id="checkout-btn" onclick="window.location.href='/checkout'" class="btn-primary btn-lg w-full shadow-lg shadow-brand-200/50 group">
+            Proceed to Checkout
             <svg class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
           </button>
 
@@ -144,11 +144,13 @@
       summary.style.display = ''; // scoped CSS: none on mobile, block on desktop
       document.getElementById('subtotal').textContent = formatPrice(0);
       document.getElementById('total').textContent = formatPrice(0);
+      document.getElementById('checkout-btn').classList.add('hidden');
       return;
     }
 
     empty.classList.add('hidden');
     summary.style.display = 'block'; // show on all breakpoints when cart has items
+    document.getElementById('checkout-btn').classList.remove('hidden');
 
     let subtotal = 0;
     list.innerHTML = cart.map((item, idx) => {

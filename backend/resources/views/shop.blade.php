@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('meta_title', 'Shop Deals | DealMindanao')
-@section('meta_description', 'Browse curated local deals from trusted partners across Mindanao.')
+@section('meta_title', 'Shop Local Deals in Mindanao | Hardware, Food & More – DealMindanao')
+@section('meta_description', 'Browse hardware, food, and local products from verified Mindanao sellers. Place your order online and pay offline upon confirmation.')
 
 @section('content')
 <div class="page-shell py-8">
@@ -9,7 +9,7 @@
     <!-- Page Header -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Shop Deals</h1>
-        <p class="text-gray-600 mt-2">Browse curated hardware and equipment deals from trusted local sellers.</p>
+        <p class="text-gray-600 mt-2">Browse curated products from trusted Mindanao sellers. Orders are reviewed and confirmed by our team before payment and delivery.</p>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8">
@@ -98,8 +98,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
-                <h2 class="text-xl font-bold text-gray-900 mb-2">No deals available yet</h2>
-                <p class="text-gray-500 mb-8">Please check back soon.</p>
+                <h2 class="text-xl font-bold text-gray-900 mb-2">No products available yet.</h2>
+                <p class="text-gray-500 mb-8">New Mindanao deals are coming soon.</p>
+                <p class="text-gray-500 mb-8">Want to sell here? Become a Partner.</p>
                 <button id="clear-filters" class="btn-primary">Clear All Filters</button>
             </div>
 

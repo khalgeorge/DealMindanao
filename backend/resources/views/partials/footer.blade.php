@@ -11,7 +11,7 @@
           <img src="{{ asset('logo_main-final.png') }}" alt="DealMindanao Logo" class="h-20 w-auto">
         </a>
         <p class="text-sm text-gray-500 font-medium leading-relaxed max-w-xs">
-          A curated online marketplace for hardware and heavy equipment in Mindanao, connecting customers with quality local deals.
+          DealMindanao is a curated marketplace connecting Mindanao buyers with verified local sellers. Orders are placed online and confirmed offline for secure payment and delivery coordination.
         </p>
         <div class="flex gap-4">
           <div class="w-10 h-10 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center hover:bg-brand-600 transition-colors cursor-pointer">

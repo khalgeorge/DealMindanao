@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta_title', 'Checkout | DealMindanao')
+@section('meta_title', 'Checkout | Submit Your Order – DealMindanao')
 @section('meta_description', 'Confirm your details to place an offline payment request.')
 
 @section('content')
@@ -46,7 +46,7 @@
 
         <div>
           <h1 class="text-3xl font-black text-gray-900 mb-2">Checkout – Order Request</h1>
-          <p class="text-gray-500">Please provide your contact details so we can confirm your order and arrange delivery.</p>
+          <p class="text-gray-500">Please provide accurate contact details so we can confirm your order faster.</p>
         </div>
 
         {{-- Delivery Information Card --}}
@@ -117,7 +117,7 @@
             </div>
             <div>
               <p class="text-sm font-bold text-amber-900 mb-1">Important Notice</p>
-              <p class="text-sm text-amber-800 leading-relaxed mb-2">This is an order request only. No online payment is required.</p>
+              <p class="text-sm text-amber-800 leading-relaxed mb-2">This is an order request only. No online payment is required. Our team will contact you within 24 hours to confirm payment and delivery.</p>
               <div class="flex gap-3 text-xs">
                 <a href="/terms" class="text-amber-900 hover:underline font-semibold">Terms of Service →</a>
                 <a href="/refunds" class="text-amber-900 hover:underline font-semibold">Refund Policy →</a>

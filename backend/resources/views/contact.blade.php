@@ -6,7 +6,7 @@
 @section('canonical', $s['contact_canonical'] ?: url('/contact'))
 
 @section('content')
-    <div class="container mx-auto px-6">
+    <div class="container mx-auto px-6 py-20">
         <div class="max-w-6xl mx-auto">
             <div class="grid lg:grid-cols-2 gap-20">
 
@@ -51,7 +51,7 @@
                         <div class="flex flex-wrap gap-3 text-sm">
                             <a href="{{ url('/help') }}" class="text-brand-600 hover:underline font-semibold">Help Center &rarr;</a>
                             <a href="{{ url('/trust-safety') }}" class="text-brand-600 hover:underline font-semibold">Trust &amp; Safety &rarr;</a>
-                            <a href="{{ url('/refunds') }}" class="text-brand-600 hover:underline font-semibold">Returns &rarr;</a>
+                            <a href="{{ url('/refunds') }}" class="text-brand-600 hover:underline font-semibold">Refunds &amp; Returns &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -84,5 +84,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
