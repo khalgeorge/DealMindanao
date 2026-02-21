@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', ($s['tos_title'] ?? 'Terms of Service') . ' - DealMindanao')
+@section('meta_title', $s['tos_meta_title'] ?? 'Terms of Service - DealMindanao')
+@section('meta_description', $s['tos_meta_description'] ?? 'Read the DealMindanao terms of service before using our platform.')
+@section('meta_keywords', $s['tos_meta_keywords'] ?? 'terms of service, DealMindanao')
+@section('canonical', $s['tos_canonical'] ?: url('/terms'))
 
 @section('content')
 <div class="py-24 bg-white">

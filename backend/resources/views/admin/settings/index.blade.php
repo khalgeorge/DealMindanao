@@ -30,11 +30,17 @@
                 <button onclick="switchTab('notifications')" class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" id="tab-btn-notifications">
                     SMS & Email Alerts
                 </button>
-                <div class="pt-2 mt-2 border-t border-gray-100">
-                    <a href="{{ route('admin.settings.pages.index') }}"
-                       class="flex items-center px-4 py-3 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
-                        Page Content
-                    </a>
+                <div class="pt-2 mt-2 border-t border-gray-100 space-y-1">
+                    <p class="px-4 pt-1 pb-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">Page Editors</p>
+                    <a href="{{ route('admin.home_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Home</a>
+                    <a href="{{ route('admin.about_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">About</a>
+                    <a href="{{ route('admin.partner_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Partner</a>
+                    <a href="{{ route('admin.contact_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Contact</a>
+                    <a href="{{ route('admin.help_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Help / FAQ</a>
+                    <a href="{{ route('admin.trust_safety.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Trust &amp; Safety</a>
+                    <a href="{{ route('admin.privacy_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Privacy Policy</a>
+                    <a href="{{ route('admin.refund_policy.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Refund Policy</a>
+                    <a href="{{ route('admin.terms_page.index') }}" class="flex items-center px-4 py-2.5 text-sm font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Terms of Service</a>
                 </div>
             </nav>
         </div>

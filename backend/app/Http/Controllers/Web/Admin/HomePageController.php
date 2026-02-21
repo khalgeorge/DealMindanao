@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class HomePageController extends Controller
 {
     private array $allKeys = [
-        'home_meta_title', 'home_meta_description',
+        'home_meta_title', 'home_meta_description', 'home_meta_keywords', 'home_canonical',
         'home_hero_enabled', 'home_hero_slides',
         'home_highlights_enabled', 'home_highlights_badge', 'home_highlights_heading',
         'home_highlights_subtext', 'home_highlights_cta_text', 'home_highlights_cta_url',
@@ -39,12 +39,16 @@ class HomePageController extends Controller
     public function updateMeta(Request $request)
     {
         $request->validate([
-            'home_meta_title'       => 'required|string|max:255',
-            'home_meta_description' => 'nullable|string|max:500',
+            'home_meta_title'       => 'required|string|max:70',
+            'home_meta_description' => 'nullable|string|max:160',
+            'home_meta_keywords'    => 'nullable|string|max:300',
+            'home_canonical'        => 'nullable|string|max:300',
         ]);
 
         Setting::set('home_meta_title',       $request->input('home_meta_title', ''));
         Setting::set('home_meta_description', $request->input('home_meta_description', ''));
+        Setting::set('home_meta_keywords',    $request->input('home_meta_keywords', ''));
+        Setting::set('home_canonical',        $request->input('home_canonical', ''));
 
         return back()->with('success', 'SEO / Meta saved.')->with('tab', 'meta');
     }

@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('meta_title', $s['partner_meta_title'] ?? 'Become a Partner - DealMindanao')
+@section('meta_description', $s['partner_meta_description'] ?? 'Partner with DealMindanao to showcase your products to more customers online.')
+@section('meta_keywords', $s['partner_meta_keywords'] ?? 'DealMindanao partner, sell online')
+@section('canonical', $s['partner_canonical'] ?: url('/partner'))
+
 @section('content')
 
 {{-- Hero --}}

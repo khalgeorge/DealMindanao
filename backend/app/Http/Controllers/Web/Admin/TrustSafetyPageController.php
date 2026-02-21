@@ -28,6 +28,10 @@ class TrustSafetyPageController extends Controller
         'ts_footer_link3_url',
         'ts_footer_link4_label',
         'ts_footer_link4_url',
+        'ts_meta_title',
+        'ts_meta_description',
+        'ts_meta_keywords',
+        'ts_canonical',
     ];
 
     public array $defaults = [
@@ -47,6 +51,10 @@ class TrustSafetyPageController extends Controller
         'ts_footer_link3_url'     => '/refunds',
         'ts_footer_link4_label'   => 'Terms of Service →',
         'ts_footer_link4_url'     => '/terms',
+        'ts_meta_title'           => 'Trust & Safety - DealMindanao',
+        'ts_meta_description'     => 'Learn about DealMindanao trust and safety measures. Your confidence and security are our top priorities.',
+        'ts_meta_keywords'        => 'trust and safety, secure shopping, DealMindanao',
+        'ts_canonical'            => '',
     ];
 
     private array $toggleKeys = ['ts_header_enabled', 'ts_footer_enabled'];
@@ -85,6 +93,10 @@ class TrustSafetyPageController extends Controller
             'ts_footer_link3_url'     => 'nullable|string|max:200',
             'ts_footer_link4_label'   => 'nullable|string|max:100',
             'ts_footer_link4_url'     => 'nullable|string|max:200',
+            'ts_meta_title'           => 'nullable|string|max:70',
+            'ts_meta_description'     => 'nullable|string|max:160',
+            'ts_meta_keywords'        => 'nullable|string|max:300',
+            'ts_canonical'            => 'nullable|string|max:300',
         ]);
 
         foreach ($this->allKeys as $key) {

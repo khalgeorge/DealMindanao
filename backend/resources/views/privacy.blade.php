@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('meta_title', $s['pp_meta_title'] ?? 'Privacy Policy - DealMindanao')
+@section('meta_description', $s['pp_meta_description'] ?? 'Learn how DealMindanao collects, uses, and protects your personal information.')
+@section('meta_keywords', $s['pp_meta_keywords'] ?? 'privacy policy, data protection, DealMindanao')
+@section('canonical', $s['pp_canonical'] ?: url('/privacy'))
+
 @section('content')
 <div class="py-24 bg-white">
     <div class="container mx-auto px-6">

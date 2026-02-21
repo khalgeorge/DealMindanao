@@ -24,7 +24,7 @@ class HomeController extends Controller
 
         // Home page content from settings
         $hp = Setting::getMany([
-            'home_meta_title', 'home_meta_description',
+            'home_meta_title', 'home_meta_description', 'home_meta_keywords', 'home_canonical',
             'home_hero_enabled', 'home_hero_slides',
             'home_highlights_enabled', 'home_highlights_badge', 'home_highlights_heading',
             'home_highlights_subtext', 'home_highlights_cta_text', 'home_highlights_cta_url',

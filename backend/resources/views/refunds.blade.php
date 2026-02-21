@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Refund & Returns Policy - DealMindanao')
+@section('meta_title', $s['rp_meta_title'] ?? 'Refund & Returns Policy - DealMindanao')
+@section('meta_description', $s['rp_meta_description'] ?? 'Learn about DealMindanao refund and returns policy.')
+@section('meta_keywords', $s['rp_meta_keywords'] ?? 'refund policy, returns, DealMindanao')
+@section('canonical', $s['rp_canonical'] ?: url('/refunds'))
 
 @section('content')
 <div class="py-24 bg-white">

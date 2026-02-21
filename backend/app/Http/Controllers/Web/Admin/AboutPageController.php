@@ -21,6 +21,10 @@ class AboutPageController extends Controller
         'about_cta1_label', 'about_cta1_link',
         'about_cta2_label', 'about_cta2_link',
         'about_image',
+        'about_meta_title',
+        'about_meta_description',
+        'about_meta_keywords',
+        'about_canonical',
     ];
 
     private array $defaults = [
@@ -41,7 +45,11 @@ class AboutPageController extends Controller
         'about_cta1_link'               => '/shop',
         'about_cta2_label'              => 'Become a Partner',
         'about_cta2_link'               => '/partner',
-        'about_image'                   => 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800',
+        'about_image'            => 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800',
+        'about_meta_title'       => 'About DealMindanao - Authentic Mindanao Hardware & Heavy Equipment',
+        'about_meta_description' => 'DealMindanao is a curated online marketplace connecting customers with quality hardware and heavy equipment from trusted Mindanao sellers.',
+        'about_meta_keywords'    => 'DealMindanao, about, Mindanao marketplace, hardware, heavy equipment',
+        'about_canonical'        => '',
     ];
 
     public function index()
@@ -75,8 +83,12 @@ class AboutPageController extends Controller
             'about_cta1_link'               => 'required|string|max:255',
             'about_cta2_label'              => 'required|string|max:100',
             'about_cta2_link'               => 'required|string|max:255',
-            'about_image_upload'            => 'nullable|image|max:5120',
-            'about_image_url'               => 'nullable|string|max:500',
+            'about_image_upload'      => 'nullable|image|max:5120',
+            'about_image_url'         => 'nullable|string|max:500',
+            'about_meta_title'        => 'nullable|string|max:70',
+            'about_meta_description'  => 'nullable|string|max:160',
+            'about_meta_keywords'     => 'nullable|string|max:300',
+            'about_canonical'         => 'nullable|string|max:300',
         ]);
 
         // Image: file upload takes priority, then URL field, then keep existing

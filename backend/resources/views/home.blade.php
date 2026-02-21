@@ -2,6 +2,8 @@
 
 @section('meta_title', $hp['home_meta_title'] ?? 'DealMindanao - Authentic Mindanao Hardware & Heavy Equipment')
 @section('meta_description', $hp['home_meta_description'] ?? 'Quality tools and equipment from trusted local sellers.')
+@section('meta_keywords', $hp['home_meta_keywords'] ?? 'hardware, heavy equipment, tools, Mindanao, deals')
+@section('canonical', $hp['home_canonical'] ?: url('/'))
 
 @section('content')
 

@@ -23,6 +23,7 @@ use App\Http\Controllers\Web\Admin\TrustSafetyPageController as AdminTrustSafety
 use App\Http\Controllers\Web\Admin\PrivacyPageController as AdminPrivacyPageController;
 use App\Http\Controllers\Web\Admin\RefundPolicyPageController as AdminRefundPolicyPageController;
 use App\Http\Controllers\Web\Admin\TermsPageController as AdminTermsPageController;
+use App\Http\Controllers\Web\Admin\NavigationController as AdminNavigationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -178,15 +179,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/home-page/steps', [AdminHomePageController::class, 'updateSteps'])->name('home_page.steps.update');
     Route::post('/home-page/cta', [AdminHomePageController::class, 'updateCta'])->name('home_page.cta.update');
 
+    // Navigation Menu
+    Route::get('/navigation', [AdminNavigationController::class, 'index'])->name('navigation.index');
+    Route::get('/navigation/create', [AdminNavigationController::class, 'create'])->name('navigation.create');
+    Route::post('/navigation', [AdminNavigationController::class, 'store'])->name('navigation.store');
+    Route::post('/navigation/reorder', [AdminNavigationController::class, 'reorder'])->name('navigation.reorder');
+    Route::get('/navigation/{navigation}/edit', [AdminNavigationController::class, 'edit'])->name('navigation.edit');
+    Route::put('/navigation/{navigation}', [AdminNavigationController::class, 'update'])->name('navigation.update');
+    Route::delete('/navigation/{navigation}', [AdminNavigationController::class, 'destroy'])->name('navigation.destroy');
+
     // Settings
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings/general', [AdminSettingsController::class, 'updateGeneral'])->name('settings.general.update');
     Route::post('/settings/regional', [AdminSettingsController::class, 'updateRegional'])->name('settings.regional.update');
     Route::post('/settings/notifications', [AdminSettingsController::class, 'updateNotifications'])->name('settings.notifications.update');
     Route::put('/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('password.update');
-    Route::get('/settings/pages', [AdminSettingsController::class, 'pagesIndex'])->name('settings.pages.index');
-    Route::get('/settings/pages/{slug}/edit', [AdminSettingsController::class, 'pagesEdit'])->name('settings.pages.edit');
-    Route::put('/settings/pages/{slug}', [AdminSettingsController::class, 'pagesUpdate'])->name('settings.pages.update');
 });
 
 // Admin Login (separate from user login)

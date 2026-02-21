@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('meta_title', $s['ts_meta_title'] ?? 'Trust & Safety - DealMindanao')
+@section('meta_description', $s['ts_meta_description'] ?? 'Learn about DealMindanao trust and safety measures.')
+@section('meta_keywords', $s['ts_meta_keywords'] ?? 'trust and safety, secure shopping, DealMindanao')
+@section('canonical', $s['ts_canonical'] ?: url('/trust-safety'))
+
 @section('content')
 <div class="py-24">
     <div class="container mx-auto px-6">

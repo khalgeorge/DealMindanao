@@ -17,6 +17,10 @@ class RefundPolicyPageController extends Controller
         'rp_footer_text',
         'rp_footer_link_label',
         'rp_footer_link_url',
+        'rp_meta_title',
+        'rp_meta_description',
+        'rp_meta_keywords',
+        'rp_canonical',
     ];
 
     private array $defaults = [
@@ -26,7 +30,11 @@ class RefundPolicyPageController extends Controller
         'rp_footer_enabled'    => '1',
         'rp_footer_text'       => 'For questions about returns or to initiate a return, please',
         'rp_footer_link_label' => 'contact our support team',
-        'rp_footer_link_url'   => '/contact',
+        'rp_footer_link_url'    => '/contact',
+        'rp_meta_title'         => 'Refund & Returns Policy - DealMindanao',
+        'rp_meta_description'   => 'Learn about DealMindanao refund and returns policy. We want you to be completely satisfied with your purchase.',
+        'rp_meta_keywords'      => 'refund policy, returns, DealMindanao',
+        'rp_canonical'          => '',
     ];
 
     private array $toggleKeys = ['rp_header_enabled', 'rp_footer_enabled'];
@@ -56,6 +64,10 @@ class RefundPolicyPageController extends Controller
             'rp_footer_text'       => 'nullable|string|max:400',
             'rp_footer_link_label' => 'nullable|string|max:100',
             'rp_footer_link_url'   => 'nullable|string|max:200',
+            'rp_meta_title'        => 'nullable|string|max:70',
+            'rp_meta_description'  => 'nullable|string|max:160',
+            'rp_meta_keywords'     => 'nullable|string|max:300',
+            'rp_canonical'         => 'nullable|string|max:300',
         ]);
 
         foreach ($this->allKeys as $key) {

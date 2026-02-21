@@ -33,6 +33,10 @@ class PageController extends Controller
         'about_cta2_label'              => 'Become a Partner',
         'about_cta2_link'               => '/partner',
         'about_image'                   => 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800',
+        'about_meta_title'              => 'About DealMindanao - Authentic Mindanao Hardware & Heavy Equipment',
+        'about_meta_description'        => 'DealMindanao is a curated online marketplace connecting customers with quality hardware and heavy equipment from trusted Mindanao sellers.',
+        'about_meta_keywords'           => 'DealMindanao, about, Mindanao marketplace, hardware, heavy equipment',
+        'about_canonical'               => '',
     ];
 
     public function about()
@@ -74,6 +78,10 @@ class PageController extends Controller
         'partner_cta_btn1_link'         => '/contact',
         'partner_cta_btn2_label'        => 'Learn About Us',
         'partner_cta_btn2_link'         => '/about',
+        'partner_meta_title'            => 'Become a Partner - DealMindanao',
+        'partner_meta_description'      => 'Partner with DealMindanao to showcase your products to more customers online. We handle listings, pricing, and order coordination.',
+        'partner_meta_keywords'         => 'DealMindanao partner, sell online, Mindanao business partner',
+        'partner_canonical'             => '',
     ];
 
     private array $contactDefaults = [
@@ -83,6 +91,10 @@ class PageController extends Controller
         'contact_description'     => 'Need help with an order or have questions? Contact our support team and include your order number for faster assistance.',
         'contact_email'           => 'hello@dealmindanao.ph',
         'contact_address'         => 'Poblacion District, Davao City, 8000',
+        'contact_meta_title'      => 'Contact Us - DealMindanao',
+        'contact_meta_description'=> 'Get in touch with DealMindanao. Our support team is here to help with your orders, payments, and delivery questions.',
+        'contact_meta_keywords'   => 'contact DealMindanao, customer support, Davao City',
+        'contact_canonical'       => '',
     ];
 
     public function contact()
@@ -116,6 +128,10 @@ class PageController extends Controller
             'pp_footer_link_url',
             'pp_last_updated',
             'pp_last_updated_auto',
+            'pp_meta_title',
+            'pp_meta_description',
+            'pp_meta_keywords',
+            'pp_canonical',
         ];
         $defaults = [
             'pp_header_enabled'    => '1',
@@ -127,6 +143,10 @@ class PageController extends Controller
             'pp_footer_link_url'   => '/contact',
             'pp_last_updated'      => 'February 14, 2026',
             'pp_last_updated_auto' => '0',
+            'pp_meta_title'        => 'Privacy Policy - DealMindanao',
+            'pp_meta_description'  => 'Learn how DealMindanao collects, uses, and protects your personal information.',
+            'pp_meta_keywords'     => 'privacy policy, data protection, DealMindanao',
+            'pp_canonical'         => '',
         ];
         $raw = Setting::getMany($allKeys);
         $s   = [];
@@ -149,6 +169,10 @@ class PageController extends Controller
             'tos_footer_link_url'   => '/contact',
             'tos_last_updated'      => 'February 14, 2026',
             'tos_auto_update_date'  => '0',
+            'tos_meta_title'        => 'Terms of Service - DealMindanao',
+            'tos_meta_description'  => 'Read the DealMindanao terms of service before using our marketplace platform.',
+            'tos_meta_keywords'     => 'terms of service, DealMindanao terms, conditions of use',
+            'tos_canonical'         => '',
         ];
         $keys = array_keys($defaults);
         $raw  = Setting::whereIn('key', $keys)->pluck('value', 'key');
@@ -172,6 +196,10 @@ class PageController extends Controller
             'help_cta_btn1_link'   => '/contact',
             'help_cta_btn2_label'  => 'Browse Deals',
             'help_cta_btn2_link'   => '/shop',
+            'help_meta_title'      => 'Help Center - DealMindanao',
+            'help_meta_description'=> 'Find answers to frequently asked questions about ordering, payment, and delivery on DealMindanao.',
+            'help_meta_keywords'   => 'DealMindanao help, FAQ, ordering, payment, delivery',
+            'help_canonical'       => '',
         ];
 
         $keys = array_keys($defaults);
@@ -196,6 +224,10 @@ class PageController extends Controller
             'rp_footer_text'       => 'For questions about returns or to initiate a return, please',
             'rp_footer_link_label' => 'contact our support team',
             'rp_footer_link_url'   => '/contact',
+            'rp_meta_title'        => 'Refund & Returns Policy - DealMindanao',
+            'rp_meta_description'  => 'Learn about DealMindanao refund and returns policy. We want you to be completely satisfied with your purchase.',
+            'rp_meta_keywords'     => 'refund policy, returns, DealMindanao',
+            'rp_canonical'         => '',
         ];
         $keys = array_keys($defaults);
         $raw  = Setting::whereIn('key', $keys)->pluck('value', 'key');
@@ -216,6 +248,7 @@ class PageController extends Controller
             'ts_footer_link2_label', 'ts_footer_link2_url',
             'ts_footer_link3_label', 'ts_footer_link3_url',
             'ts_footer_link4_label', 'ts_footer_link4_url',
+            'ts_meta_title', 'ts_meta_description', 'ts_meta_keywords', 'ts_canonical',
         ];
         $defaults = [
             'ts_header_enabled'       => '1',
@@ -234,6 +267,10 @@ class PageController extends Controller
             'ts_footer_link3_url'     => '/refunds',
             'ts_footer_link4_label'   => 'Terms of Service →',
             'ts_footer_link4_url'     => '/terms',
+            'ts_meta_title'           => 'Trust & Safety - DealMindanao',
+            'ts_meta_description'     => 'Learn about DealMindanao trust and safety measures. Your confidence and security are our top priorities.',
+            'ts_meta_keywords'        => 'trust and safety, secure shopping, DealMindanao',
+            'ts_canonical'            => '',
         ];
         $raw = Setting::getMany($allKeys);
         $s   = [];

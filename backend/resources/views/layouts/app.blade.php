@@ -11,19 +11,20 @@
         $metaDescription = trim($__env->yieldContent('meta_description', 'Discover authentic products from Mindanao - handcrafted items, local delicacies, and unique treasures from Filipino artisans.'));
         $metaKeywords = trim($__env->yieldContent('meta_keywords', 'Mindanao products, Philippine handicrafts, local delicacies, artisan products'));
         $metaImage = trim($__env->yieldContent('meta_image', asset('logo_main-final.png')));
-        $metaUrl = request()->fullUrl();
+        $metaCanonical = trim($__env->yieldContent('canonical', '')) ?: request()->url();
     @endphp
     
     {{-- SEO Meta Tags --}}
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ $metaDescription }}">
     <meta name="keywords" content="{{ $metaKeywords }}">
+    <link rel="canonical" href="{{ $metaCanonical }}">
     
     {{-- Open Graph --}}
     <meta property="og:title" content="{{ $metaTitle }}">
     <meta property="og:description" content="{{ $metaDescription }}">
     <meta property="og:image" content="{{ $metaImage }}">
-    <meta property="og:url" content="{{ $metaUrl }}">
+    <meta property="og:url" content="{{ $metaCanonical }}">
     <meta property="og:type" content="website">
     
     {{-- Favicon --}}

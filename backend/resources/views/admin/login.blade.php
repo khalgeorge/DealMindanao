@@ -81,7 +81,7 @@
             
             <!-- Contact Support -->
             <p class="text-center text-xs text-gray-400 font-bold uppercase tracking-wider">
-                Forgotten password? <a href="#" class="hover:underline" style="color: #16a34a;">Contact Support</a>
+                Forgotten password? <a href="{{ url('/contact') }}" class="hover:underline" style="color: #16a34a;">Contact Support</a>
             </p>
         </form>
     </div>

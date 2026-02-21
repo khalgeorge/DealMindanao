@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('meta_title', $s['about_meta_title'] ?? 'About DealMindanao - Authentic Mindanao Hardware & Heavy Equipment')
+@section('meta_description', $s['about_meta_description'] ?? 'DealMindanao is a curated online marketplace connecting customers with quality hardware and heavy equipment.')
+@section('meta_keywords', $s['about_meta_keywords'] ?? 'DealMindanao, about, Mindanao marketplace')
+@section('canonical', $s['about_canonical'] ?: url('/about'))
+
 @section('content')
 
 {{-- Hero --}}

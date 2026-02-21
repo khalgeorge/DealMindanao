@@ -22,6 +22,10 @@ class HelpPageController extends Controller
         'help_cta_btn1_link',
         'help_cta_btn2_label',
         'help_cta_btn2_link',
+        'help_meta_title',
+        'help_meta_description',
+        'help_meta_keywords',
+        'help_canonical',
     ];
 
     public array $defaults = [
@@ -34,7 +38,11 @@ class HelpPageController extends Controller
         'help_cta_btn1_label'  => 'Contact Support',
         'help_cta_btn1_link'   => '/contact',
         'help_cta_btn2_label'  => 'Browse Deals',
-        'help_cta_btn2_link'   => '/shop',
+        'help_cta_btn2_link'    => '/shop',
+        'help_meta_title'       => 'Help Center - DealMindanao',
+        'help_meta_description' => 'Find answers to frequently asked questions about ordering, payment, and delivery on DealMindanao.',
+        'help_meta_keywords'    => 'DealMindanao help, FAQ, ordering, payment, delivery',
+        'help_canonical'        => '',
     ];
 
     private array $toggleKeys = ['help_header_enabled', 'help_cta_enabled'];
@@ -66,7 +74,11 @@ class HelpPageController extends Controller
             'help_cta_btn1_label'  => 'required|string|max:100',
             'help_cta_btn1_link'   => 'required|string|max:200',
             'help_cta_btn2_label'  => 'required|string|max:100',
-            'help_cta_btn2_link'   => 'required|string|max:200',
+            'help_cta_btn2_link'    => 'required|string|max:200',
+            'help_meta_title'       => 'nullable|string|max:70',
+            'help_meta_description' => 'nullable|string|max:160',
+            'help_meta_keywords'    => 'nullable|string|max:300',
+            'help_canonical'        => 'nullable|string|max:300',
         ]);
 
         foreach ($this->allKeys as $key) {

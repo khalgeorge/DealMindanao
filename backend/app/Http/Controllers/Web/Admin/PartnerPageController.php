@@ -29,6 +29,10 @@ class PartnerPageController extends Controller
         'partner_cta_quote',
         'partner_cta_btn1_label', 'partner_cta_btn1_link',
         'partner_cta_btn2_label', 'partner_cta_btn2_link',
+        'partner_meta_title',
+        'partner_meta_description',
+        'partner_meta_keywords',
+        'partner_canonical',
     ];
 
     /** Default values matching the current frontend template. */
@@ -60,6 +64,10 @@ class PartnerPageController extends Controller
         'partner_cta_btn1_link'         => '/contact',
         'partner_cta_btn2_label'        => 'Learn About Us',
         'partner_cta_btn2_link'         => '/about',
+        'partner_meta_title'            => 'Become a Partner - DealMindanao',
+        'partner_meta_description'      => 'Partner with DealMindanao to showcase your products to more customers online. We handle listings, pricing, and order coordination.',
+        'partner_meta_keywords'         => 'DealMindanao partner, sell online, Mindanao business partner',
+        'partner_canonical'             => '',
     ];
 
     /** Keys that are boolean toggles (checkboxes). */
@@ -105,8 +113,12 @@ class PartnerPageController extends Controller
             'partner_cta_quote'             => 'required|string|max:1000',
             'partner_cta_btn1_label'        => 'required|string|max:100',
             'partner_cta_btn1_link'         => 'required|string|max:255',
-            'partner_cta_btn2_label'        => 'required|string|max:100',
-            'partner_cta_btn2_link'         => 'required|string|max:255',
+            'partner_cta_btn2_label'   => 'required|string|max:100',
+            'partner_cta_btn2_link'    => 'required|string|max:255',
+            'partner_meta_title'       => 'nullable|string|max:70',
+            'partner_meta_description' => 'nullable|string|max:160',
+            'partner_meta_keywords'    => 'nullable|string|max:300',
+            'partner_canonical'        => 'nullable|string|max:300',
         ]);
 
         // Toggles: unchecked checkboxes are absent from the request

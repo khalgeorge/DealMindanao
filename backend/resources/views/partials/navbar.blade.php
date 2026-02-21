@@ -1,5 +1,11 @@
 <nav class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
-  <div class="page-shell">
+@php
+    $navItems = \App\Models\NavigationItem::where('location', 'header')
+        ->where('is_active', true)
+        ->orderBy('position')
+        ->get();
+@endphp
+<div class="page-shell">
     <div class="flex items-center justify-between h-20">
       {{-- Logo --}}
       <div class="flex items-center">
@@ -10,12 +16,11 @@
       
       {{-- Desktop Navigation --}}
       <div class="hidden md:flex items-center space-x-6">
-        <a href="{{ route('home') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('home') ? 'text-brand-600' : '' }}">Home</a>
-        <a href="{{ route('shop') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('shop') ? 'text-brand-600' : '' }}">Shop</a>
-        <a href="{{ route('about') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('about') ? 'text-brand-600' : '' }}">About</a>
-        <a href="{{ route('partner') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('partner') ? 'text-brand-600' : '' }}">Partner</a>
-        <a href="/help" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('help') ? 'text-brand-600' : '' }}">Help</a>
-        <a href="{{ route('contact') }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->routeIs('contact') ? 'text-brand-600' : '' }}">Contact</a>
+        @foreach($navItems as $navItem)
+          <a href="{{ $navItem->url }}" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors {{ request()->is(ltrim($navItem->url, '/')) || request()->fullUrlIs(url($navItem->url)) ? 'text-brand-600' : '' }}">
+            {{ $navItem->label }}
+          </a>
+        @endforeach
       </div>
       
       {{-- Actions --}}
@@ -51,13 +56,11 @@
     
     {{-- Mobile Menu --}}
     <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
-      <a href="{{ route('home') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Home</a>
-      <a href="{{ route('shop') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Shop</a>
-      <a href="{{ route('about') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">About</a>
-      <a href="{{ route('partner') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Partner</a>
-      <a href="/help" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Help</a>
-      <a href="{{ route('contact') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Contact</a>
-    </div>
+      @foreach($navItems as $navItem)
+        <a href="{{ $navItem->url }}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">
+          {{ $navItem->label }}
+        </a>
+      @endforeach
   </div>
 </nav>
 

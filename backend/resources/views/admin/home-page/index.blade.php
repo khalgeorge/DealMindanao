@@ -8,12 +8,18 @@
         <h1 class="text-xl font-black text-gray-900">Home Page Editor</h1>
         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Manage Every Section</p>
     </div>
-    <a href="{{ url('/') }}" target="_blank" class="btn-secondary flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-        </svg>
-        Preview
-    </a>
+    <div class="flex items-center gap-3">
+        <a href="{{ route('admin.settings.index') }}" class="btn-secondary btn-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Settings
+        </a>
+        <a href="{{ url('/') }}" target="_blank" class="btn-secondary btn-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+            Preview
+        </a>
+    </div>
 </header>
 
 <div class="admin-content">
@@ -65,17 +71,33 @@
                     <div class="bg-white rounded-lg border border-gray-100 p-8 shadow-sm space-y-5">
                         <div>
                             <h2 class="text-xl font-black text-gray-900 uppercase tracking-tight">SEO / Meta</h2>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Browser tab title & search engine description</p>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Browser tab title &amp; search engine description</p>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-3 bg-blue-50 border border-blue-100 rounded-lg">
+                            <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                            <span class="text-xs font-bold text-blue-700 uppercase tracking-widest">Page URL:</span>
+                            <a href="{{ url('/') }}" target="_blank" class="text-xs font-black text-blue-600 hover:underline">{{ url('/') }}</a>
                         </div>
                         <hr class="border-gray-100">
                         <div>
-                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Page Title <span class="text-red-500">*</span></label>
-                            <input type="text" name="home_meta_title" value="{{ $s['home_meta_title'] ?? '' }}" required>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Title <span class="text-red-500">*</span> <span class="font-normal normal-case text-gray-400">(max 70 chars)</span></label>
+                            <input type="text" name="home_meta_title" value="{{ old('home_meta_title', $s['home_meta_title'] ?? '') }}" class="input" maxlength="70" required>
+                            <p class="text-[10px] text-gray-400 mt-1 font-bold">Recommended: 50–70 characters. Shown as the clickable headline in Google results.</p>
                         </div>
                         <div>
-                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Description</label>
-                            <textarea name="home_meta_description" rows="3">{{ $s['home_meta_description'] ?? '' }}</textarea>
-                            <p class="text-xs text-gray-400 mt-1">Shown in search engine results. Keep under 160 characters.</p>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Description <span class="font-normal normal-case text-gray-400">(max 160 chars)</span></label>
+                            <textarea name="home_meta_description" rows="3" class="input resize-none" maxlength="160">{{ old('home_meta_description', $s['home_meta_description'] ?? '') }}</textarea>
+                            <p class="text-[10px] text-gray-400 mt-1 font-bold">Recommended: 150–160 characters. Shown below the title in search results.</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Keywords <span class="font-normal normal-case text-gray-400">(comma-separated)</span></label>
+                            <input type="text" name="home_meta_keywords" value="{{ old('home_meta_keywords', $s['home_meta_keywords'] ?? '') }}" class="input" placeholder="hardware, heavy equipment, deals, Mindanao">
+                            <p class="text-[10px] text-gray-400 mt-1 font-bold">Comma-separated list. Helps reinforce the page topic.</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Canonical URL <span class="font-normal normal-case">(optional)</span></label>
+                            <input type="text" name="home_canonical" value="{{ old('home_canonical', $s['home_canonical'] ?? '') }}" class="input" placeholder="{{ url('/') }}">
+                            <p class="text-[10px] text-gray-400 mt-1 font-bold">Leave blank to use the default URL. Only set this if this page is accessible at multiple addresses.</p>
                         </div>
                         <div class="pt-2">
                             <button type="submit" class="btn-primary">Save SEO Settings</button>

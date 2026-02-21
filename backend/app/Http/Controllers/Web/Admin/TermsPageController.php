@@ -20,6 +20,10 @@ class TermsPageController extends Controller
         'tos_footer_link_url',
         'tos_last_updated',
         'tos_auto_update_date',
+        'tos_meta_title',
+        'tos_meta_description',
+        'tos_meta_keywords',
+        'tos_canonical',
     ];
 
     private array $defaults = [
@@ -32,6 +36,10 @@ class TermsPageController extends Controller
         'tos_footer_link_url'   => '/contact',
         'tos_last_updated'      => 'February 14, 2026',
         'tos_auto_update_date'  => '0',
+        'tos_meta_title'        => 'Terms of Service - DealMindanao',
+        'tos_meta_description'  => 'Read the DealMindanao terms of service before using our marketplace platform.',
+        'tos_meta_keywords'     => 'terms of service, DealMindanao terms, conditions of use',
+        'tos_canonical'         => '',
     ];
 
     private array $toggleKeys = [
@@ -66,6 +74,10 @@ class TermsPageController extends Controller
             'tos_footer_link_label' => 'nullable|string|max:100',
             'tos_footer_link_url'   => 'nullable|string|max:200',
             'tos_last_updated'      => 'nullable|string|max:100',
+            'tos_meta_title'        => 'nullable|string|max:70',
+            'tos_meta_description'  => 'nullable|string|max:160',
+            'tos_meta_keywords'     => 'nullable|string|max:300',
+            'tos_canonical'         => 'nullable|string|max:300',
         ]);
 
         $autoUpdate = $request->has('tos_auto_update_date');

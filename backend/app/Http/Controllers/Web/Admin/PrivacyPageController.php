@@ -21,6 +21,10 @@ class PrivacyPageController extends Controller
         'pp_footer_link_url',
         'pp_last_updated',
         'pp_last_updated_auto',
+        'pp_meta_title',
+        'pp_meta_description',
+        'pp_meta_keywords',
+        'pp_canonical',
     ];
 
     private array $defaults = [
@@ -33,6 +37,10 @@ class PrivacyPageController extends Controller
         'pp_footer_link_url'   => '/contact',
         'pp_last_updated'      => 'February 14, 2026',
         'pp_last_updated_auto' => '0',
+        'pp_meta_title'        => 'Privacy Policy - DealMindanao',
+        'pp_meta_description'  => 'Learn how DealMindanao collects, uses, and protects your personal information.',
+        'pp_meta_keywords'     => 'privacy policy, data protection, DealMindanao',
+        'pp_canonical'         => '',
     ];
 
     private array $toggleKeys = [
@@ -67,6 +75,10 @@ class PrivacyPageController extends Controller
             'pp_footer_link_label' => 'nullable|string|max:100',
             'pp_footer_link_url'   => 'nullable|string|max:200',
             'pp_last_updated'      => 'nullable|string|max:50',
+            'pp_meta_title'        => 'nullable|string|max:70',
+            'pp_meta_description'  => 'nullable|string|max:160',
+            'pp_meta_keywords'     => 'nullable|string|max:300',
+            'pp_canonical'         => 'nullable|string|max:300',
         ]);
 
         foreach ($this->allKeys as $key) {

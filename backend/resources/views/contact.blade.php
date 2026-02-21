@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
+@section('meta_title', $s['contact_meta_title'] ?? 'Contact Us - DealMindanao')
+@section('meta_description', $s['contact_meta_description'] ?? 'Get in touch with DealMindanao. Our support team is here to help.')
+@section('meta_keywords', $s['contact_meta_keywords'] ?? 'contact DealMindanao, customer support')
+@section('canonical', $s['contact_canonical'] ?: url('/contact'))
+
 @section('content')
-<div class="py-32">
     <div class="container mx-auto px-6">
         <div class="max-w-6xl mx-auto">
             <div class="grid lg:grid-cols-2 gap-20">

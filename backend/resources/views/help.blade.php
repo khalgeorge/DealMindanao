@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('meta_title', $s['help_meta_title'] ?? 'Help Center - DealMindanao')
+@section('meta_description', $s['help_meta_description'] ?? 'Find answers to frequently asked questions about ordering, payment, and delivery on DealMindanao.')
+@section('meta_keywords', $s['help_meta_keywords'] ?? 'DealMindanao help, FAQ')
+@section('canonical', $s['help_canonical'] ?: url('/help'))
+
 @section('content')
 <div class="py-24">
     <div class="container mx-auto px-6">
