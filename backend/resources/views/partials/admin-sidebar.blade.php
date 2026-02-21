@@ -8,7 +8,7 @@
 @endphp
 
 <aside class="admin-sidebar overflow-y-auto">
-  <div class="border-b border-gray-200" style="padding: calc(var(--spacing) * 0.4);">
+  <div class="border-b border-white/10" style="padding: calc(var(--spacing) * 0.4);">
     <a href="{{ route('admin.dashboard') }}" class="flex items-center justify-center">
       <img src="{{ asset('logo_main-final.png') }}" alt="DealMindanao Logo" class="w-auto" style="height: calc(var(--spacing) * 20);">
     </a>
@@ -64,7 +64,7 @@
       Navigation
     </a>
 
-    <div class="pt-4 mt-4 border-t border-gray-100 space-y-1">
+    <div class="pt-4 mt-4 border-t border-white/10 space-y-1">
 
       {{-- ══════════════════════════════════════ --}}
       {{-- SETTINGS — collapsible parent          --}}
@@ -97,25 +97,25 @@
 
           {{-- General --}}
           <a href="{{ route('admin.settings.index') }}?tab=general"
-             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && in_array($settingTab, ['general', null, ''])) ? 'text-brand-700 bg-brand-50' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800' }}">
+             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && in_array($settingTab, ['general', null, ''])) ? 'text-white bg-white/20 font-semibold' : 'text-emerald-200 hover:bg-white/10 hover:text-white' }}">
             General
           </a>
 
           {{-- Regional & Logistics --}}
           <a href="{{ route('admin.settings.index') }}?tab=regional"
-             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && $settingTab === 'regional') ? 'text-brand-700 bg-brand-50' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800' }}">
+             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && $settingTab === 'regional') ? 'text-white bg-white/20 font-semibold' : 'text-emerald-200 hover:bg-white/10 hover:text-white' }}">
             Regional &amp; Logistics
           </a>
 
           {{-- Security & Access --}}
           <a href="{{ route('admin.settings.index') }}?tab=security"
-             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && $settingTab === 'security') ? 'text-brand-700 bg-brand-50' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800' }}">
+             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && $settingTab === 'security') ? 'text-white bg-white/20 font-semibold' : 'text-emerald-200 hover:bg-white/10 hover:text-white' }}">
             Security &amp; Access
           </a>
 
           {{-- SMS & Email Alerts --}}
           <a href="{{ route('admin.settings.index') }}?tab=notifications"
-             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && $settingTab === 'notifications') ? 'text-brand-700 bg-brand-50' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800' }}">
+             class="flex items-center pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($onSettings && $settingTab === 'notifications') ? 'text-white bg-white/20 font-semibold' : 'text-emerald-200 hover:bg-white/10 hover:text-white' }}">
             SMS &amp; Email Alerts
           </a>
 
@@ -125,7 +125,7 @@
               id="page-editors-toggle"
               type="button"
               onclick="toggleSubmenu('page-editors')"
-              class="flex items-center w-full pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ $isPageEditor ? 'text-brand-700 bg-brand-50' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800' }}"
+              class="flex items-center w-full pl-11 pr-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150 {{ $isPageEditor ? 'text-white bg-white/20 font-semibold' : 'text-emerald-200 hover:bg-white/10 hover:text-white' }}"
               aria-expanded="{{ $isPageEditor ? 'true' : 'false' }}"
             >
               <svg class="w-3.5 h-3.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,16 +198,16 @@
                 ];
               @endphp
               {{-- Guide rail: ml-11 aligns the border with the Page Editors icon position --}}
-              <div class="ml-11 pl-8 border-l-2 border-gray-100 space-y-0.5 py-0.5">
+              <div class="ml-11 pl-3 border-l-2 border-white/20 space-y-0.5 py-0.5">
                 @foreach ($pageEditorLinks as $pe)
                 @php $peActive = request()->routeIs($pe['pattern']); @endphp
                 <a href="{{ route($pe['route']) }}"
-                   class="group relative flex items-center gap-2.5 pl-3 pr-3 py-1.5 text-xs font-medium rounded-lg transition-colors duration-150 {{ $peActive ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-gray-500 hover:bg-gray-50 hover:text-brand-600' }}">
+                   class="group relative flex items-center gap-2.5 pl-3 pr-3 py-1.5 text-xs font-medium rounded-lg transition-colors duration-150 {{ $peActive ? 'bg-white/20 text-white font-semibold' : 'text-emerald-200 hover:bg-white/10 hover:text-white' }}">
                   {{-- Active left border indicator — sits exactly on the guide rail --}}
                   @if($peActive)
-                  <span class="absolute -left-[3px] inset-y-1.5 w-0.5 rounded-full bg-brand-500"></span>
+                  <span class="absolute -left-[3px] inset-y-1.5 w-0.5 rounded-full bg-white/70"></span>
                   @endif
-                  <svg class="w-3.5 h-3.5 flex-shrink-0 {{ $peActive ? 'text-brand-600' : 'text-gray-400 group-hover:text-brand-500' }}"
+                  <svg class="w-3.5 h-3.5 flex-shrink-0 {{ $peActive ? 'text-white' : 'text-emerald-300 group-hover:text-white' }}"
                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     {!! $pe['icon'] !!}
                   </svg>

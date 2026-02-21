@@ -322,7 +322,9 @@
 }
 
 @utility admin-sidebar {
-  @apply w-64 bg-white border-r border-gray-200 flex-shrink-0 sticky top-0 h-screen overflow-y-auto;
+  @apply w-64 flex-shrink-0 sticky top-0 h-screen overflow-y-auto;
+  background: linear-gradient(170deg, #0b6b3e 0%, #0f7a4a 55%, #117a44 100%);
+  box-shadow: 4px 0 24px -4px rgba(0, 0, 0, 0.25);
 }
 
 @utility admin-main {
@@ -371,23 +373,39 @@
 /* Admin Sidebar */
 @utility admin-nav-item {
   @apply flex items-center px-4 py-3 text-sm font-medium rounded-lg
-         text-gray-700 hover:bg-gray-100 hover:text-gray-900
+         relative
          transition-colors duration-150;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .admin-nav-item.active {
-  @apply bg-brand-50 text-brand-700;
+  background-color: rgba(34, 197, 94, 0.22);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 0 rgba(74, 222, 128, 0.85);
 }
 
 @utility admin-sidebar-link {
   @apply flex items-center px-4 py-2.5 text-sm font-medium rounded-lg
-         text-gray-700 hover:bg-gray-100 hover:text-gray-900
+         relative
          transition-colors duration-150
-         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+@media (hover: hover) {
+  .admin-sidebar-link:hover,
+  .admin-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
 }
 
 .admin-sidebar-link.active {
-  @apply bg-brand-50 text-brand-700;
+  background-color: rgba(34, 197, 94, 0.22);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 0 rgba(74, 222, 128, 0.85);
 }
 
 /* Admin header compact mode — activated via JS when scrollY > 30 */
