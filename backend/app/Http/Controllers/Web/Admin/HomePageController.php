@@ -40,7 +40,7 @@ class HomePageController extends Controller
     {
         $request->validate([
             'home_meta_title'       => 'required|string|max:70',
-            'home_meta_description' => 'nullable|string|max:160',
+            'home_meta_description' => 'nullable|string|max:300',
             'home_meta_keywords'    => 'nullable|string|max:300',
             'home_canonical'        => 'nullable|string|max:300',
         ]);

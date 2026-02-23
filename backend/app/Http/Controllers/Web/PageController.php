@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use App\Models\Page;
+use App\Models\PartnerHowItWorksStep;
 use App\Models\PrivacySection;
 use App\Models\RefundSection;
 use App\Models\Setting;
@@ -78,6 +79,8 @@ class PageController extends Controller
         'partner_cta_btn1_link'         => '/contact',
         'partner_cta_btn2_label'        => 'Learn About Us',
         'partner_cta_btn2_link'         => '/about',
+        'partner_hiw_enabled'           => '1',
+        'partner_hiw_title'             => 'How Partnering Works',
         'partner_meta_title'            => 'Become a Partner - DealMindanao',
         'partner_meta_description'      => 'Partner with DealMindanao to showcase your products to more customers online. We handle listings, pricing, and order coordination.',
         'partner_meta_keywords'         => 'DealMindanao partner, sell online, Mindanao business partner',
@@ -289,6 +292,9 @@ class PageController extends Controller
         foreach ($keys as $key) {
             $s[$key] = $raw[$key] ?? $this->partnerDefaults[$key];
         }
-        return view('partner', ['s' => $s]);
+
+        $hiwSteps = PartnerHowItWorksStep::active()->get();
+
+        return view('partner', compact('s', 'hiwSteps'));
     }
 }

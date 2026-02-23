@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PartnerHowItWorksStep;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PartnerPageController extends Controller
 {
@@ -23,6 +25,9 @@ class PartnerPageController extends Controller
         'partner_card1_enabled', 'partner_card1_number', 'partner_card1_title', 'partner_card1_description',
         'partner_card2_enabled', 'partner_card2_number', 'partner_card2_title', 'partner_card2_description',
         'partner_card3_enabled', 'partner_card3_number', 'partner_card3_title', 'partner_card3_description',
+        // How It Works section
+        'partner_hiw_enabled',
+        'partner_hiw_title',
         // CTA / Testimonial section
         'partner_cta_enabled',
         'partner_cta_title',
@@ -57,6 +62,8 @@ class PartnerPageController extends Controller
         'partner_card3_number'          => '03',
         'partner_card3_title'           => 'Growth Insights',
         'partner_card3_description'     => 'Access detailed analytics and market trends to help you optimize your inventory.',
+        'partner_hiw_enabled'           => '1',
+        'partner_hiw_title'             => 'How Partnering Works',
         'partner_cta_enabled'           => '1',
         'partner_cta_title'             => 'Ready to Scale?',
         'partner_cta_quote'             => '"Our sales doubled within three months of joining DealMindanao. The logistics support is a game-changer for Mindanao farms."',
@@ -77,6 +84,7 @@ class PartnerPageController extends Controller
         'partner_card1_enabled',
         'partner_card2_enabled',
         'partner_card3_enabled',
+        'partner_hiw_enabled',
         'partner_cta_enabled',
     ];
 
@@ -88,7 +96,9 @@ class PartnerPageController extends Controller
             $s[$key] = $raw[$key] ?? $this->defaults[$key] ?? '';
         }
 
-        return view('admin.partner-page.index', ['s' => $s]);
+        $steps = PartnerHowItWorksStep::ordered()->get();
+
+        return view('admin.partner-page.index', compact('s', 'steps'));
     }
 
     public function update(Request $request)
@@ -109,6 +119,10 @@ class PartnerPageController extends Controller
             'partner_card3_number'          => 'required|string|max:10',
             'partner_card3_title'           => 'required|string|max:100',
             'partner_card3_description'     => 'required|string|max:500',
+            'partner_hiw_title'             => 'required|string|max:255',
+            'steps'                         => 'nullable|array',
+            'steps.*.text'                  => 'nullable|string|max:500',
+            'steps.*.sort_order'            => 'nullable|integer|min:0',
             'partner_cta_title'             => 'required|string|max:255',
             'partner_cta_quote'             => 'required|string|max:1000',
             'partner_cta_btn1_label'        => 'required|string|max:100',
@@ -130,6 +144,38 @@ class PartnerPageController extends Controller
         $textKeys = array_diff($this->allKeys, $this->toggleKeys);
         foreach ($textKeys as $key) {
             Setting::set($key, $request->input($key, ''));
+        }
+
+        // ── Sync How It Works steps ──────────────────────────────────────────
+        $submittedSteps = $request->input('steps', []);
+
+        // Collect IDs of existing rows that are being kept (id > 0)
+        $keptIds = collect($submittedSteps)
+            ->pluck('id')
+            ->map(fn($id) => (int) $id)
+            ->filter(fn($id) => $id > 0)
+            ->toArray();
+
+        // Remove rows that were deleted in the UI
+        PartnerHowItWorksStep::whereNotIn('id', $keptIds)->delete();
+
+        foreach ($submittedSteps as $i => $stepData) {
+            $id = (int) ($stepData['id'] ?? 0);
+            $text = Str::limit($stepData['text'] ?? '', 500);
+            if ($text === '') {
+                continue; // skip blank rows
+            }
+            $payload = [
+                'step_text'  => $text,
+                'sort_order' => (int) ($stepData['sort_order'] ?? $i),
+                'is_active'  => isset($stepData['is_active']),
+            ];
+
+            if ($id > 0) {
+                PartnerHowItWorksStep::where('id', $id)->update($payload);
+            } else {
+                PartnerHowItWorksStep::create($payload);
+            }
         }
 
         return back()->with('success', 'Partner page content saved successfully.');

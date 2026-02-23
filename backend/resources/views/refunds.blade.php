@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('meta_title', $s['rp_meta_title'] ?? 'Refund & Returns Policy - DealMindanao')
-@section('meta_description', $s['rp_meta_description'] ?? 'Learn about DealMindanao refund and returns policy.')
-@section('meta_keywords', $s['rp_meta_keywords'] ?? 'refund policy, returns, DealMindanao')
+@section('meta_title', $s['rp_meta_title'] ?? 'Refund & Returns Policy – DealMindanao | Mindanao Marketplace')
+@section('meta_description', $s['rp_meta_description'] ?? 'Learn how to request a refund or return on DealMindanao. Understand our policy for COD and GCash orders from verified Mindanao sellers.')
+@section('meta_keywords', $s['rp_meta_keywords'] ?? 'DealMindanao refund policy, returns Mindanao, COD refund Philippines, GCash order return')
 @section('canonical', $s['rp_canonical'] ?: url('/refunds'))
 
 @section('content')

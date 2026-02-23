@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('meta_title', $s['help_meta_title'] ?? 'Help Center - DealMindanao')
-@section('meta_description', $s['help_meta_description'] ?? 'Find answers to frequently asked questions about ordering, payment, and delivery on DealMindanao.')
-@section('meta_keywords', $s['help_meta_keywords'] ?? 'DealMindanao help, FAQ')
+@section('meta_title', $s['help_meta_title'] ?? 'Help Center & FAQ – DealMindanao | Orders, Payment & Delivery')
+@section('meta_description', $s['help_meta_description'] ?? 'Find answers about placing orders, offline payment via COD or GCash, regional delivery in Mindanao, and how to request a refund on DealMindanao.')
+@section('meta_keywords', $s['help_meta_keywords'] ?? 'DealMindanao FAQ, how to order Mindanao, COD delivery Philippines, GCash payment Mindanao')
 @section('canonical', $s['help_canonical'] ?: url('/help'))
 
 @section('content')
@@ -13,6 +13,7 @@
             {{-- Page Header --}}
             @if(($s['help_header_enabled'] ?? '1') == '1')
             <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">{{ $s['help_title'] }}</h1>
+            <h2 class="text-2xl font-bold mt-10 mb-4">Frequently Asked Questions</h2>
             @if(!empty($s['help_subtitle']))
             <p class="text-lg text-gray-600 mb-12">{{ $s['help_subtitle'] }}</p>
             @endif

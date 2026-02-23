@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('meta_title', 'Checkout | Submit Your Order – DealMindanao')
-@section('meta_description', 'Confirm your details to place an offline payment request.')
+@section('meta_description', 'Complete your delivery details to submit your order. No online payment needed — our team will contact you within 24 hours to confirm via COD or GCash.')
 
 @section('content')
 <div class="page-shell py-12">
@@ -46,7 +46,7 @@
 
         <div>
           <h1 class="text-3xl font-black text-gray-900 mb-2">Checkout – Order Request</h1>
-          <p class="text-gray-500">Please provide accurate contact details so we can confirm your order faster.</p>
+          <p class="text-gray-500">No payment required now. Fill in your delivery details and our team will contact you within 24 hours to confirm and arrange delivery.</p>
         </div>
 
         {{-- Delivery Information Card --}}
@@ -164,13 +164,13 @@
           <button type="submit" class="btn-primary btn-lg w-full shadow-xl shadow-brand-200/50 flex flex-col items-center gap-0 py-4 group">
             <span class="text-lg font-black tracking-tight">Submit Order Request</span>
             <span class="text-[10px] opacity-70 font-bold uppercase tracking-widest flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-              Process Regionally
+              No payment now · confirmed offline
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
             </span>
           </button>
 
           <p class="mt-6 text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest">
-            No automatic charges. Pay later.
+            No automatic charges · Pay only after our team confirms
           </p>
         </div>
       </div>

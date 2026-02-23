@@ -41,8 +41,8 @@
             <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
           </div>
           <h2 class="text-xl font-bold text-gray-900">Your cart is empty</h2>
-          <p class="text-gray-500 mt-2 mb-8">Browse Shop Deals to add items.</p>
-          <a href="/shop" class="btn-primary">Browse Deals</a>
+          <p class="text-gray-500 mt-2 mb-8">Explore verified Mindanao deals and add items to get started.</p>
+          <a href="/shop" class="btn-primary">Explore Mindanao Deals</a>
         </div>
       </div>
 
@@ -57,7 +57,7 @@
               <span id="subtotal" class="font-bold text-gray-900">₱0.00</span>
             </div>
             <div class="flex justify-between text-gray-600">
-              <span>Regional Shipping</span>
+              <span>Mindanao Delivery</span>
               <span id="shipping-fee" class="font-bold text-green-600">FREE</span>
             </div>
             <div class="border-t border-gray-100 pt-4 flex justify-between">
@@ -74,7 +74,7 @@
           <div class="mt-6 flex flex-col gap-4">
             <div class="flex items-center justify-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-              Secure Regional Transaction
+              Order Online · Pay Offline After Confirmation
             </div>
           </div>
         </div>

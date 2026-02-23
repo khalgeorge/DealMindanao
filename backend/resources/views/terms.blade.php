@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('meta_title', $s['tos_meta_title'] ?? 'Terms of Service - DealMindanao')
-@section('meta_description', $s['tos_meta_description'] ?? 'Read the DealMindanao terms of service before using our platform.')
-@section('meta_keywords', $s['tos_meta_keywords'] ?? 'terms of service, DealMindanao')
+@section('meta_title', $s['tos_meta_title'] ?? 'Terms of Service – DealMindanao | Marketplace Rules & Conditions')
+@section('meta_description', $s['tos_meta_description'] ?? 'Review the DealMindanao Terms of Service. Learn the rules for placing orders, our offline payment flow via COD or GCash, and using our Mindanao marketplace.')
+@section('meta_keywords', $s['tos_meta_keywords'] ?? 'DealMindanao terms of service, Mindanao marketplace conditions, online ordering rules Philippines')
 @section('canonical', $s['tos_canonical'] ?: url('/terms'))
 
 @section('content')

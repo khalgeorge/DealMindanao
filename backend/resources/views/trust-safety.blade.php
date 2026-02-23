@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('meta_title', $s['ts_meta_title'] ?? 'Trust & Safety - DealMindanao')
-@section('meta_description', $s['ts_meta_description'] ?? 'Learn about DealMindanao trust and safety measures.')
-@section('meta_keywords', $s['ts_meta_keywords'] ?? 'trust and safety, secure shopping, DealMindanao')
+@section('meta_title', $s['ts_meta_title'] ?? 'Trust & Safety – DealMindanao | Safe Shopping in Mindanao')
+@section('meta_description', $s['ts_meta_description'] ?? 'Discover how DealMindanao keeps you safe. All sellers are verified, orders are reviewed manually, and payment is only collected offline after our team confirms your request.')
+@section('meta_keywords', $s['ts_meta_keywords'] ?? 'DealMindanao trust safety, safe shopping Mindanao, verified sellers Philippines, offline payment COD')
 @section('canonical', $s['ts_canonical'] ?: url('/trust-safety'))
 
 @section('content')

@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="mGtFlpfU87ZiuEcC4Am8okpErPaGyUJJNGrvwi97">
+    
+        
+    
+    <title>Contact DealMindanao | Customer Support in Mindanao</title>
+    <meta name="description" content="Need help with your order? Contact DealMindanao support. We respond within 1 business day.">
+    <meta name="keywords" content="contact DealMindanao, customer support, Davao City">
+    <link rel="canonical" href="http://localhost:8000/contact">
+        
+    
+    <meta property="og:site_name" content="DealMindanao">
+    <meta property="og:locale" content="en_PH">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Contact DealMindanao | Customer Support in Mindanao">
+    <meta property="og:description" content="Need help with your order? Contact DealMindanao support. We respond within 1 business day.">
+    <meta property="og:image" content="https://dealmindanao.com/logo_main-final.png">
+    <meta property="og:url" content="http://localhost:8000/contact">
+    
+    
+    <link rel="icon" type="image/png" href="/favicon.png?v=1771476955">
+
+    
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "DealMindanao",
+        "url": "https://dealmindanao.com",
+        "logo": "https://dealmindanao.com/logo_main-final.png",
+        "sameAs": [
+            "https://www.facebook.com/dealmindanao"
+        ]
+    }
+    </script>
+    
+
+    
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DealMindanao",
+        "url": "https://dealmindanao.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://dealmindanao.com/shop?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+
+    
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+            "@type": "Question",
+            "name": "How does payment work?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "After placing your order, our team will contact you to arrange offline payment such as COD, bank transfer, or GCash."
+            }
+            },
+            {
+            "@type": "Question",
+            "name": "How long does delivery take?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Delivery typically takes 3–7 business days within Mindanao."
+            }
+            }
+        ]
+        }
+    </script>
+    
+
+    
+        <link rel="preload" as="style" href="http://localhost:8000/build/assets/app-BrfNuSOQ.css" /><link rel="modulepreload" as="script" href="http://localhost:8000/build/assets/app-B3Ap9YUa.js" /><link rel="stylesheet" href="http://localhost:8000/build/assets/app-BrfNuSOQ.css" /><script type="module" src="http://localhost:8000/build/assets/app-B3Ap9YUa.js"></script>    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "DealMindanao",
+    "url": "https://dealmindanao.com",
+    "logo": "https://dealmindanao.com/logo_main-final.png",
+    "image": "https://dealmindanao.com/logo_main-final.png",
+    "description": "Need help with your order? Contact DealMindanao support. We respond within 1 business day.",
+    "email": "hello@dealmindanao.com",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Poblacion District, Davao City, 8000",
+        "addressLocality": "Davao City",
+        "addressRegion": "Davao del Sur",
+        "addressCountry": "PH"
+    },
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "hello@dealmindanao.com",
+        "availableLanguage": ["English", "Filipino"]
+    },
+    "sameAs": [
+        "https://www.facebook.com/dealmindanao"
+    ]
+}
+</script>
+</head>
+<body class="bg-gray-50">
+    
+    <nav class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
+<div class="page-shell">
+    <div class="flex items-center justify-between h-20">
+      
+      <div class="flex items-center">
+        <a href="http://localhost:8000" class="flex items-center">
+          <img src="http://localhost:8000/logo_main-final.png" alt="DealMindanao Logo" class="w-auto" style="height: calc(var(--spacing) * 20);">
+        </a>
+      </div>
+      
+      
+      <div class="hidden md:flex items-center space-x-6">
+                  <a href="/" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors ">
+            Home
+          </a>
+                  <a href="/shop" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors ">
+            Shop
+          </a>
+                  <a href="/about" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors ">
+            About
+          </a>
+                  <a href="/partner" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors ">
+            Partner
+          </a>
+                  <a href="/help" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors ">
+            Help
+          </a>
+                  <a href="/contact" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors text-brand-600">
+            Contact
+          </a>
+              </div>
+      
+      
+      <div class="flex items-center space-x-3">
+                  <a href="http://localhost:8000/account" class="p-2 text-gray-700 hover:text-brand-600 transition-colors" aria-label="My Account">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </a>
+                
+        <a href="http://localhost:8000/cart" class="relative p-2 text-gray-700 hover:text-brand-600 transition-colors" aria-label="View cart">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          <span id="cart-count" class="absolute -top-1 -right-1 bg-accent-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" aria-live="polite" aria-label="Cart items">0</span>
+        </a>
+        
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-700 hover:text-brand-600"
+                aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    
+    <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
+              <a href="/" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">
+          Home
+        </a>
+              <a href="/shop" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">
+          Shop
+        </a>
+              <a href="/about" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">
+          About
+        </a>
+              <a href="/partner" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">
+          Partner
+        </a>
+              <a href="/help" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">
+          Help
+        </a>
+              <a href="/contact" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">
+          Contact
+        </a>
+        </div>
+</nav>
+
+    
+    
+    <main>
+            <div class="container mx-auto px-6 py-20">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-20">
+
+                
+                <div>
+                                        <span class="text-brand-600 font-black uppercase tracking-[0.2em] text-[10px]">Contact Support</span>
+                                        <h1 class="text-5xl font-black text-gray-900 mt-4 mb-8">
+                        We&#039;re here to <span class="text-brand-600">help</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 font-medium leading-relaxed mb-12">Need help with your order or want to partner with us? Our support team is ready to assist you.</p>
+
+                    <div class="space-y-10">
+                        <div class="flex gap-6">
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center shrink-0" aria-hidden="true">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Email Support</h4>
+                                <p class="text-gray-500 font-medium text-lg">hello@dealmindanao.com</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center shrink-0" aria-hidden="true">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Davao Office</h4>
+                                <p class="text-gray-500 font-medium text-lg">Poblacion District, Davao City, 8000</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 p-6 bg-brand-50 rounded-lg border border-brand-200">
+                        <h3 class="font-bold text-gray-900 mb-3 text-sm">Quick Links</h3>
+                        <div class="flex flex-wrap gap-3 text-sm">
+                            <a href="http://localhost:8000/help" class="text-brand-600 hover:underline font-semibold">Help Center &rarr;</a>
+                            <a href="http://localhost:8000/trust-safety" class="text-brand-600 hover:underline font-semibold">Trust &amp; Safety &rarr;</a>
+                            <a href="http://localhost:8000/refunds" class="text-brand-600 hover:underline font-semibold">Refunds &amp; Returns &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="bg-gray-50 p-12 rounded-lg border border-gray-100 shadow-inner">
+                    <form method="POST" action="http://localhost:8000/contact/send" name="contact" class="space-y-6" novalidate>
+                        <input type="hidden" name="_token" value="mGtFlpfU87ZiuEcC4Am8okpErPaGyUJJNGrvwi97" autocomplete="off">                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label for="contact_name" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name</label>
+                                <input type="text" id="contact_name" name="name" required autocomplete="name"
+                                       class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm"
+                                       placeholder="Juan Dela Cruz">
+                            </div>
+                            <div>
+                                <label for="contact_subject" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Subject</label>
+                                <select id="contact_subject" name="subject" required
+                                        class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm">
+                                    <option value="">Select a subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="order_status">Order Status &amp; Confirmation</option>
+                                    <option value="payment_delivery">Payment &amp; Delivery Questions</option>
+                                    <option value="returns">Returns &amp; Refunds</option>
+                                    <option value="partner">Become a Partner</option>
+                                    <option value="report">Report an Issue</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="contact_message" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Message</label>
+                            <textarea id="contact_message" name="message" required
+                                      class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm h-40"
+                                      placeholder="How can we help?"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full py-5 rounded-lg font-black uppercase tracking-widest shadow-xl shadow-brand-100">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </main>
+    
+    
+    <footer class="bg-gray-900 pt-24 pb-12 overflow-hidden relative">
+  
+  <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-600 via-brand-400 to-brand-600"></div>
+
+  <div class="container mx-auto px-6 lg:px-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
+
+      
+      <div class="space-y-8">
+        <a href="http://localhost:8000" class="inline-block">
+          <img src="http://localhost:8000/logo_main-final.png" alt="DealMindanao Logo" class="h-20 w-auto">
+        </a>
+        <p class="text-sm text-gray-500 font-medium leading-relaxed max-w-xs">
+          DealMindanao is a Mindanao-based online marketplace for hardware, food, and local products from verified regional sellers. Browse online, place your order, and pay offline via COD or GCash after confirmation.
+        </p>
+        <div class="flex gap-4">
+          <div class="w-10 h-10 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center hover:bg-brand-600 transition-colors cursor-pointer">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+          </div>
+          <div class="w-10 h-10 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center hover:bg-brand-600 transition-colors cursor-pointer">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="lg:pl-10">
+        <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-10">Marketplace</h4>
+        <ul class="space-y-4">
+          <li><a href="http://localhost:8000/shop" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+            <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Shop Deals
+          </a></li>
+          <li><a href="http://localhost:8000/cart" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+            <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Your Cart
+          </a></li>
+          <li><a href="/trust-safety" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+            <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Trust & Safety
+          </a></li>
+        </ul>
+      </div>
+
+      
+      <div class="lg:pl-10">
+        <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-10">Company</h4>
+        <ul class="space-y-4">
+          <li><a href="http://localhost:8000/about" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">About Us</a></li>
+          <li><a href="http://localhost:8000/partner" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Become a Partner</a></li>
+          <li><a href="http://localhost:8000/contact" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Contact Support</a></li>
+          <li><a href="/help" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Help Center</a></li>
+        </ul>
+      </div>
+
+      
+      <div class="bg-white/5 p-10 rounded-lg border border-white/5">
+        <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-6">Regional Focus</h4>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center font-black text-brand-400 text-lg italic">M</div>
+            <div>
+              <p class="text-xs font-black text-white uppercase tracking-tighter">Made in Mindanao</p>
+              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Direct from Source</p>
+            </div>
+          </div>
+          <p class="text-[10px] text-gray-500 leading-relaxed font-bold uppercase tracking-wider mt-6">
+            Proudly serving buyers across Davao, North &amp; South Cotabato, Bukidnon, Zamboanga, and all Mindanao regions.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+      <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest">&copy; 2026 DealMindanao. All Rights Reserved.</p>
+      <div class="flex flex-wrap gap-6 justify-center md:justify-end">
+        <a href="/privacy" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Privacy</a>
+        <a href="/terms" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Terms</a>
+        <a href="/refunds" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Refunds</a>
+        <a href="/trust-safety" class="text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-white">Trust & Safety</a>
+      </div>
+    </div>
+  </div>
+</footer>
+    
+    
+    <div id="toast-container" class="fixed top-24 right-4 z-50 space-y-2"></div>
+    
+    <script>
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileMenuBtn?.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('hidden');
+    mobileMenuBtn.setAttribute('aria-expanded', String(!isOpen));
+  });
+  
+  // Update cart count from localStorage
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').textContent = totalItems;
+  }
+  
+  updateCartCount();
+  window.addEventListener('cart-updated', updateCartCount);
+</script>
+</body>
+</html>

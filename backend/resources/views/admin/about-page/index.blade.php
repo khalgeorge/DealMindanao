@@ -370,9 +370,9 @@
                     <a href="{{ url('/about') }}" target="_blank" class="text-xs font-black text-blue-600 hover:underline">{{ url('/about') }}</a>
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Title <span class="font-normal normal-case">(max 70 chars)</span></label>
-                    <input type="text" name="about_meta_title" value="{{ old('about_meta_title', $s['about_meta_title']) }}" class="input" placeholder="About DealMindanao - Hardware &amp; Heavy Equipment" maxlength="70">
-                    <p class="text-[10px] text-gray-400 mt-1 font-bold">Recommended: 50–70 characters. Shown as the clickable headline in Google results.</p>
+                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Title <span class="font-normal normal-case">(max 160 chars)</span></label>
+                    <input type="text" name="about_meta_title" value="{{ old('about_meta_title', $s['about_meta_title']) }}" class="input" placeholder="About DealMindanao - Hardware &amp; Heavy Equipment" maxlength="160">
+                    <p class="text-[10px] text-gray-400 mt-1 font-bold">Recommended: 50–160 characters. Shown as the clickable headline in Google results.</p>
                 </div>
                 <div>
                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Description <span class="font-normal normal-case">(max 160 chars)</span></label>

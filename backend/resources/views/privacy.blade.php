@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('meta_title', $s['pp_meta_title'] ?? 'Privacy Policy - DealMindanao')
-@section('meta_description', $s['pp_meta_description'] ?? 'Learn how DealMindanao collects, uses, and protects your personal information.')
-@section('meta_keywords', $s['pp_meta_keywords'] ?? 'privacy policy, data protection, DealMindanao')
+@section('meta_title', $s['pp_meta_title'] ?? 'Privacy Policy – DealMindanao | How We Protect Your Data')
+@section('meta_description', $s['pp_meta_description'] ?? 'Read the DealMindanao Privacy Policy to understand how your personal information is collected, used, and protected when you place orders on our Mindanao marketplace.')
+@section('meta_keywords', $s['pp_meta_keywords'] ?? 'DealMindanao privacy policy, data protection Philippines, personal information Mindanao marketplace')
 @section('canonical', $s['pp_canonical'] ?: url('/privacy'))
 
 @section('content')

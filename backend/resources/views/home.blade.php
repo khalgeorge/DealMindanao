@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('meta_title', $hp['home_meta_title'] ?? 'DealMindanao - Authentic Mindanao Hardware & Heavy Equipment')
-@section('meta_description', $hp['home_meta_description'] ?? 'Quality tools and equipment from trusted local sellers.')
-@section('meta_keywords', $hp['home_meta_keywords'] ?? 'hardware, heavy equipment, tools, Mindanao, deals')
+@section('meta_title', $hp['home_meta_title'] ?? 'DealMindanao – Verified Mindanao Deals | Hardware, Food & Equipment')
+@section('meta_description', $hp['home_meta_description'] ?? 'Shop curated deals from verified Mindanao sellers. Browse hardware, food, and equipment. Order online — pay offline via COD or GCash after our team confirms your request.')
+@section('meta_keywords', $hp['home_meta_keywords'] ?? 'Mindanao deals, buy online Mindanao, hardware Davao, Bukidnon products, Zamboanga marketplace, COD Philippines, GCash payment')
 @section('canonical', $hp['home_canonical'] ?: url('/'))
 
 @section('content')

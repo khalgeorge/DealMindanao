@@ -213,7 +213,104 @@
         </div>
 
         {{-- ══════════════════════════════════════════════════════════════
-             SECTION 3 — CTA / TESTIMONIAL
+             SECTION 3 — HOW IT WORKS
+        ══════════════════════════════════════════════════════════════ --}}
+        <div class="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+            {{-- Section Header --}}
+            <div class="px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-brand-50 rounded-lg flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-black text-gray-900 uppercase tracking-tight">How It Works</h2>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Numbered steps · shown between Benefits and CTA sections</p>
+                    </div>
+                </div>
+                {{-- Section-level toggle --}}
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="partner_hiw_enabled" value="1" class="sr-only peer"
+                           {{ ($s['partner_hiw_enabled'] ?? '1') == '1' ? 'checked' : '' }}>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-brand-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
+                    <span class="ml-3 text-sm font-bold text-gray-700">Enabled</span>
+                </label>
+            </div>
+            <div class="p-8 space-y-6">
+                {{-- Section title --}}
+                <div>
+                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Section Title <span class="text-red-500">*</span></label>
+                    <input type="text" name="partner_hiw_title"
+                           value="{{ old('partner_hiw_title', $s['partner_hiw_title']) }}"
+                           class="input" required placeholder="How Partnering Works">
+                    @error('partner_hiw_title')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+
+                {{-- Step rows --}}
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest">Steps</label>
+                        <button type="button" id="add-step-btn"
+                                class="flex items-center gap-1.5 text-xs font-black text-brand-600 hover:text-brand-700 uppercase tracking-widest transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Add Step
+                        </button>
+                    </div>
+
+                    <div id="hiw-steps-container" class="space-y-3">
+                        @foreach($steps as $step)
+                        <div class="step-row flex items-start gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                            <input type="hidden" name="steps[{{ $loop->index }}][id]" value="{{ $step->id }}">
+                            {{-- Sort order --}}
+                            <div class="shrink-0">
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Order</label>
+                                <input type="number" name="steps[{{ $loop->index }}][sort_order]"
+                                       value="{{ $step->sort_order }}" min="0"
+                                       class="input w-16 text-center px-2">
+                            </div>
+                            {{-- Step text --}}
+                            <div class="flex-1 min-w-0">
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Step Text <span class="text-red-500">*</span></label>
+                                <input type="text" name="steps[{{ $loop->index }}][text]"
+                                       value="{{ $step->step_text }}"
+                                       class="input w-full" required placeholder="Describe this step...">
+                            </div>
+                            {{-- Active toggle --}}
+                            <div class="shrink-0 flex flex-col items-center gap-1 pt-5">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="steps[{{ $loop->index }}][is_active]" value="1"
+                                           class="sr-only peer" {{ $step->is_active ? 'checked' : '' }}>
+                                    <div class="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-brand-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                                </label>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase">Show</span>
+                            </div>
+                            {{-- Remove button --}}
+                            <div class="shrink-0 pt-5">
+                                <button type="button" onclick="hiwRemoveStep(this)"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-600 transition-colors"
+                                        title="Remove step">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <p class="text-xs text-gray-400 font-medium mt-3">
+                        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Steps with "Show" off are hidden from the frontend. Order sets display sequence (lower = first). Blank text rows are ignored on save.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {{-- ══════════════════════════════════════════════════════════════
+             SECTION 4 — CTA / TESTIMONIAL
         ══════════════════════════════════════════════════════════════ --}}
         <div class="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
             {{-- Section Header --}}
@@ -357,4 +454,57 @@
 
     </form>
 </div>
+
+@push('scripts')
+<script>
+(function () {
+    // Track next available index for new rows
+    let hiwRowIndex = {{ $steps->count() }};
+
+    window.hiwRemoveStep = function (btn) {
+        btn.closest('.step-row').remove();
+    };
+
+    document.getElementById('add-step-btn').addEventListener('click', function () {
+        const idx       = hiwRowIndex++;
+        const container = document.getElementById('hiw-steps-container');
+
+        const row = document.createElement('div');
+        row.className = 'step-row flex items-start gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100';
+        row.innerHTML = `
+            <input type="hidden" name="steps[${idx}][id]" value="0">
+            <div class="shrink-0">
+                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Order</label>
+                <input type="number" name="steps[${idx}][sort_order]" value="${idx}" min="0"
+                       class="input w-16 text-center px-2">
+            </div>
+            <div class="flex-1 min-w-0">
+                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Step Text <span class="text-red-500">*</span></label>
+                <input type="text" name="steps[${idx}][text]" value=""
+                       class="input w-full" placeholder="Describe this step...">
+            </div>
+            <div class="shrink-0 flex flex-col items-center gap-1 pt-5">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="steps[${idx}][is_active]" value="1" class="sr-only peer" checked>
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-brand-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                </label>
+                <span class="text-[10px] font-bold text-gray-400 uppercase">Show</span>
+            </div>
+            <div class="shrink-0 pt-5">
+                <button type="button" onclick="hiwRemoveStep(this)"
+                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-600 transition-colors"
+                        title="Remove step">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        `;
+        container.appendChild(row);
+        // Focus the new text input
+        row.querySelector('input[type="text"]').focus();
+    });
+})();
+</script>
+@endpush
 @endsection

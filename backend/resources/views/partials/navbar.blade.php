@@ -26,28 +26,29 @@
       {{-- Actions --}}
       <div class="flex items-center space-x-3">
         @auth
-          <a href="{{ route('account') }}" class="p-2 text-gray-700 hover:text-brand-600 transition-colors" title="My Account">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <a href="{{ route('account') }}" class="p-2 text-gray-700 hover:text-brand-600 transition-colors" aria-label="My Account">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
             </svg>
           </a>
         @else
-          <a href="{{ route('login') }}" class="p-2 text-gray-700 hover:text-brand-600 transition-colors" title="Login">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <a href="{{ route('login') }}" class="p-2 text-gray-700 hover:text-brand-600 transition-colors" aria-label="Log in">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
             </svg>
           </a>
         @endauth
         
-        <a href="{{ route('cart') }}" class="relative p-2 text-gray-700 hover:text-brand-600 transition-colors">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a href="{{ route('cart') }}" class="relative p-2 text-gray-700 hover:text-brand-600 transition-colors" aria-label="View cart">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
-          <span id="cart-count" class="absolute -top-1 -right-1 bg-accent-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+          <span id="cart-count" class="absolute -top-1 -right-1 bg-accent-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" aria-live="polite" aria-label="Cart items">0</span>
         </a>
         
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-700 hover:text-brand-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-700 hover:text-brand-600"
+                aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
@@ -67,8 +68,11 @@
 @push('scripts')
 <script>
   // Mobile menu toggle
-  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileMenuBtn?.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('hidden');
+    mobileMenuBtn.setAttribute('aria-expanded', String(!isOpen));
   });
   
   // Update cart count from localStorage

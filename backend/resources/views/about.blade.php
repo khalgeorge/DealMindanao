@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('meta_title', $s['about_meta_title'] ?? 'About DealMindanao - Authentic Mindanao Hardware & Heavy Equipment')
-@section('meta_description', $s['about_meta_description'] ?? 'DealMindanao is a curated online marketplace connecting customers with quality hardware and heavy equipment.')
-@section('meta_keywords', $s['about_meta_keywords'] ?? 'DealMindanao, about, Mindanao marketplace')
+@section('meta_title', $s['about_meta_title'] ?? 'About DealMindanao – Trusted Mindanao Marketplace for Local Products')
+@section('meta_description', $s['about_meta_description'] ?? 'DealMindanao is a trusted online marketplace connecting buyers with verified Mindanao sellers of hardware, food, and equipment. Order online, pay offline after our team confirms your request.')
+@section('meta_keywords', $s['about_meta_keywords'] ?? 'about DealMindanao, Mindanao marketplace, local sellers Davao, verified Mindanao products')
 @section('canonical', $s['about_canonical'] ?: url('/about'))
 
 @section('content')
@@ -50,8 +50,10 @@
         <div class="grid lg:grid-cols-2 gap-20 items-center">
             <div class="relative">
                 <div class="aspect-video bg-gray-200 rounded-lg overflow-hidden shadow-2xl relative z-10">
-                    <img src="{{ $storyImg }}" class="w-full h-full object-cover" alt="Mindanao Story">
-                </div>
+                    <img src="{{ $storyImg }}" class="w-full h-full object-cover" alt="Local sellers and communities in Mindanao supported by DealMindanao marketplace">
+                </div><p class="mt-4 text-sm text-gray-500">
+  ✔ Manual confirmation • ✔ COD/GCash • ✔ Verified Mindanao sellers
+</p>
                 <div class="absolute -top-10 -left-10 w-40 h-40 bg-brand-600 rounded-lg -z-0"></div>
             </div>
             <div>

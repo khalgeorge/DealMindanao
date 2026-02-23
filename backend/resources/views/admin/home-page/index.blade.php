@@ -85,9 +85,9 @@
                             <p class="text-[10px] text-gray-400 mt-1 font-bold">Recommended: 50–70 characters. Shown as the clickable headline in Google results.</p>
                         </div>
                         <div>
-                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Description <span class="font-normal normal-case text-gray-400">(max 160 chars)</span></label>
-                            <textarea name="home_meta_description" rows="3" class="input resize-none" maxlength="160">{{ old('home_meta_description', $s['home_meta_description'] ?? '') }}</textarea>
-                            <p class="text-[10px] text-gray-400 mt-1 font-bold">Recommended: 150–160 characters. Shown below the title in search results.</p>
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Description <span class="font-normal normal-case text-gray-400">(max 300 chars)</span></label>
+                            <textarea name="home_meta_description" rows="3" class="input resize-none" maxlength="300">{{ old('home_meta_description', $s['home_meta_description'] ?? '') }}</textarea>
+                            <p class="text-[10px] text-gray-400 mt-1 font-bold">Recommended: 150–300 characters. Shown below the title in search results.</p>
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Keywords <span class="font-normal normal-case text-gray-400">(comma-separated)</span></label>

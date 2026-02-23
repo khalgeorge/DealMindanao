@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -43,7 +44,7 @@ class CheckoutController extends Controller
         } while (Order::where('order_number', $orderNumber)->exists());
 
         $order = Order::create([
-            'user_id'          => auth()->id(),
+            'user_id'          => Auth::id(),
             'order_number'     => $orderNumber,
             'total'            => $total,
             'status'           => 'pending',
@@ -73,8 +74,8 @@ class CheckoutController extends Controller
             Mail::to($adminEmail)->send(new AdminNewOrderMail($order));
         }
 
-        if (auth()->user()?->email) {
-            Mail::to(auth()->user()->email)->send(new OrderConfirmationMail($order));
+        if (Auth::user()?->email) {
+            Mail::to(Auth::user()->email)->send(new OrderConfirmationMail($order));
         }
 
         return redirect()->route('checkout.success', $order)

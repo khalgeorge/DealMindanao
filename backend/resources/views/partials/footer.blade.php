@@ -11,7 +11,7 @@
           <img src="{{ asset('logo_main-final.png') }}" alt="DealMindanao Logo" class="h-20 w-auto">
         </a>
         <p class="text-sm text-gray-500 font-medium leading-relaxed max-w-xs">
-          DealMindanao is a curated marketplace connecting Mindanao buyers with verified local sellers. Orders are placed online and confirmed offline for secure payment and delivery coordination.
+          DealMindanao is a Mindanao-based online marketplace for hardware, food, and local products from verified regional sellers. Browse online, place your order, and pay offline via COD or GCash after confirmation.
         </p>
         <div class="flex gap-4">
           <div class="w-10 h-10 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center hover:bg-brand-600 transition-colors cursor-pointer">
@@ -62,7 +62,7 @@
             </div>
           </div>
           <p class="text-[10px] text-gray-500 leading-relaxed font-bold uppercase tracking-wider mt-6">
-            Supporting sustainable trade and ethical farming practices across the Davao, Bukidnon, and Zamboanga regions.
+            Proudly serving buyers across Davao, North &amp; South Cotabato, Bukidnon, Zamboanga, and all Mindanao regions.
           </p>
         </div>
       </div>

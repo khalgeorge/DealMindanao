@@ -85,7 +85,7 @@ class AboutPageController extends Controller
             'about_cta2_link'               => 'required|string|max:255',
             'about_image_upload'      => 'nullable|image|max:5120',
             'about_image_url'         => 'nullable|string|max:500',
-            'about_meta_title'        => 'nullable|string|max:70',
+            'about_meta_title'        => 'nullable|string|max:160',
             'about_meta_description'  => 'nullable|string|max:160',
             'about_meta_keywords'     => 'nullable|string|max:300',
             'about_canonical'         => 'nullable|string|max:300',
