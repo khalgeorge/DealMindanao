@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\CartController;
 use App\Http\Controllers\Web\CheckoutController;
 use App\Http\Controllers\Web\AccountController;
 use App\Http\Controllers\Web\PageController;
+use App\Http\Controllers\Web\ContactController;
 use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Web\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
@@ -57,6 +58,7 @@ Route::middleware('auth')->group(function () {
 // Static Pages
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/partner', [PageController::class, 'partner'])->name('partner');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');

@@ -34,6 +34,9 @@
     ]
 }
 </script>
+@if(config('services.recaptcha.site_key'))
+<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+@endif
 @endpush
 
 @section('content')
@@ -66,13 +69,14 @@
                         <div class="flex gap-6">
                             <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center shrink-0" aria-hidden="true">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 004 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
                             <div>
-                                <h4 class="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Davao Office</h4>
-                                <p class="text-gray-500 font-medium text-lg">{{ $s['contact_address'] }}</p>
+                                <h4 class="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Online Support (Mindanao-Wide)</h4>
+                                <p class="text-gray-500 font-medium">We currently operate online and coordinate directly with verified local sellers and delivery partners across Mindanao.</p>
+                                <p class="text-gray-500 font-medium mt-1">Support is available via email and chat.</p>
+                                <p class="text-gray-400 text-sm mt-2">Serving Davao, CDO, Zamboanga, Bukidnon, and nearby areas.</p>
                             </div>
                         </div>
                     </div>
@@ -89,35 +93,126 @@
 
                 {{-- Right: Form --}}
                 <div class="bg-gray-50 p-12 rounded-lg border border-gray-100 shadow-inner">
-                    <form method="POST" action="{{ url('/contact/send') }}" name="contact" class="space-y-6" novalidate>
+
+                    {{-- Success message --}}
+                    @if(session('success'))
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 font-medium text-sm" role="alert">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
+                    {{-- CAPTCHA error --}}
+                    @error('captcha')
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 font-medium text-sm" role="alert">
+                        {{ $message }}
+                    </div>
+                    @enderror
+
+                    <form method="POST" action="{{ url('/contact/send') }}" name="contact" id="contact-form" class="space-y-6" novalidate>
                         @csrf
+
+                        {{-- Row 1: Full Name + Subject --}}
                         <div class="grid grid-cols-2 gap-6">
                             <div>
-                                <label for="contact_name" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name</label>
+                                <label for="contact_name" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name <span class="text-red-400">*</span></label>
                                 <input type="text" id="contact_name" name="name" required autocomplete="name"
-                                       class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm"
-                                       placeholder="Juan Dela Cruz">
+                                       value="{{ old('name') }}"
+                                       class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm @error('name') !border-red-400 @enderror"
+                                       placeholder="Juan Dela Cruz"
+                                       aria-required="true"
+                                       aria-describedby="error-name">
+                                @error('name')
+                                <p id="error-name" class="mt-1 text-xs text-red-500 font-medium" role="alert">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
-                                <label for="contact_subject" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Subject</label>
+                                <label for="contact_subject" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Subject <span class="text-red-400">*</span></label>
                                 <select id="contact_subject" name="subject" required
-                                        class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm">
+                                        class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm @error('subject') !border-red-400 @enderror"
+                                        aria-required="true"
+                                        aria-describedby="error-subject">
                                     <option value="">Select a subject</option>
-                                    <option value="general">General Inquiry</option>
-                                    <option value="order_status">Order Status &amp; Confirmation</option>
-                                    <option value="payment_delivery">Payment &amp; Delivery Questions</option>
-                                    <option value="returns">Returns &amp; Refunds</option>
-                                    <option value="partner">Become a Partner</option>
-                                    <option value="report">Report an Issue</option>
+                                    <option value="general" {{ old('subject') === 'general' ? 'selected' : '' }}>General Inquiry</option>
+                                    <option value="order_status" {{ old('subject') === 'order_status' ? 'selected' : '' }}>Order Status &amp; Confirmation</option>
+                                    <option value="payment_delivery" {{ old('subject') === 'payment_delivery' ? 'selected' : '' }}>Payment &amp; Delivery Questions</option>
+                                    <option value="returns" {{ old('subject') === 'returns' ? 'selected' : '' }}>Returns &amp; Refunds</option>
+                                    <option value="partner" {{ old('subject') === 'partner' ? 'selected' : '' }}>Become a Partner</option>
+                                    <option value="report" {{ old('subject') === 'report' ? 'selected' : '' }}>Report an Issue</option>
                                 </select>
+                                @error('subject')
+                                <p id="error-subject" class="mt-1 text-xs text-red-500 font-medium" role="alert">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
-                        <div>
-                            <label for="contact_message" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Message</label>
-                            <textarea id="contact_message" name="message" required
-                                      class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm h-40"
-                                      placeholder="How can we help?"></textarea>
+
+                        {{-- Row 2: Email + Contact Number --}}
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label for="contact_email" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Email Address <span class="text-red-400">*</span></label>
+                                <input type="email" id="contact_email" name="email" required autocomplete="email"
+                                       value="{{ old('email') }}"
+                                       class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm @error('email') !border-red-400 @enderror"
+                                       placeholder="juan@email.com"
+                                       aria-required="true"
+                                       aria-describedby="error-email">
+                                @error('email')
+                                <p id="error-email" class="mt-1 text-xs text-red-500 font-medium" role="alert">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="contact_phone" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Contact Number <span class="text-gray-300 normal-case font-normal">(Optional)</span></label>
+                                <input type="tel" id="contact_phone" name="phone" autocomplete="tel"
+                                       value="{{ old('phone') }}"
+                                       class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm"
+                                       placeholder="09XXXXXXXXX">
+                            </div>
                         </div>
+
+                        {{-- Row 3: Message --}}
+                        <div>
+                            <label for="contact_message" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Message <span class="text-red-400">*</span></label>
+                            <textarea id="contact_message" name="message" required
+                                      class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm h-40 @error('message') !border-red-400 @enderror"
+                                      placeholder="How can we help?"
+                                      aria-required="true"
+                                      aria-describedby="error-message">{{ old('message') }}</textarea>
+                            @error('message')
+                            <p id="error-message" class="mt-1 text-xs text-red-500 font-medium" role="alert">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Data Privacy Consent (RA 10173 / DPA compliance) --}}
+                        <div class="p-5 bg-white rounded-lg border border-gray-100 shadow-sm" aria-label="Data privacy consent">
+                            <p class="text-xs text-gray-500 leading-relaxed mb-4">
+                                By submitting this form, you agree that DealMindanao may collect and process your personal information in accordance with the Data Privacy Act of 2012 (RA&nbsp;10173) and our <a href="{{ url('/privacy') }}" class="text-brand-600 hover:underline font-semibold">Privacy Policy</a>. Your information will only be used to respond to your inquiry and provide support.
+                            </p>
+                            <div class="flex items-start gap-3">
+                                <input type="checkbox" id="privacy_consent" name="privacy_consent" value="1" required
+                                       class="mt-0.5 w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 shrink-0"
+                                       aria-required="true"
+                                       aria-describedby="error-privacy"
+                                       {{ old('privacy_consent') ? 'checked' : '' }}>
+                                <label for="privacy_consent" class="text-sm text-gray-700 font-medium leading-snug cursor-pointer">
+                                    I agree to the <a href="{{ url('/privacy') }}" class="text-brand-600 hover:underline font-semibold">Data Privacy Policy</a> <span class="text-red-400">*</span>
+                                </label>
+                            </div>
+                            @error('privacy_consent')
+                            <p id="error-privacy" class="mt-2 text-xs text-red-500 font-medium" role="alert">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Hidden reCAPTCHA v3 token --}}
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
+                        {{-- reCAPTCHA branding (required by Google ToS when badge is hidden) --}}
+                        @if(config('services.recaptcha.site_key'))
+                        <p class="text-[10px] text-gray-400 text-center">
+                            Protected by reCAPTCHA &mdash;
+                            <a href="https://policies.google.com/privacy" class="underline hover:text-gray-600" target="_blank" rel="noopener noreferrer">Privacy</a> &amp;
+                            <a href="https://policies.google.com/terms" class="underline hover:text-gray-600" target="_blank" rel="noopener noreferrer">Terms</a> apply.
+                        </p>
+                        @endif
+
                         <button type="submit" class="btn-primary w-full py-5 rounded-lg font-black uppercase tracking-widest shadow-xl shadow-brand-100">
                             Send Message
                         </button>
@@ -128,3 +223,35 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+@if(config('services.recaptcha.site_key'))
+<script>
+grecaptcha.ready(function () {
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const form = this;
+        const btn  = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Verifying…';
+        grecaptcha.execute('{{ config("services.recaptcha.site_key") }}', { action: 'contact_submit' })
+            .then(function (token) {
+                document.getElementById('g-recaptcha-response').value = token;
+                form.submit();
+            })
+            .catch(function () {
+                btn.disabled = false;
+                btn.textContent = 'Send Message';
+            });
+    });
+});
+</script>
+@else
+<script>
+/* reCAPTCHA not configured — form submits directly (set RECAPTCHA_SITE_KEY in .env to enable) */
+document.getElementById('contact-form').addEventListener('submit', function () {
+    document.getElementById('g-recaptcha-response').value = 'dev-bypass';
+});
+</script>
+@endif
+@endpush
