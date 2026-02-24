@@ -23,6 +23,9 @@
       </button>
     </header>
 
+    <!-- Environment Banner (populated by JS after auth) -->
+    <div id="env-banner" class="hidden px-8 pt-4"></div>
+
     <div class="admin-content">
       <!-- Filters & Search -->
       <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -125,7 +128,7 @@
   </div>
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
-import { showToast } from '/src/js/utils.js';
+import { showToast, initEnvBanner } from '/src/js/utils.js';
 import { categories as categoriesAPI } from '/src/js/api.js';
 let allCats = [];
 let currentPage = 1;
@@ -342,6 +345,7 @@ window.closeCategoryModal();
 
 // Initial load
 loadCategories();
+initEnvBanner();
   </script>
 </body>
 </html>

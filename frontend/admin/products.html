@@ -18,12 +18,19 @@
         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Manage Store Inventory</p>
       </div>
       <div class="flex items-center gap-4">
+        <button id="bulk-delete-btn" onclick="bulkDeleteSelected()" class="hidden btn-danger flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          Delete Selected (<span id="selected-count">0</span>)
+        </button>
         <button onclick="openProductModal()" class="btn-primary flex items-center gap-2">
            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
            Add Product
         </button>
       </div>
     </header>
+
+    <!-- Environment Banner (populated by JS after auth) -->
+    <div id="env-banner" class="hidden px-8 pt-4"></div>
 
     <div class="admin-content">
       <!-- Filters & Search -->
@@ -42,10 +49,15 @@
                <option value="Drinks">Drinks</option>
             </select>
             <select id="filter-status" class="input py-2 text-xs font-bold uppercase tracking-wider">
-               <option value="">All Statuses</option>
-               <option value="Active">Active</option>
+               <option value="">All Stock</option>
+               <option value="Active">Active Stock</option>
                <option value="Low">Low Stock</option>
                <option value="Out">Out of Stock</option>
+            </select>
+            <select id="filter-publish" class="input py-2 text-xs font-bold uppercase tracking-wider">
+               <option value="">All Statuses</option>
+               <option value="published">Published</option>
+               <option value="draft">Draft</option>
             </select>
             <button onclick="resetFilters()" class="btn-secondary px-4 py-2 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 whitespace-nowrap">
                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -60,12 +72,14 @@
             <table class="data-table">
                <thead>
                   <tr>
+                     <th class="w-8 px-4"><input type="checkbox" id="select-all" class="rounded border-gray-300" title="Select all on this page"></th>
                      <th>Product</th>
                      <th>Category</th>
                      <th>Partner</th>
                      <th>Price</th>
                      <th>Stock</th>
-                     <th>Status</th>
+                     <th>Published</th>
+                     <th>Stock Status</th>
                      <th class="text-right">Actions</th>
                   </tr>
                </thead>
@@ -161,6 +175,15 @@
                     <div>
                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Stock Level</label>
                        <input type="number" name="stock" required placeholder="100" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                    </div>
+
+                    <div>
+                       <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Publish Status</label>
+                       <select name="status" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900">
+                          <option value="draft">Draft — Not visible on shop</option>
+                          <option value="published">Published — Live on shop</option>
+                       </select>
+                       <p class="mt-1 text-xs text-gray-400">New products are saved as Draft by default. At least 1 real image is required to publish.</p>
                     </div>
 
                     <div class="md:col-span-2">
@@ -268,6 +291,7 @@
        document.getElementById('product-search').value = '';
        document.getElementById('filter-category').value = '';
        document.getElementById('filter-status').value = '';
+       document.getElementById('filter-publish').value = '';
        if (window.currentPage !== undefined) {
          window.currentPage = 1;
        }
@@ -277,7 +301,7 @@
     };
   </script>
   <script type="module">
-    import { formatPrice, showToast } from '/src/js/utils.js';
+    import { formatPrice, showToast, initEnvBanner } from '/src/js/utils.js';
     import { products as productsAPI, categories, companies } from '/src/js/api.js';
 
     let allProducts = [];
@@ -296,8 +320,9 @@
           cat: p.category?.name || 'Uncategorized',
           partner: p.company?.name || 'Unknown',
           price: parseFloat(p.price),
-          stock: p.stock || 0,
-          status: (p.stock || 0) > 10 ? 'Active' : ((p.stock || 0) > 0 ? 'Low' : 'Out'),
+          stock: p.stock_quantity ?? p.stock ?? 0,
+          status: (p.stock_quantity ?? p.stock ?? 0) > 10 ? 'Active' : ((p.stock_quantity ?? p.stock ?? 0) > 0 ? 'Low' : 'Out'),
+          publishStatus: p.status || 'draft',
           description: p.description || '',
           slug: p.slug,
           images: p.images,
@@ -374,6 +399,7 @@
        form.elements['price'].value = p.price;
        form.elements['stock'].value = p.stock;
        form.elements['description'].value = p.description || '';
+       form.elements['status'].value = p.publishStatus || 'draft';
 
        // Populate image URLs
        const container = document.getElementById('image-inputs-container');
@@ -414,14 +440,81 @@
        document.getElementById('product-search').value = '';
        document.getElementById('filter-category').value = '';
        document.getElementById('filter-status').value = '';
+       document.getElementById('filter-publish').value = '';
        window.currentPage = 1;
        renderProducts();
     };
 
-    // Make functions globally available
-    window.renderProducts = renderProducts;
-    window.editProduct = editProduct;
-    window.deleteProduct = deleteProduct;
+    // ─── Bulk delete ─────────────────────────────────────────────────────────
+    window.updateBulkDeleteBtn = function() {
+       const checked = document.querySelectorAll('.row-checkbox:checked');
+       const btn = document.getElementById('bulk-delete-btn');
+       const countEl = document.getElementById('selected-count');
+       if (checked.length > 0) {
+          btn.classList.remove('hidden');
+          countEl.textContent = checked.length;
+       } else {
+          btn.classList.add('hidden');
+          countEl.textContent = '0';
+       }
+    };
+
+    window.bulkDeleteSelected = async function() {
+       const checked = Array.from(document.querySelectorAll('.row-checkbox:checked'));
+       if (checked.length === 0) return;
+
+       const ids = checked.map(cb => parseInt(cb.dataset.id));
+       const names = ids.map(id => {
+          const p = allProducts.find(p => p.id === id);
+          return p ? p.name : `ID ${id}`;
+       });
+
+       // Step 1: First confirmation
+       if (!confirm(`You are about to permanently delete ${ids.length} product(s):\n\n` +
+          names.map(n => `  \u2022 ${n}`).join('\n') +
+          `\n\nThis action CANNOT be undone. Click OK to proceed.`)) {
+          return;
+       }
+
+       // Step 2: Final confirmation
+       if (!confirm(`FINAL CONFIRMATION\n\nDelete ${ids.length} product(s) permanently?\n\nClick OK to delete now.`)) {
+          return;
+       }
+
+       let successCount = 0;
+       let failCount = 0;
+
+       for (const id of ids) {
+          try {
+             await productsAPI.delete(id);
+             successCount++;
+          } catch (err) {
+             const msg = err.response?.data?.message || `Failed to delete ID ${id}`;
+             console.error(msg);
+             failCount++;
+             showToast(msg, 'error');
+          }
+       }
+
+       if (successCount > 0) {
+          showToast(`Deleted ${successCount} product(s) successfully.`, 'success');
+       }
+       if (failCount > 0) {
+          showToast(`${failCount} product(s) could not be deleted (referenced by orders).`, 'warning');
+       }
+
+       document.getElementById('bulk-delete-btn').classList.add('hidden');
+       document.getElementById('selected-count').textContent = '0';
+       await loadProducts();
+    };
+
+    // ─── Select-all checkbox ─────────────────────────────────────────────────
+    document.getElementById('select-all').addEventListener('change', function() {
+       document.querySelectorAll('.row-checkbox').forEach(cb => {
+          cb.checked = this.checked;
+       });
+       updateBulkDeleteBtn();
+    });
 
     function renderProducts() {
        const body = document.getElementById('product-list-body');
@@ -434,13 +527,15 @@
        const search = document.getElementById('product-search').value.toLowerCase();
        const catFilter = document.getElementById('filter-category').value;
        const statusFilter = document.getElementById('filter-status').value;
+       const publishFilter = document.getElementById('filter-publish').value;
 
        // 1. Filter
        const filtered = allProducts.filter(p => {
           const matchesSearch = p.name.toLowerCase().includes(search) || p.partner.toLowerCase().includes(search);
           const matchesCat = !catFilter || p.cat === catFilter;
           const matchesStatus = !statusFilter || p.status === statusFilter;
-          return matchesSearch && matchesCat && matchesStatus;
+          const matchesPublish = !publishFilter || p.publishStatus === publishFilter;
+          return matchesSearch && matchesCat && matchesStatus && matchesPublish;
        });
 
        // 2. Paginate
@@ -454,7 +549,20 @@
 
        // 3. Update Table
        if (paginatedItems.length === 0) {
-          body.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400 font-bold italic">No products found matching filters</td></tr>`;
+          if (allProducts.length === 0) {
+             body.innerHTML = `<tr><td colspan="7" class="px-6 py-16 text-center">
+                <div class="flex flex-col items-center gap-3">
+                   <svg class="w-14 h-14 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                   </svg>
+                   <p class="text-gray-600 font-semibold text-lg">No products yet</p>
+                   <p class="text-gray-400 text-sm">Add your first product to start selling.</p>
+                   <button onclick="window.openProductModal()" class="btn-primary mt-2">+ Add First Product</button>
+                </div>
+             </td></tr>`;
+          } else {
+             body.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400 font-bold italic">No products found matching filters</td></tr>`;
+          }
        } else {
           body.innerHTML = paginatedItems.map(p => `
              <tr>
@@ -503,6 +611,10 @@
        window.currentPage = 1;
        renderProducts();
     });
+    document.getElementById('filter-publish').addEventListener('change', () => {
+       window.currentPage = 1;
+       renderProducts();
+    });
 
     // Pagination Listeners
     document.getElementById('rows-per-page')?.addEventListener('change', (e) => {
@@ -523,10 +635,12 @@
           const search = document.getElementById('product-search').value.toLowerCase();
           const catFilter = document.getElementById('filter-category').value;
           const statusFilter = document.getElementById('filter-status').value;
+          const publishFilter = document.getElementById('filter-publish').value;
           const matchesSearch = p.name.toLowerCase().includes(search) || p.partner.toLowerCase().includes(search);
           const matchesCat = !catFilter || p.cat === catFilter;
           const matchesStatus = !statusFilter || p.status === statusFilter;
-          return matchesSearch && matchesCat && matchesStatus;
+          const matchesPublish = !publishFilter || p.publishStatus === publishFilter;
+          return matchesSearch && matchesCat && matchesStatus && matchesPublish;
        }).length;
 
        if (window.currentPage < Math.ceil(filteredCount / itemsPerPage)) {
@@ -538,6 +652,12 @@
     // Load data on page load
     loadProducts();
     loadFormData();
+    initEnvBanner();
+
+    // Make functions globally available
+    window.renderProducts = renderProducts;
+    window.editProduct = editProduct;
+    window.deleteProduct = deleteProduct;
 
     document.getElementById('product-form').addEventListener('submit', async (e) => {
        e.preventDefault();
@@ -554,7 +674,8 @@
           price: parseFloat(formData.get('price')),
           stock_quantity: parseInt(formData.get('stock')) || 0,
           description: formData.get('description') || null,
-          images: collectImageUrls(), // Collect image URLs
+          images: collectImageUrls(),
+          status: formData.get('status') || 'draft',
        };
        
        // Validate required fields

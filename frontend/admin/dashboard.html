@@ -29,6 +29,9 @@
       </div>
     </header>
 
+    <!-- Environment Banner (populated by JS after auth) -->
+    <div id="env-banner" class="hidden px-8 pt-4"></div>
+
     <div class="admin-content">
       <!-- Welcome Header -->
       <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -162,54 +165,64 @@
 
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
-    import { formatPrice, showToast } from '/src/js/utils.js';
-    import { dashboard } from '/src/js/api.js';
+    import { formatPrice, showToast, initEnvBanner } from '/src/js/utils.js';
+    import { orders, companies, products } from '/src/js/api.js';
     
     // Load dashboard data
     async function loadDashboard() {
       try {
-        // Fetch statistics
-        const stats = await dashboard.getStatistics();
-        
+        // Fetch data in parallel
+        const [ordersRes, companiesRes, productsRes] = await Promise.allSettled([
+          orders.getAllOrders(),
+          companies.getAll(),
+          products.getAll(),
+        ]);
+
+        const allOrders   = ordersRes.status   === 'fulfilled' ? (ordersRes.value.data   ?? []) : [];
+        const allCompanies= companiesRes.status === 'fulfilled' ? (companiesRes.value.data ?? []) : [];
+        const allProducts = productsRes.status  === 'fulfilled' ? (productsRes.value.data  ?? []) : [];
+
+        // Derive statistics
+        const totalRevenue   = allOrders.reduce((sum, o) => sum + parseFloat(o.total_amount || 0), 0);
+        const totalOrders    = allOrders.length;
+        const activePartners = allCompanies.length;
+        const pendingOrders  = allOrders.filter(o => o.status === 'pending').length;
+        const today          = new Date().toDateString();
+        const ordersToday    = allOrders.filter(o => new Date(o.created_at).toDateString() === today).length;
+
         // Update statistics cards
-        document.getElementById('total-revenue').textContent = formatPrice(stats.total_revenue);
-        document.getElementById('total-orders').textContent = stats.total_orders;
-        document.getElementById('active-partners').textContent = stats.active_partners;
-        document.getElementById('pending-orders').textContent = stats.pending_orders;
-        document.getElementById('orders-today').textContent = `+${stats.orders_today}`;
-        
-        // Update revenue change
+        document.getElementById('total-revenue').textContent    = formatPrice(totalRevenue);
+        document.getElementById('total-orders').textContent     = totalOrders;
+        document.getElementById('active-partners').textContent  = activePartners;
+        document.getElementById('pending-orders').textContent   = pendingOrders;
+        document.getElementById('orders-today').textContent     = `+${ordersToday}`;
+
+        // Revenue change placeholder (no historical data yet)
         const revenueChangeEl = document.getElementById('revenue-change');
-        const change = stats.revenue_change_percent;
-        if (change >= 0) {
-          revenueChangeEl.textContent = `+${change}%`;
-          revenueChangeEl.className = 'text-green-600 font-bold';
+        revenueChangeEl.textContent = totalRevenue > 0 ? 'Live' : '—';
+        revenueChangeEl.className = 'text-gray-400 font-bold';
+
+        // Recent orders table
+        const tbody   = document.getElementById('recent-orders-tbody');
+        const recent  = allOrders.slice(0, 5);
+
+        if (recent.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">No orders yet</td></tr>';
         } else {
-          revenueChangeEl.textContent = `${change}%`;
-          revenueChangeEl.className = 'text-red-600 font-bold';
-        }
-        
-        // Fetch recent orders
-        const orders = await dashboard.getRecentOrders(5);
-        const tbody = document.getElementById('recent-orders-tbody');
-        
-        if (orders.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-400">No orders yet</td></tr>';
-        } else {
-          tbody.innerHTML = orders.map(order => {
+          tbody.innerHTML = recent.map(order => {
             const statusClass = {
-              'pending': 'badge-warning',
+              'pending':    'badge-warning',
               'processing': 'badge-info',
-              'shipped': 'badge-success',
-              'delivered': 'badge-success',
-              'cancelled': 'badge-danger'
+              'shipped':    'badge-success',
+              'delivered':  'badge-success',
+              'cancelled':  'badge-danger'
             }[order.status] || 'badge-secondary';
-            
+
             return `
               <tr>
-                <td>${order.order_number}</td>
-                <td class="font-bold text-gray-900">${order.customer_name}</td>
-                <td>${order.shipping_city}</td>
+                <td>#${order.id}</td>
+                <td class="font-bold text-gray-900">${order.customer_name ?? '—'}</td>
+                <td>${order.shipping_city ?? '—'}</td>
                 <td class="font-bold">${formatPrice(order.total_amount)}</td>
                 <td><span class="${statusClass}">${order.status}</span></td>
               </tr>
@@ -224,6 +237,7 @@
     
     // Load dashboard on page load
     loadDashboard();
+    initEnvBanner();
 
     // Download comprehensive dashboard report
     window.downloadReport = () => {

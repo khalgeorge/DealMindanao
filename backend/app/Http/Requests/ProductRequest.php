@@ -46,9 +46,42 @@ class ProductRequest extends FormRequest
             'category_id' => ['required', 'integer', 'exists:categories,id'],
             'company_id' => ['required', 'integer', 'exists:companies,id'],
             
-            'images' => ['nullable', 'array', 'max:10'],
-            'images.*' => ['string', 'max:500'],
+            'images' => [
+                // Require at least one image when explicitly publishing a product.
+                function ($attribute, $value, $fail) {
+                    if ($this->input('status') === 'published') {
+                        $images = is_array($value) ? array_filter($value) : [];
+                        // Also check uploaded_images for blade admin
+                        $uploaded = array_filter(explode(',', (string) $this->input('uploaded_images', '')));
+                        if (empty($images) && empty($uploaded)) {
+                            $fail('A product must have at least one image before it can be published.');
+                        }
+                    }
+                },
+                'nullable', 'array', 'max:10',
+            ],
+            'images.*' => [
+                'string',
+                'max:500',
+                function ($attribute, $value, $fail) {
+                    $placeholders = [
+                        'no-image-available',
+                        'placeholder',
+                        'no_image',
+                        'default-product',
+                        'no-image',
+                    ];
+                    foreach ($placeholders as $p) {
+                        if (stripos($value, $p) !== false) {
+                            $fail('Placeholder images are not allowed. Please upload a real product image.');
+                            break;
+                        }
+                    }
+                },
+            ],
             'uploaded_images' => ['nullable', 'string'],
+
+            'status' => ['nullable', Rule::in(['draft', 'published'])],
 
             'promo_label'     => ['nullable', 'string', 'max:60'],
             'promo_starts_at' => ['nullable', 'date'],
@@ -83,6 +116,7 @@ class ProductRequest extends FormRequest
             'promo_label'      => 'promo label',
             'promo_starts_at'  => 'promo start date',
             'promo_ends_at'    => 'promo end date',
+            'status'           => 'publish status',
         ];
     }
 
@@ -92,9 +126,10 @@ class ProductRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'slug.regex'  => 'The slug must be lowercase and contain only letters, numbers, and hyphens.',
-            'images.max'  => 'You can upload a maximum of 10 images per product.',
-            'discount.lt' => 'The discount must be less than the product price.',
+            'slug.regex'   => 'The slug must be lowercase and contain only letters, numbers, and hyphens.',
+            'images.max'   => 'You can upload a maximum of 10 images per product.',
+            'discount.lt'  => 'The discount must be less than the product price.',
+            'status.in'    => 'Product status must be either \'draft\' or \'published\'.',
         ];
     }
 

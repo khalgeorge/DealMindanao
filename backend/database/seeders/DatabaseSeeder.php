@@ -12,12 +12,18 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
+    use BlocksInProduction;
 
     /**
      * Seed the application's database.
+     *
+     * This seeder is for local/staging development ONLY.
+     * It is automatically blocked when APP_ENV=production.
      */
     public function run(): void
     {
+        if ($this->guardAgainstProduction()) return;
+
         // Create admin user
         User::create([
             'name' => 'Admin User',

@@ -7,8 +7,12 @@ use Illuminate\Database\Seeder;
 
 class RefundSectionSeeder extends Seeder
 {
+    use BlocksInProduction;
+
     public function run(): void
     {
+        if ($this->guardAgainstProduction()) return;
+
         RefundSection::truncate();
 
         $sections = [

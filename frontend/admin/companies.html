@@ -23,6 +23,9 @@
       </button>
     </header>
 
+    <!-- Environment Banner (populated by JS after auth) -->
+    <div id="env-banner" class="hidden px-8 pt-4"></div>
+
     <div class="admin-content">
        <!-- Search & Filter Area -->
        <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -251,7 +254,7 @@
 
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
-import { showToast } from '/src/js/utils.js';
+import { showToast, initEnvBanner } from '/src/js/utils.js';
 import { companies } from '/src/js/api.js';
 
 let currentSearch = '';
@@ -499,6 +502,7 @@ document.getElementById('partner-form').addEventListener('submit', async (e) => 
 
 // Initial load
 loadCompanies();
+initEnvBanner();
 </script>
 </body>
 </html>

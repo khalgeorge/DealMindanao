@@ -40,7 +40,11 @@ class ProductController extends Controller
         }
         
         if ($request->filled('status')) {
-            $query->where('is_active', $status === 'active');
+            if (in_array($status, ['draft', 'published'], true)) {
+                $query->where('status', $status);
+            } else {
+                $query->where('is_active', $status === 'active');
+            }
         }
         
         // Apply sorting
@@ -116,8 +120,16 @@ class ProductController extends Controller
         }
         
         $data['images'] = array_values(array_unique($images));
-        $data['is_active'] = $data['is_active'] ?? true;
+        $data['is_active'] = $data['is_active'] ?? false;
         $data['is_featured'] = $data['is_featured'] ?? false;
+
+        // Default new products to draft; admin must explicitly publish.
+        $data['status'] = $data['status'] ?? 'draft';
+
+        // Auto-activate when published
+        if ($data['status'] === 'published') {
+            $data['is_active'] = true;
+        }
 
         // Clear promo metadata when discount is absent or zero
         if (empty($data['discount']) || (float) $data['discount'] <= 0) {
@@ -175,6 +187,11 @@ class ProductController extends Controller
         
         $data['images'] = array_values(array_unique($images));
 
+        // Sync is_active with published status
+        if (isset($data['status']) && $data['status'] === 'published') {
+            $data['is_active'] = true;
+        }
+
         // Clear promo metadata when discount is absent or zero
         if (empty($data['discount']) || (float) $data['discount'] <= 0) {
             $data['promo_label']     = null;
@@ -183,7 +200,7 @@ class ProductController extends Controller
         }
 
         $product->update($data);
-        
+
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Product updated successfully!');

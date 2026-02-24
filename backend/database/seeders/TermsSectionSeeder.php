@@ -7,8 +7,12 @@ use Illuminate\Database\Seeder;
 
 class TermsSectionSeeder extends Seeder
 {
+    use BlocksInProduction;
+
     public function run(): void
     {
+        if ($this->guardAgainstProduction()) return;
+
         TermsSection::truncate();
 
         $sections = [

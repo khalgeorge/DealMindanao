@@ -23,6 +23,13 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        if (app()->environment('production')) {
+            throw new \RuntimeException(
+                'UserFactory cannot run in APP_ENV=production. ' .
+                'Factories are disabled in the production environment to prevent demo data creation.'
+            );
+        }
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),

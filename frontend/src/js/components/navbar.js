@@ -17,7 +17,63 @@ export function createNavbar(isAdmin = false) {
       </nav>
     `;
   }
-  
+
+  // ── Active-state helpers ─────────────────────────────────────────────────
+  // Normalise the path: strip trailing slash, treat /index.html as /
+  const raw = window.location.pathname.replace(/\/$/, '') || '/';
+  const path = raw === '/index.html' ? '/' : raw;
+
+  /**
+   * Returns true when `path` matches any of the given patterns.
+   * A pattern ending with /* matches the prefix (e.g. /product/* matches
+   * /product/any-slug). Exact patterns are compared literally.
+   * The most-specific rule wins because patterns are tested in order and
+   * each nav item owns its own non-overlapping pattern set.
+   */
+  function isActive(patterns) {
+    return patterns.some(p => {
+      if (p.endsWith('/*')) {
+        return path.startsWith(p.slice(0, -1)); // strip the *
+      }
+      return path === p;
+    });
+  }
+
+  // Desktop nav link — aria-current drives color via CSS rule in app.css
+  function dLink(href, label, patterns) {
+    const active = isActive(patterns);
+    const cls = active
+      ? 'text-sm font-medium transition-colors'
+      : 'text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors';
+    const aria = active ? ' aria-current="page"' : '';
+    return `<a href="${href}" class="${cls}"${aria}>${label}</a>`;
+  }
+
+  // Mobile nav link — aria-current drives color+bg via CSS rule in app.css
+  function mLink(href, label, patterns) {
+    const active = isActive(patterns);
+    const cls = active
+      ? 'block px-3 py-2 text-sm font-medium rounded-lg'
+      : 'block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg';
+    const aria = active ? ' aria-current="page"' : '';
+    return `<a href="${href}" class="${cls}"${aria}>${label}</a>`;
+  }
+
+  // Cart icon: active when on /cart.html
+  const cartActive = isActive(['/cart.html']);
+  const cartIconCls = cartActive
+    ? 'relative p-2 transition-colors'
+    : 'relative p-2 text-gray-700 hover:text-brand-600 transition-colors';
+  const cartAria = cartActive ? ' aria-current="page"' : '';
+
+  // Account icon: active on /account.html or any /account/* path
+  const accountActive = isActive(['/account.html', '/account/*']);
+  const accountIconCls = accountActive
+    ? 'hidden p-2 transition-colors'
+    : 'hidden p-2 text-gray-700 hover:text-brand-600 transition-colors';
+  const accountAria = accountActive ? ' aria-current="page"' : '';
+  // ────────────────────────────────────────────────────────────────────────
+
   return `
     <nav class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
       <div class="page-shell">
@@ -31,22 +87,22 @@ export function createNavbar(isAdmin = false) {
           
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center space-x-6">
-            <a href="/index.html" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors">Home</a>
-            <a href="/shop.html" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors">Shop</a>
-            <a href="/about.html" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors">About</a>
-            <a href="/partner.html" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors">Partner</a>
-            <a href="/help.html" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors">Help</a>
-            <a href="/contact.html" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors">Contact</a>
+            ${dLink('/index.html', 'Home',    ['/'])}
+            ${dLink('/shop.html',  'Shop',    ['/shop.html', '/product/*'])}
+            ${dLink('/about.html', 'About',   ['/about.html'])}
+            ${dLink('/partner.html','Partner',['/partner.html'])}
+            ${dLink('/help.html',  'Help',    ['/help.html'])}
+            ${dLink('/contact.html','Contact',['/contact.html'])}
           </div>
           
           <!-- Actions -->
           <div class="flex items-center space-x-3">
-            <a href="#" id="user-account-link" class="hidden p-2 text-gray-700 hover:text-brand-600 transition-colors">
+            <a href="#" id="user-account-link" class="${accountIconCls}"${accountAria}>
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
               </svg>
             </a>
-            <a href="/cart.html" class="relative p-2 text-gray-700 hover:text-brand-600 transition-colors">
+            <a href="/cart.html" class="${cartIconCls}"${cartAria}>
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
@@ -62,12 +118,12 @@ export function createNavbar(isAdmin = false) {
         
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
-          <a href="/index.html" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Home</a>
-          <a href="/shop.html" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Shop</a>
-          <a href="/about.html" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">About</a>
-          <a href="/partner.html" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Partner</a>
-          <a href="/help.html" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Help</a>
-          <a href="/contact.html" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 rounded-lg">Contact</a>
+          ${mLink('/index.html', 'Home',    ['/'])}
+          ${mLink('/shop.html',  'Shop',    ['/shop.html', '/product/*'])}
+          ${mLink('/about.html', 'About',   ['/about.html'])}
+          ${mLink('/partner.html','Partner',['/partner.html'])}
+          ${mLink('/help.html',  'Help',    ['/help.html'])}
+          ${mLink('/contact.html','Contact',['/contact.html'])}
         </div>
       </div>
     </nav>

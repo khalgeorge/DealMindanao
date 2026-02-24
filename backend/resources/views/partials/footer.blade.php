@@ -40,10 +40,18 @@
       <div class="lg:pl-10">
         <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-10">Company</h4>
         <ul class="space-y-4">
-          <li><a href="{{ route('about') }}" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">About Us</a></li>
-          <li><a href="{{ route('partner') }}" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Become a Partner</a></li>
-          <li><a href="{{ route('contact') }}" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Contact Support</a></li>
-          <li><a href="/help" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors">Help Center</a></li>
+          <li><a href="{{ route('about') }}" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+            <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> About Us
+          </a></li>
+          <li><a href="{{ route('partner') }}" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+            <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Become a Partner
+          </a></li>
+          <li><a href="{{ route('contact') }}" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+            <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Contact Support
+          </a></li>
+          <li><a href="{{ route('help') }}" class="text-sm font-bold text-gray-500 hover:text-brand-400 transition-colors flex items-center gap-2 group">
+            <span class="w-1.5 h-1.5 bg-gray-800 rounded-full group-hover:bg-brand-600 transition-colors"></span> Help Center
+          </a></li>
         </ul>
       </div>
 

@@ -20,6 +20,9 @@
       <button id="save-all-btn" class="btn-primary btn-sm">Save Changes</button>
     </header>
     
+    <!-- Environment Banner (populated by JS after auth) -->
+    <div id="env-banner" class="hidden px-8 pt-4"></div>
+
     <div class="admin-content">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Sidebar Navigation -->
@@ -373,7 +376,7 @@
 
   <script type="module" src="/src/js/layout.js"></script>
   <script type="module">
-    import { showToast } from '/src/js/utils.js';
+    import { showToast, initEnvBanner } from '/src/js/utils.js';
 
     window.switchTab = (tabId) => {
       // Hide all tabs
@@ -464,6 +467,9 @@
         }, 1500);
       }
     };
+
+    // Initialize environment banner
+    initEnvBanner();
   </script>
 </body>
 </html>

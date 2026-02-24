@@ -60,5 +60,13 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('products', ProductController::class)->except(['index', 'show']);
         Route::apiResource('categories', CategoryController::class)->except(['index']);
         Route::apiResource('companies', CompanyController::class)->except(['index']);
+
+        // System information (environment, production mode flag)
+        Route::get('/system/info', function () {
+            return response()->json([
+                'environment'  => app()->environment(),
+                'is_production' => app()->environment('production'),
+            ]);
+        });
     });
 });

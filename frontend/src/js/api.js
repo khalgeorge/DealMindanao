@@ -206,4 +206,12 @@ export const orders = {
   },
 };
 
+// System API (admin only)
+export const system = {
+  async getInfo() {
+    const response = await api.get('/system/info');
+    return response.data;
+  },
+};
+
 export default api;
