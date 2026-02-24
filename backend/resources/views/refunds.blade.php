@@ -3,7 +3,20 @@
 @section('meta_title', $s['rp_meta_title'] ?? 'Refund & Returns Policy – DealMindanao | Mindanao Marketplace')
 @section('meta_description', $s['rp_meta_description'] ?? 'Learn how to request a refund or return on DealMindanao. Understand our policy for COD and GCash orders from verified Mindanao sellers.')
 @section('meta_keywords', $s['rp_meta_keywords'] ?? 'DealMindanao refund policy, returns Mindanao, COD refund Philippines, GCash order return')
-@section('canonical', $s['rp_canonical'] ?: url('/refunds'))
+@section('canonical', $s['rp_canonical'] ?: 'https://dealmindanao.com/refunds')
+
+@push('styles')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@@type": "ListItem", "position": 1, "name": "Home", "item": "https://dealmindanao.com"},
+    {"@@type": "ListItem", "position": 2, "name": "Refund & Returns Policy", "item": "https://dealmindanao.com/refunds"}
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 <div class="py-24 bg-white">
@@ -43,6 +56,11 @@
                     @endif
                 </p>
             </div>
+            @endif
+
+            {{-- Last updated --}}
+            @if(!empty($s['rp_last_updated']))
+            <p class="mt-8 text-sm text-gray-500">Last updated: {{ $s['rp_last_updated'] }}</p>
             @endif
 
         </div>

@@ -8,22 +8,22 @@
     
         
     
-    <title>Privacy Policy | DealMindanao Philippines</title>
-    <meta name="description" content="Learn how DealMindanao collects, uses, and protects your personal data in compliance with Philippine data privacy laws.">
-    <meta name="keywords" content="privacy policy, data protection, DealMindanao">
-    <link rel="canonical" href="http://localhost:8000/privacy">
+    <title>Trust &amp; Safety | Verified Sellers on DealMindanao</title>
+    <meta name="description" content="Learn how DealMindanao verifies sellers, reviews orders manually, and protects customers from fraud.">
+    <meta name="keywords" content="trust and safety, secure shopping, DealMindanao">
+    <link rel="canonical" href="https://dealmindanao.com/trust-safety">
         
     
     <meta property="og:site_name" content="DealMindanao">
     <meta property="og:locale" content="en_PH">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Privacy Policy | DealMindanao Philippines">
-    <meta property="og:description" content="Learn how DealMindanao collects, uses, and protects your personal data in compliance with Philippine data privacy laws.">
+    <meta property="og:title" content="Trust &amp; Safety | Verified Sellers on DealMindanao">
+    <meta property="og:description" content="Learn how DealMindanao verifies sellers, reviews orders manually, and protects customers from fraud.">
     <meta property="og:image" content="https://dealmindanao.com/logo_main-final.png">
-    <meta property="og:url" content="http://localhost:8000/privacy">
+    <meta property="og:url" content="http://localhost:8000/trust-safety">
     
     
-    <link rel="icon" type="image/png" href="https://dealmindanao.com/favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png?v=1771476955">
 
     
     
@@ -60,7 +60,17 @@
 
     
         <link rel="preload" as="style" href="http://localhost:8000/build/assets/app-BrfNuSOQ.css" /><link rel="modulepreload" as="script" href="http://localhost:8000/build/assets/app-B3Ap9YUa.js" /><link rel="stylesheet" href="http://localhost:8000/build/assets/app-BrfNuSOQ.css" /><script type="module" src="http://localhost:8000/build/assets/app-B3Ap9YUa.js"></script>    
-    </head>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dealmindanao.com"},
+    {"@type": "ListItem", "position": 2, "name": "Trust & Safety", "item": "https://dealmindanao.com/trust-safety"}
+  ]
+}
+</script>
+</head>
 <body class="bg-gray-50">
     
     <nav class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
@@ -145,82 +155,94 @@
     
     
     <main>
-        <div class="py-24 bg-white">
+        <div class="py-24">
     <div class="container mx-auto px-6">
         <div class="max-w-4xl mx-auto">
 
             
-                        <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">Privacy Policy</h1>
-                        <p class="text-lg text-gray-600 mb-12">Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.</p>
+                        <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">Trust &amp; Safety</h1>
+                        <p class="text-lg text-gray-600 mb-12">Your security matters. We manually verify sellers and review every order before confirming payment and delivery.</p>
                         
             
-                        <div class="space-y-8">
+                        <div class="space-y-6">
                                 <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">1. Information We Collect</h2>
-                    <p class="text-gray-600 leading-relaxed mb-4">We collect only necessary personal data to process orders and arrange delivery:</p>
-<ul class="list-disc list-inside text-gray-600 space-y-2">
-<li>Name and contact information (phone number, email address)</li>
-<li>Delivery address</li>
-<li>Order details and purchase history</li>
-<li>Communication preferences</li>
-</ul>
+                    <div class="flex items-start gap-4">
+                                                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                                                <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">We Verify Product Listings</h3>
+                            <p class="text-gray-600 leading-relaxed">All products are reviewed by our team before listing. Sellers are verified before they can publish products, ensuring only trusted local businesses appear on DealMindanao.</p>
+                        </div>
+                    </div>
                 </div>
                                 <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">2. How We Use Your Information</h2>
-                    <p class="text-gray-600 leading-relaxed mb-4">Your personal information is used for the following purposes:</p>
-<ul class="list-disc list-inside text-gray-600 space-y-2">
-<li>Processing and confirming your orders</li>
-<li>Coordinating delivery with our partners</li>
-<li>Communicating order status updates</li>
-<li>Providing customer support</li>
-<li>Improving our services</li>
-</ul>
+                    <div class="flex items-start gap-4">
+                                                <div class="w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                                                <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">No Online Payments</h3>
+                            <p class="text-gray-600 leading-relaxed">We do not process online payments. All payment arrangements are coordinated offline after order confirmation, protecting you from online payment fraud. We never ask for card details on the website.</p>
+                        </div>
+                    </div>
                 </div>
                                 <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">3. Payment Information</h2>
-                    <p class="text-gray-600 leading-relaxed">We do not store payment information. All payment transactions are coordinated offline after order confirmation. We do not process or store credit card details or bank account information.</p>
+                    <div class="flex items-start gap-4">
+                                                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                        </div>
+                                                <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Manual Order Review</h3>
+                            <p class="text-gray-600 leading-relaxed">Every order is manually reviewed by our team to verify details and coordinate with sellers before confirming with you.</p>
+                        </div>
+                    </div>
                 </div>
                                 <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">4. Data Security</h2>
-                    <p class="text-gray-600 leading-relaxed">We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. Your data is handled securely and stored on protected servers.</p>
+                    <div class="flex items-start gap-4">
+                                                <div class="w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                                                <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Secure Handling of Customer Data</h3>
+                            <p class="text-gray-600 leading-relaxed">Your personal information is handled securely and used only for order processing and delivery coordination. We never sell your data to third parties.</p>
+                        </div>
+                    </div>
                 </div>
                                 <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">5. Sharing Your Information</h2>
-                    <p class="text-gray-600 leading-relaxed mb-4">We never sell your data to third parties. Your information may be shared only in the following circumstances:</p>
-<ul class="list-disc list-inside text-gray-600 space-y-2">
-<li>With delivery partners to fulfill your order</li>
-<li>With sellers to coordinate product preparation (name and contact only)</li>
-<li>When required by law or legal process</li>
-</ul>
-                </div>
-                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">6. Your Rights</h2>
-                    <p class="text-gray-600 leading-relaxed mb-4">You have the right to:</p>
-<ul class="list-disc list-inside text-gray-600 space-y-2">
-<li>Access your personal data we hold</li>
-<li>Request correction of inaccurate information</li>
-<li>Request deletion of your data (subject to legal obligations)</li>
-<li>Opt out of marketing communications</li>
-</ul>
-                </div>
-                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">7. Cookies and Tracking</h2>
-                    <p class="text-gray-600 leading-relaxed">We use cookies to enhance your browsing experience and remember your preferences. You can disable cookies in your browser settings, though this may affect site functionality.</p>
-                </div>
-                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">8. Changes to This Policy</h2>
-                    <p class="text-gray-600 leading-relaxed">We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new policy on this page with an updated revision date.</p>
+                    <div class="flex items-start gap-4">
+                                                <div class="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                                                <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Support Available for Disputes</h3>
+                            <p class="text-gray-600 leading-relaxed">If you encounter any issues with your order, our support team is available to help. If a dispute arises, our team will mediate between buyer and seller to reach a fair resolution.</p>
+                        </div>
+                    </div>
                 </div>
                             </div>
             
             
                         <div class="mt-12 p-6 bg-brand-50 border border-brand-200 rounded-lg">
-                <p class="text-sm text-gray-700">
-                    For questions about your privacy or to exercise your rights, please                     <a href="/contact" class="text-brand-600 font-semibold hover:underline">contact our support team</a>.                </p>
+                <p class="text-sm text-gray-700 mb-4">
+                    For questions about our trust and safety measures, please                     <a href="/contact" class="text-brand-600 font-semibold hover:underline">contact our support team</a>                     or explore our policies:                </p>
+                <div class="flex flex-wrap gap-4 text-sm">
+                                        <a href="/help" class="text-brand-600 hover:underline font-semibold">Help Center →</a>
+                                                            <a href="/privacy" class="text-brand-600 hover:underline font-semibold">Privacy Policy →</a>
+                                                            <a href="/refunds" class="text-brand-600 hover:underline font-semibold">Refund Policy →</a>
+                                                            <a href="/terms" class="text-brand-600 hover:underline font-semibold">Terms of Service →</a>
+                                    </div>
             </div>
-            
-            
-                        <p class="mt-8 text-sm text-gray-500">Last updated: February 14, 2026</p>
             
         </div>
     </div>

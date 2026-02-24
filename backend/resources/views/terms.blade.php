@@ -3,7 +3,20 @@
 @section('meta_title', $s['tos_meta_title'] ?? 'Terms of Service – DealMindanao | Marketplace Rules & Conditions')
 @section('meta_description', $s['tos_meta_description'] ?? 'Review the DealMindanao Terms of Service. Learn the rules for placing orders, our offline payment flow via COD or GCash, and using our Mindanao marketplace.')
 @section('meta_keywords', $s['tos_meta_keywords'] ?? 'DealMindanao terms of service, Mindanao marketplace conditions, online ordering rules Philippines')
-@section('canonical', $s['tos_canonical'] ?: url('/terms'))
+@section('canonical', $s['tos_canonical'] ?: 'https://dealmindanao.com/terms')
+
+@push('styles')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@@type": "ListItem", "position": 1, "name": "Home", "item": "https://dealmindanao.com"},
+    {"@@type": "ListItem", "position": 2, "name": "Terms of Service", "item": "https://dealmindanao.com/terms"}
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 <div class="py-24 bg-white">
