@@ -4,6 +4,7 @@
 @section('meta_description', $s['ts_meta_description'] ?? 'Discover how DealMindanao keeps you safe. All sellers are verified, orders are reviewed manually, and payment is only collected offline after our team confirms your request.')
 @section('meta_keywords', $s['ts_meta_keywords'] ?? 'DealMindanao trust safety, safe shopping Mindanao, verified sellers Philippines, offline payment COD')
 @section('canonical', $s['ts_canonical'] ?: 'https://dealmindanao.com/trust-safety')
+@section('og_url', 'https://dealmindanao.com/trust-safety')
 
 @push('styles')
 <script type="application/ld+json">

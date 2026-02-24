@@ -18,6 +18,7 @@
         $metaImage       = $hed(trim($__env->yieldContent('meta_image', '')) ?: 'https://dealmindanao.com/logo_main-final.png');
         $metaCanonical   = $hed(trim($__env->yieldContent('canonical', '')) ?: request()->url());
         $metaRobots      = $hed(trim($__env->yieldContent('meta_robots', '')));
+        $metaOgUrl       = $hed(trim($__env->yieldContent('og_url', '')) ?: url()->current());
     @endphp
     
     {{-- SEO Meta Tags --}}
@@ -36,7 +37,7 @@
     <meta property="og:title" content="{{ $metaTitle }}">
     <meta property="og:description" content="{{ $metaDescription }}">
     <meta property="og:image" content="{{ $metaImage }}">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:url" content="{{ $metaOgUrl }}">
     
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="/favicon.png?v={{ file_exists(public_path('favicon.png')) ? filemtime(public_path('favicon.png')) : '0' }}">
