@@ -6,13 +6,18 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     @php
+        // Laravel 12: @section('name', $value) calls e() internally, so we
+        // must html_entity_decode before re-escaping with {{ }} to avoid
+        // double-encoding (e.g. "Trust &amp;amp; Safety").
+        $hed = fn(string $v) => html_entity_decode($v, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
         $defaultTitle = config('app.name', 'DealMindanao') . ' - Authentic Products from Mindanao';
-        $metaTitle       = trim($__env->yieldContent('meta_title', $defaultTitle));
-        $metaDescription = trim($__env->yieldContent('meta_description', 'Discover authentic products from Mindanao - handcrafted items, local delicacies, and unique treasures from Filipino artisans.'));
-        $metaKeywords    = trim($__env->yieldContent('meta_keywords', 'Mindanao products, Philippine handicrafts, local delicacies, artisan products'));
-        $metaImage       = trim($__env->yieldContent('meta_image', '')) ?: 'https://dealmindanao.com/logo_main-final.png';
-        $metaCanonical   = trim($__env->yieldContent('canonical', '')) ?: request()->url();
-        $metaRobots      = trim($__env->yieldContent('meta_robots', ''));
+        $metaTitle       = $hed(trim($__env->yieldContent('meta_title', $defaultTitle)));
+        $metaDescription = $hed(trim($__env->yieldContent('meta_description', 'Discover authentic products from Mindanao - handcrafted items, local delicacies, and unique treasures from Filipino artisans.')));
+        $metaKeywords    = $hed(trim($__env->yieldContent('meta_keywords', 'Mindanao products, Philippine handicrafts, local delicacies, artisan products')));
+        $metaImage       = $hed(trim($__env->yieldContent('meta_image', '')) ?: 'https://dealmindanao.com/logo_main-final.png');
+        $metaCanonical   = $hed(trim($__env->yieldContent('canonical', '')) ?: request()->url());
+        $metaRobots      = $hed(trim($__env->yieldContent('meta_robots', '')));
     @endphp
     
     {{-- SEO Meta Tags --}}
@@ -66,33 +71,6 @@
             "query-input": "required name=search_term_string"
         }
     }
-    </script>
-    @endverbatim
-
-    @verbatim
-    <script type="application/ld+json">
-        {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-            "@type": "Question",
-            "name": "How does payment work?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "After placing your order, our team will contact you to arrange offline payment such as COD, bank transfer, or GCash."
-            }
-            },
-            {
-            "@type": "Question",
-            "name": "How long does delivery take?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Delivery typically takes 3–7 business days within Mindanao."
-            }
-            }
-        ]
-        }
     </script>
     @endverbatim
 

@@ -2,6 +2,9 @@
 
 @section('meta_title', 'Your Cart | DealMindanao')
 @section('meta_description', 'No payment is required at checkout. Our team will contact you to confirm your order, payment method, and delivery details.')
+@section('meta_keywords', 'Mindanao online shopping cart, DealMindanao cart, Mindanao marketplace checkout, local sellers Mindanao cart')
+@section('meta_robots', 'noindex, nofollow')
+@section('canonical', 'https://dealmindanao.com/cart')
 
 @section('content')
 <div class="page-shell py-12">
@@ -27,7 +30,8 @@
       {{-- Cart Items Column --}}
       <div class="lg:col-span-2 space-y-6">
         <div class="flex items-center justify-between mb-2">
-          <h1 class="text-3xl font-black text-gray-900">Your Cart</h1>
+          <h1 class="text-3xl font-black text-gray-900">Your Cart – Review Your Mindanao Orders</h1>
+          <p class="sr-only">Review your selected products from verified Mindanao sellers before checkout. No online payment required — our team will contact you to confirm your order, delivery, and payment method.</p>
           <span class="text-sm font-bold text-gray-400 uppercase tracking-widest"><span id="items-count-badge">0</span> Items</span>
         </div>
 
@@ -42,7 +46,7 @@
           </div>
           <h2 class="text-xl font-bold text-gray-900">Your cart is empty</h2>
           <p class="text-gray-500 mt-2 mb-8">Explore verified Mindanao deals and add items to get started.</p>
-          <a href="/shop" class="btn-primary">Explore Mindanao Deals</a>
+          <a href="/shop" class="btn-primary">Explore Local Deals in Mindanao</a>
         </div>
       </div>
 
@@ -74,7 +78,7 @@
           <div class="mt-6 flex flex-col gap-4">
             <div class="flex items-center justify-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-              Order Online · Pay Offline After Confirmation
+              Order Online · Pay Offline After Confirmation by Our Team
             </div>
           </div>
         </div>
@@ -86,6 +90,26 @@
 @endsection
 
 @push('styles')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dealmindanao.com"
+    },
+    {
+      "@@type": "ListItem",
+      "position": 2,
+      "name": "Cart",
+      "item": "https://dealmindanao.com/cart"
+    }
+  ]
+}
+</script>
 <style>
   /* Scoped: hide summary on mobile by default; always show on desktop */
   #cart-summary { display: none; }
@@ -164,7 +188,7 @@
       return `
         <div class="bg-white p-4 sm:p-6 rounded-lg border border-gray-100 flex gap-4 sm:gap-6 hover:shadow-md transition-shadow">
           <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-gray-50 shrink-0">
-            <img src="${productImage}" alt="${item.name}" class="w-full h-full object-cover">
+            <img src="${productImage}" alt="${item.name} from Mindanao seller ${item.company || 'Local Partner'}" class="w-full h-full object-cover">
           </div>
           <div class="flex-1 flex flex-col justify-between">
             <div>
@@ -217,6 +241,28 @@
     loadCart();
   };
 
+  // ─── Reorder flash: merge server-side items into localStorage cart ──────────
+  @if(session('reorder_items'))
+  (function () {
+    const reorderItems = @json(session('reorder_items'));
+    const existing = JSON.parse(localStorage.getItem('cart') || '[]');
+    reorderItems.forEach(function (newItem) {
+      const found = existing.find(function (c) { return c.id == newItem.id; });
+      if (found) {
+        found.quantity += newItem.quantity;
+      } else {
+        existing.push(newItem);
+      }
+    });
+    localStorage.setItem('cart', JSON.stringify(existing));
+    window.dispatchEvent(new Event('cart-updated'));
+  })();
+  @endif
+
   loadCart();
+
+  @if(session('reorder_skipped'))
+  showToast('Some items could not be added because they\'re currently unavailable.', 'info');
+  @endif
 </script>
 @endpush

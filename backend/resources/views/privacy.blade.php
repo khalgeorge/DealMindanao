@@ -3,7 +3,20 @@
 @section('meta_title', $s['pp_meta_title'] ?? 'Privacy Policy – DealMindanao | How We Protect Your Data')
 @section('meta_description', $s['pp_meta_description'] ?? 'Read the DealMindanao Privacy Policy to understand how your personal information is collected, used, and protected when you place orders on our Mindanao marketplace.')
 @section('meta_keywords', $s['pp_meta_keywords'] ?? 'DealMindanao privacy policy, data protection Philippines, personal information Mindanao marketplace')
-@section('canonical', $s['pp_canonical'] ?: url('/privacy'))
+@section('canonical', $s['pp_canonical'] ?: 'https://dealmindanao.com/privacy')
+
+@push('styles')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@@type": "ListItem", "position": 1, "name": "Home", "item": "https://dealmindanao.com"},
+    {"@@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": "https://dealmindanao.com/privacy"}
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 <div class="py-24 bg-white">

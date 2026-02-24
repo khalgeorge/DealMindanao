@@ -3,7 +3,34 @@
 @section('meta_title', $s['help_meta_title'] ?? 'Help Center & FAQ – DealMindanao | Orders, Payment & Delivery')
 @section('meta_description', $s['help_meta_description'] ?? 'Find answers about placing orders, offline payment via COD or GCash, regional delivery in Mindanao, and how to request a refund on DealMindanao.')
 @section('meta_keywords', $s['help_meta_keywords'] ?? 'DealMindanao FAQ, how to order Mindanao, COD delivery Philippines, GCash payment Mindanao')
-@section('canonical', $s['help_canonical'] ?: url('/help'))
+@section('canonical', $s['help_canonical'] ?: 'https://dealmindanao.com/help')
+
+@push('styles')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@@type": "Question",
+      "name": "How does payment work?",
+      "acceptedAnswer": {
+        "@@type": "Answer",
+        "text": "After placing your order, our team will contact you to arrange offline payment such as COD, bank transfer, or GCash."
+      }
+    },
+    {
+      "@@type": "Question",
+      "name": "How long does delivery take?",
+      "acceptedAnswer": {
+        "@@type": "Answer",
+        "text": "Delivery typically takes 3\u20137 business days within Mindanao."
+      }
+    }
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 <div class="py-24">

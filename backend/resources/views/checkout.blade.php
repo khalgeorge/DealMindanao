@@ -55,14 +55,20 @@
             <span class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 text-sm">1</span>
             Delivery Information
           </h2>
+          @if($defaultAddress)
+          <p class="text-xs text-blue-600 font-medium mb-6 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            We’ve filled this in from your saved address. You can edit it if needed.
+          </p>
+          @endif
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name</label>
-              <input type="text" name="shipping_name" required placeholder="Juan Dela Cruz" class="input" value="{{ old('shipping_name') }}">
+              <input type="text" name="shipping_name" required placeholder="Juan Dela Cruz" class="input" value="{{ old('shipping_name', $defaultAddress?->full_name) }}">
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number</label>
-              <input type="tel" name="shipping_phone" required placeholder="09XX XXX XXXX" class="input" value="{{ old('shipping_phone') }}">
+              <input type="tel" name="shipping_phone" required placeholder="09XX XXX XXXX" class="input" value="{{ old('shipping_phone', $defaultAddress?->phone) }}">
             </div>
             <div class="md:col-span-2">
               <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email Address</label>
@@ -71,7 +77,7 @@
             </div>
             <div class="md:col-span-2">
               <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Complete Address</label>
-              <textarea name="shipping_address" required rows="3" placeholder="House #, Street, Barangay, City/Municipality, Province" class="input">{{ old('shipping_address') }}</textarea>
+              <textarea name="shipping_address" required rows="3" placeholder="House #, Street, Barangay, City/Municipality, Province" class="input">{{ old('shipping_address', $defaultAddress?->full_address) }}</textarea>
               <p class="mt-2 text-xs text-brand-600 font-medium">Currently serving all Mindanao regions.</p>
             </div>
           </div>

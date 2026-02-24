@@ -53,6 +53,14 @@ Route::middleware('auth')->group(function () {
 // User Account (requires authentication)
 Route::middleware('auth')->group(function () {
     Route::get('/account', [AccountController::class, 'index'])->name('account');
+    Route::post('/account/profile',  [AccountController::class, 'updateProfile'])->name('account.profile.update');
+    Route::post('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+    Route::post('/account/addresses',                        [AccountController::class, 'storeAddress'])->name('account.addresses.store');
+    Route::put('/account/addresses/{address}',               [AccountController::class, 'updateAddress'])->name('account.addresses.update');
+    Route::delete('/account/addresses/{address}',            [AccountController::class, 'destroyAddress'])->name('account.addresses.destroy');
+    Route::post('/account/addresses/{address}/set-default',  [AccountController::class, 'setDefaultAddress'])->name('account.addresses.setDefault');
+    Route::post('/account/orders/{order}/reorder',           [AccountController::class, 'reorder'])->name('account.orders.reorder');
+    Route::post('/account/orders/{order}/cancel',            [AccountController::class, 'cancelOrder'])->name('account.orders.cancel');
 });
 
 // Static Pages

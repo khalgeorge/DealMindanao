@@ -17,7 +17,11 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        return view('checkout');
+        $defaultAddress = \App\Models\Address::where('user_id', Auth::id())
+            ->where('is_default', true)
+            ->first();
+
+        return view('checkout', compact('defaultAddress'));
     }
     
     public function store(CheckoutRequest $request)

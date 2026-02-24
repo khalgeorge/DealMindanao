@@ -4,26 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="mGtFlpfU87ZiuEcC4Am8okpErPaGyUJJNGrvwi97">
+    <meta name="csrf-token" content="5UPq5E3Zr2v68lDnBHcktqBkZ5sBXX541VbiIoIc">
     
         
     
-    <title>Contact DealMindanao | Customer Support in Mindanao</title>
-    <meta name="description" content="Need help with your order? Contact DealMindanao support. We respond within 1 business day.">
-    <meta name="keywords" content="contact DealMindanao, customer support, Davao City">
-    <link rel="canonical" href="http://localhost:8000/contact">
+    <title>Privacy Policy | DealMindanao Philippines</title>
+    <meta name="description" content="Learn how DealMindanao collects, uses, and protects your personal data in compliance with Philippine data privacy laws.">
+    <meta name="keywords" content="privacy policy, data protection, DealMindanao">
+    <link rel="canonical" href="http://localhost:8000/privacy">
         
     
     <meta property="og:site_name" content="DealMindanao">
     <meta property="og:locale" content="en_PH">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Contact DealMindanao | Customer Support in Mindanao">
-    <meta property="og:description" content="Need help with your order? Contact DealMindanao support. We respond within 1 business day.">
+    <meta property="og:title" content="Privacy Policy | DealMindanao Philippines">
+    <meta property="og:description" content="Learn how DealMindanao collects, uses, and protects your personal data in compliance with Philippine data privacy laws.">
     <meta property="og:image" content="https://dealmindanao.com/logo_main-final.png">
-    <meta property="og:url" content="http://localhost:8000/contact">
+    <meta property="og:url" content="http://localhost:8000/privacy">
     
     
-    <link rel="icon" type="image/png" href="/favicon.png?v=1771476955">
+    <link rel="icon" type="image/png" href="https://dealmindanao.com/favicon.png">
 
     
     
@@ -59,63 +59,8 @@
     
 
     
-    <script type="application/ld+json">
-        {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-            "@type": "Question",
-            "name": "How does payment work?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "After placing your order, our team will contact you to arrange offline payment such as COD, bank transfer, or GCash."
-            }
-            },
-            {
-            "@type": "Question",
-            "name": "How long does delivery take?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Delivery typically takes 3–7 business days within Mindanao."
-            }
-            }
-        ]
-        }
-    </script>
-    
-
-    
         <link rel="preload" as="style" href="http://localhost:8000/build/assets/app-BrfNuSOQ.css" /><link rel="modulepreload" as="script" href="http://localhost:8000/build/assets/app-B3Ap9YUa.js" /><link rel="stylesheet" href="http://localhost:8000/build/assets/app-BrfNuSOQ.css" /><script type="module" src="http://localhost:8000/build/assets/app-B3Ap9YUa.js"></script>    
-    <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "DealMindanao",
-    "url": "https://dealmindanao.com",
-    "logo": "https://dealmindanao.com/logo_main-final.png",
-    "image": "https://dealmindanao.com/logo_main-final.png",
-    "description": "Need help with your order? Contact DealMindanao support. We respond within 1 business day.",
-    "email": "hello@dealmindanao.com",
-    "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Poblacion District, Davao City, 8000",
-        "addressLocality": "Davao City",
-        "addressRegion": "Davao del Sur",
-        "addressCountry": "PH"
-    },
-    "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer support",
-        "email": "hello@dealmindanao.com",
-        "availableLanguage": ["English", "Filipino"]
-    },
-    "sameAs": [
-        "https://www.facebook.com/dealmindanao"
-    ]
-}
-</script>
-</head>
+    </head>
 <body class="bg-gray-50">
     
     <nav class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
@@ -145,7 +90,7 @@
                   <a href="/help" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors ">
             Help
           </a>
-                  <a href="/contact" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors text-brand-600">
+                  <a href="/contact" class="text-sm font-medium text-gray-700 hover:text-brand-600 transition-colors ">
             Contact
           </a>
               </div>
@@ -200,93 +145,86 @@
     
     
     <main>
-            <div class="container mx-auto px-6 py-20">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid lg:grid-cols-2 gap-20">
+        <div class="py-24 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
 
-                
-                <div>
-                                        <span class="text-brand-600 font-black uppercase tracking-[0.2em] text-[10px]">Contact Support</span>
-                                        <h1 class="text-5xl font-black text-gray-900 mt-4 mb-8">
-                        We&#039;re here to <span class="text-brand-600">help</span>
-                    </h1>
-                    <p class="text-lg text-gray-600 font-medium leading-relaxed mb-12">Need help with your order or want to partner with us? Our support team is ready to assist you.</p>
-
-                    <div class="space-y-10">
-                        <div class="flex gap-6">
-                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center shrink-0" aria-hidden="true">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Email Support</h4>
-                                <p class="text-gray-500 font-medium text-lg">hello@dealmindanao.com</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-6">
-                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-lg flex items-center justify-center shrink-0" aria-hidden="true">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Davao Office</h4>
-                                <p class="text-gray-500 font-medium text-lg">Poblacion District, Davao City, 8000</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-12 p-6 bg-brand-50 rounded-lg border border-brand-200">
-                        <h3 class="font-bold text-gray-900 mb-3 text-sm">Quick Links</h3>
-                        <div class="flex flex-wrap gap-3 text-sm">
-                            <a href="http://localhost:8000/help" class="text-brand-600 hover:underline font-semibold">Help Center &rarr;</a>
-                            <a href="http://localhost:8000/trust-safety" class="text-brand-600 hover:underline font-semibold">Trust &amp; Safety &rarr;</a>
-                            <a href="http://localhost:8000/refunds" class="text-brand-600 hover:underline font-semibold">Refunds &amp; Returns &rarr;</a>
-                        </div>
-                    </div>
+            
+                        <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">Privacy Policy</h1>
+                        <p class="text-lg text-gray-600 mb-12">Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.</p>
+                        
+            
+                        <div class="space-y-8">
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">1. Information We Collect</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">We collect only necessary personal data to process orders and arrange delivery:</p>
+<ul class="list-disc list-inside text-gray-600 space-y-2">
+<li>Name and contact information (phone number, email address)</li>
+<li>Delivery address</li>
+<li>Order details and purchase history</li>
+<li>Communication preferences</li>
+</ul>
                 </div>
-
-                
-                <div class="bg-gray-50 p-12 rounded-lg border border-gray-100 shadow-inner">
-                    <form method="POST" action="http://localhost:8000/contact/send" name="contact" class="space-y-6" novalidate>
-                        <input type="hidden" name="_token" value="mGtFlpfU87ZiuEcC4Am8okpErPaGyUJJNGrvwi97" autocomplete="off">                        <div class="grid grid-cols-2 gap-6">
-                            <div>
-                                <label for="contact_name" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name</label>
-                                <input type="text" id="contact_name" name="name" required autocomplete="name"
-                                       class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm"
-                                       placeholder="Juan Dela Cruz">
-                            </div>
-                            <div>
-                                <label for="contact_subject" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Subject</label>
-                                <select id="contact_subject" name="subject" required
-                                        class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm">
-                                    <option value="">Select a subject</option>
-                                    <option value="general">General Inquiry</option>
-                                    <option value="order_status">Order Status &amp; Confirmation</option>
-                                    <option value="payment_delivery">Payment &amp; Delivery Questions</option>
-                                    <option value="returns">Returns &amp; Refunds</option>
-                                    <option value="partner">Become a Partner</option>
-                                    <option value="report">Report an Issue</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="contact_message" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Message</label>
-                            <textarea id="contact_message" name="message" required
-                                      class="input w-full py-4 rounded-lg border-transparent bg-white shadow-sm h-40"
-                                      placeholder="How can we help?"></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary w-full py-5 rounded-lg font-black uppercase tracking-widest shadow-xl shadow-brand-100">
-                            Send Message
-                        </button>
-                    </form>
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">2. How We Use Your Information</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">Your personal information is used for the following purposes:</p>
+<ul class="list-disc list-inside text-gray-600 space-y-2">
+<li>Processing and confirming your orders</li>
+<li>Coordinating delivery with our partners</li>
+<li>Communicating order status updates</li>
+<li>Providing customer support</li>
+<li>Improving our services</li>
+</ul>
                 </div>
-
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">3. Payment Information</h2>
+                    <p class="text-gray-600 leading-relaxed">We do not store payment information. All payment transactions are coordinated offline after order confirmation. We do not process or store credit card details or bank account information.</p>
+                </div>
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">4. Data Security</h2>
+                    <p class="text-gray-600 leading-relaxed">We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. Your data is handled securely and stored on protected servers.</p>
+                </div>
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">5. Sharing Your Information</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">We never sell your data to third parties. Your information may be shared only in the following circumstances:</p>
+<ul class="list-disc list-inside text-gray-600 space-y-2">
+<li>With delivery partners to fulfill your order</li>
+<li>With sellers to coordinate product preparation (name and contact only)</li>
+<li>When required by law or legal process</li>
+</ul>
+                </div>
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">6. Your Rights</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">You have the right to:</p>
+<ul class="list-disc list-inside text-gray-600 space-y-2">
+<li>Access your personal data we hold</li>
+<li>Request correction of inaccurate information</li>
+<li>Request deletion of your data (subject to legal obligations)</li>
+<li>Opt out of marketing communications</li>
+</ul>
+                </div>
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">7. Cookies and Tracking</h2>
+                    <p class="text-gray-600 leading-relaxed">We use cookies to enhance your browsing experience and remember your preferences. You can disable cookies in your browser settings, though this may affect site functionality.</p>
+                </div>
+                                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">8. Changes to This Policy</h2>
+                    <p class="text-gray-600 leading-relaxed">We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new policy on this page with an updated revision date.</p>
+                </div>
+                            </div>
+            
+            
+                        <div class="mt-12 p-6 bg-brand-50 border border-brand-200 rounded-lg">
+                <p class="text-sm text-gray-700">
+                    For questions about your privacy or to exercise your rights, please                     <a href="/contact" class="text-brand-600 font-semibold hover:underline">contact our support team</a>.                </p>
             </div>
+            
+            
+                        <p class="mt-8 text-sm text-gray-500">Last updated: February 14, 2026</p>
+            
         </div>
     </div>
+</div>
     </main>
     
     
