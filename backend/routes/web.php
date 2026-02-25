@@ -207,9 +207,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 });
 
 // Admin Login (separate from user login)
+// No 'guest' middleware here — middleware('guest') uses RedirectIfAuthenticated
+// which redirects ALL authenticated users to route('home'), bouncing admin users
+// away from their own login page. We handle the auth check explicitly instead.
 Route::get('/admin/login', function () {
+    // Already authenticated as admin → send to dashboard
+    if (Auth::check() && Auth::user()->is_admin) {
+        return redirect()->route('admin.dashboard');
+    }
     return view('admin.login');
-})->name('admin.login')->middleware('guest');
+})->name('admin.login');
 
 Route::post('/admin/login', function (\Illuminate\Http\Request $request) {
     $credentials = $request->validate([

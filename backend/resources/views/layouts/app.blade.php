@@ -95,6 +95,20 @@
     {{-- Toast Notifications Container --}}
     <div id="toast-container" class="fixed top-24 right-4 z-50 space-y-2"></div>
     
+    {{-- Messenger Chat (public pages only; no-op unless APP_ENV=production) --}}
+    @include('partials.messenger-chat')
+
+    {{-- Session-expired flash message (fires showToast defined in app.js) --}}
+    @if(session('warning'))
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof window.showToast === 'function') {
+            window.showToast(@json(session('warning')), 'error');
+        }
+    });
+    </script>
+    @endif
+
     @stack('scripts')
 </body>
 </html>

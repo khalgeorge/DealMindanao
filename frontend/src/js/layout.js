@@ -6,6 +6,7 @@
 import { createNavbar, initNavbar } from './components/navbar.js';
 import { createFooter } from './components/footer.js';
 import { createAdminSidebar, checkAuth, initLogout } from './components/admin-sidebar.js';
+import { initMessengerChat } from './components/messenger-chat.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const navbarContainer = document.getElementById('navbar');
@@ -46,7 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 3. Global UI Accessibility Adjustments
+  // 3. Messenger Chat (public pages only — admin excluded)
+  if (!isAdminPage) {
+    initMessengerChat();
+  }
+
+  // 4. Global UI Accessibility Adjustments
   // Ensure images have alt tags if missing for basic a11y
   document.querySelectorAll('img').forEach(img => {
     if (!img.alt) img.alt = 'DealMindanao Asset';

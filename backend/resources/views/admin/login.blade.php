@@ -32,6 +32,12 @@
                 </div>
             @endif
 
+            @if (session('warning'))
+                <div class="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg text-sm font-bold">
+                    {{ session('warning') }}
+                </div>
+            @endif
+
             @if (session('status'))
                 <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-bold">
                     {{ session('status') }}

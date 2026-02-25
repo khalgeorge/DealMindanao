@@ -15,12 +15,16 @@ class CategoryController extends Controller
         
         // Get all categories for client-side pagination
         $allCategories = $query->latest()->get();
-        
+
+        // $perPage must be at least 1 — LengthAwarePaginator divides by it
+        // and throws DivisionByZeroError when the collection is empty.
+        $perPage = max(1, $allCategories->count());
+
         // Create a mock paginator for Blade compatibility
         $categories = new \Illuminate\Pagination\LengthAwarePaginator(
             $allCategories,
             $allCategories->count(),
-            $allCategories->count(),
+            $perPage,
             1,
             ['path' => $request->url()]
         );
