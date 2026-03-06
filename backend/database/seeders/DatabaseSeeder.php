@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Company;
+use App\Models\Supplier;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -63,12 +63,10 @@ class DatabaseSeeder extends Seeder
             'slug' => 'handicrafts',
         ]);
 
-        // Create a company
-        $company = Company::create([
-            'name' => 'DealMindanao Marketplace',
-            'city' => 'Davao City',
-            'contact_email' => 'contact@dealmindanao.ph',
-            'contact_phone' => '+63 XXX XXX XXXX',
+        // Create a demo supplier
+        $supplier = Supplier::create([
+            'name'      => 'DealMindanao Marketplace',
+            'is_active' => true,
         ]);
 
         // Create products
@@ -79,7 +77,7 @@ class DatabaseSeeder extends Seeder
             'price' => 450.00,
             'discount' => 45.00,
             'category_id' => $food->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/coffee.jpg'],
             'is_active' => true,
             'is_featured' => true,
@@ -92,7 +90,7 @@ class DatabaseSeeder extends Seeder
             'price' => 350.00,
             'discount' => 0,
             'category_id' => $food->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/durian.jpg'],
             'is_active' => true,
             'is_featured' => true,
@@ -105,7 +103,7 @@ class DatabaseSeeder extends Seeder
             'price' => 850.00,
             'discount' => 127.50,
             'category_id' => $crafts->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/woven-bag.jpg'],
             'is_active' => true,
             'is_featured' => false,
@@ -118,7 +116,7 @@ class DatabaseSeeder extends Seeder
             'price' => 1200.00,
             'discount' => 240.00,
             'category_id' => $fashion->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/mandaya-shirt.jpg'],
             'is_active' => true,
             'is_featured' => true,
@@ -131,7 +129,7 @@ class DatabaseSeeder extends Seeder
             'price' => 250.00,
             'discount' => 0,
             'category_id' => $food->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/pomelo.jpg'],
             'is_active' => true,
             'is_featured' => false,
@@ -144,7 +142,7 @@ class DatabaseSeeder extends Seeder
             'price' => 680.00,
             'discount' => 34.00,
             'category_id' => $crafts->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/malong.jpg'],
             'is_active' => true,
             'is_featured' => true,
@@ -157,7 +155,7 @@ class DatabaseSeeder extends Seeder
             'price' => 180.00,
             'discount' => 0,
             'category_id' => $food->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/banana-chips.jpg'],
             'is_active' => true,
             'is_featured' => false,
@@ -170,7 +168,7 @@ class DatabaseSeeder extends Seeder
             'price' => 950.00,
             'discount' => 95.00,
             'category_id' => $crafts->id,
-            'company_id' => $company->id,
+            'supplier_id' => $supplier->id,
             'images' => ['/products/brass.jpg'],
             'is_active' => true,
             'is_featured' => false,

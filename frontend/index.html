@@ -481,8 +481,8 @@
             
             return `
              <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-brand-200 transition-all duration-300 hover:shadow-xl">
-                <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
-                   <img src="${imageUrl}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800'">
+                <div class="h-56 bg-white p-3 overflow-hidden relative flex-shrink-0">
+                   <img src="${imageUrl}" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800'">
                    
                    ${discount > 0 ? `
                    <div class="absolute top-4 right-4">
@@ -504,8 +504,8 @@
                       </a>
                    </div>
                 </div>
-                
-                <div class="p-5">
+                <div class="border-t border-gray-200"></div>
+                <div class="px-6 pt-4 pb-8">
                    ${p.company?.name ? `
                    <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">
                       ${p.company.name}
@@ -577,8 +577,8 @@
             
             return `
              <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-brand-200 transition-all duration-300 hover:shadow-xl">
-                <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
-                   <img src="${p.images[0]}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}">
+                <div class="h-56 bg-white p-3 overflow-hidden relative flex-shrink-0">
+                   <img src="${p.images[0]}" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" alt="${p.name}">
                    
                    ${discount > 0 ? `
                    <div class="absolute top-4 right-4">
@@ -599,8 +599,8 @@
                       </a>
                    </div>
                 </div>
-                
-                <div class="p-5">
+                <div class="border-t border-gray-200"></div>
+                <div class="px-6 pt-4 pb-8">
                    <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">
                       ${p.company.name}
                    </p>

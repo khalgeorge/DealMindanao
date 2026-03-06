@@ -144,7 +144,9 @@
 
 /* Product Card */
 @utility product-card {
-  @apply bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200;
+  @apply bg-white rounded-xl border border-gray-100 overflow-hidden
+         shadow-sm hover:shadow-xl hover:border-brand-200
+         transition-all duration-300;
 }
 
 /* Forms */

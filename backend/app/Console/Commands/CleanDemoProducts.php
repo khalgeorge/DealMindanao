@@ -42,7 +42,7 @@ class CleanDemoProducts extends Command
         $protectedIds = \App\Models\OrderItem::pluck('product_id')->unique()->values()->toArray();
 
         $this->line('  Scanning products…');
-        $products = Product::with('company')->get();
+        $products = Product::with('supplier')->get();
 
         $demoProducts      = [];
         $protectedDemo     = [];
@@ -68,7 +68,7 @@ class CleanDemoProducts extends Command
         if (! empty($protectedDemo)) {
             $this->warn('  ⚠  The following demo products have ORDER references and will NOT be deleted:');
             foreach ($protectedDemo as $p) {
-                $this->line("     [ID {$p->id}] {$p->name}  (company: {$p->company?->name})");
+                $this->line("     [ID {$p->id}] {$p->name}  (supplier: {$p->supplier?->name})");
             }
             $this->line('');
         }
@@ -91,7 +91,7 @@ class CleanDemoProducts extends Command
             $this->warn('  ⚠  The following products look like manual test entries (review manually):');
             foreach ($suspectProducts as $p) {
                 $inOrders = in_array($p->id, $protectedIds, true) ? ' [HAS ORDERS - protected]' : '';
-                $this->line("     [ID {$p->id}] {$p->name}  (company: {$p->company?->name}){$inOrders}");
+                $this->line("     [ID {$p->id}] {$p->name}  (supplier: {$p->supplier?->name}){$inOrders}");
             }
             $this->line('');
             $this->line('  Run  php artisan products:clean-demo  again and enter their IDs to delete manually,');

@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Company;
+use App\Models\Supplier;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,12 +15,12 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'company']);
+        $query = Product::with(['category', 'supplier']);
         
         // Capture filter values
         $search = $request->get('search', '');
         $categoryId = $request->get('category', '');
-        $companyId = $request->get('company', '');
+        $supplierId = $request->get('supplier', '');
         $status = $request->get('status', '');
         $sort = $request->get('sort', 'latest');
         
@@ -35,8 +36,8 @@ class ProductController extends Controller
             $query->where('category_id', $categoryId);
         }
         
-        if ($request->filled('company')) {
-            $query->where('company_id', $companyId);
+        if ($request->filled('supplier')) {
+            $query->where('supplier_id', $supplierId);
         }
         
         if ($request->filled('status')) {
@@ -53,27 +54,29 @@ class ProductController extends Controller
                 $query->orderBy('name', 'asc');
                 break;
             case 'price_asc':
-                $query->orderBy('price', 'asc');
+                $query->orderBy('srp', 'asc');
                 break;
             case 'price_desc':
-                $query->orderBy('price', 'desc');
+                $query->orderBy('srp', 'desc');
                 break;
             default:
                 $query->latest();
                 break;
         }
         
-        $products = $query->paginate(15);
+        $products   = $query->paginate(15);
         $categories = Category::orderBy('name')->get();
-        $companies = Company::orderBy('name')->get();
-        
+        $suppliers  = Supplier::where('is_active', true)->orderBy('name')->get();
+        $brands     = Brand::where('is_active', true)->orderBy('name')->get();
+
         return view('admin.products.index', compact(
-            'products', 
-            'categories', 
-            'companies',
+            'products',
+            'categories',
+            'suppliers',
+            'brands',
             'search',
             'categoryId',
-            'companyId',
+            'supplierId',
             'status',
             'sort'
         ));
@@ -81,10 +84,11 @@ class ProductController extends Controller
     
     public function create()
     {
-        $categories = Category::where('is_active', true)->orderBy('name')->get();
-        $companies = Company::where('is_active', true)->orderBy('name')->get();
-        
-        return view('admin.products.create', compact('categories', 'companies'));
+        $categories = Category::orderBy('name')->get();
+        $suppliers  = Supplier::where('is_active', true)->orderBy('name')->get();
+        $brands     = Brand::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.products.create', compact('categories', 'suppliers', 'brands'));
     }
     
     public function store(ProductRequest $request)
@@ -148,9 +152,10 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::orderBy('name')->get();
-        $companies = Company::orderBy('name')->get();
-        
-        return view('admin.products.edit', compact('product', 'categories', 'companies'));
+        $suppliers  = Supplier::where('is_active', true)->orderBy('name')->get();
+        $brands     = Brand::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.products.edit', compact('product', 'categories', 'suppliers', 'brands'));
     }
     
     public function update(ProductRequest $request, Product $product)

@@ -70,7 +70,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
         </div>
       </div>
-      <p class="text-3xl font-black text-gray-900 leading-none">{{ $stats['total_companies'] ?? 0 }}</p>
+      <p class="text-3xl font-black text-gray-900 leading-none">{{ $stats['total_suppliers'] ?? 0 }}</p>
       <div class="mt-4 flex items-center gap-1.5 text-xs">
         <span class="text-gray-400 font-medium">Marketplace Vendors</span>
       </div>
@@ -159,10 +159,10 @@
            <div class="flex items-center gap-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
               <div class="w-10 h-10 rounded-lg bg-white border border-blue-100 flex items-center justify-center text-blue-600 font-bold shadow-sm">P</div>
               <div class="flex-1">
-                 <p class="text-sm font-bold text-blue-900">Partner Companies</p>
-                 <p class="text-xs text-blue-700">{{ $stats['total_companies'] ?? 0 }} active vendors on the marketplace.</p>
+                 <p class="text-sm font-bold text-blue-900">Partners</p>
+                 <p class="text-xs text-blue-700">{{ $stats['total_suppliers'] ?? 0 }} active vendors on the marketplace.</p>
               </div>
-              <a href="{{ route('admin.companies.index') }}" class="btn-primary btn-sm px-4">Manage</a>
+              <a href="{{ route('admin.suppliers.index') }}" class="btn-primary btn-sm px-4">Manage</a>
            </div>
         </div>
      </div>

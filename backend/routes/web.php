@@ -13,7 +13,8 @@ use App\Http\Controllers\Web\Admin\DashboardController as AdminDashboardControll
 use App\Http\Controllers\Web\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Web\Admin\CompanyController as AdminCompanyController;
+use App\Http\Controllers\Web\Admin\SupplierController as AdminSupplierController;
+use App\Http\Controllers\Web\Admin\BrandController as AdminBrandController;
 use App\Http\Controllers\Web\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Web\Admin\HomePageController as AdminHomePageController;
 use App\Http\Controllers\Web\Admin\AboutPageController as AdminAboutPageController;
@@ -114,14 +115,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
     Route::post('/categories/{category}/toggle-status', [AdminCategoryController::class, 'toggleStatus'])->name('categories.toggleStatus');
     
-    // Companies
-    Route::get('/companies', [AdminCompanyController::class, 'index'])->name('companies.index');
-    Route::get('/companies/create', [AdminCompanyController::class, 'create'])->name('companies.create');
-    Route::post('/companies', [AdminCompanyController::class, 'store'])->name('companies.store');
-    Route::get('/companies/{company}/edit', [AdminCompanyController::class, 'edit'])->name('companies.edit');
-    Route::put('/companies/{company}', [AdminCompanyController::class, 'update'])->name('companies.update');
-    Route::delete('/companies/{company}', [AdminCompanyController::class, 'destroy'])->name('companies.destroy');
-    Route::post('/companies/{company}/toggle-status', [AdminCompanyController::class, 'toggleStatus'])->name('companies.toggleStatus');
+
+    // Suppliers (partner sellers on DealMindanao)
+    Route::get('/suppliers', [AdminSupplierController::class, 'index'])->name('suppliers.index');
+    Route::get('/suppliers/create', [AdminSupplierController::class, 'create'])->name('suppliers.create');
+    Route::post('/suppliers', [AdminSupplierController::class, 'store'])->name('suppliers.store');
+    Route::get('/suppliers/{supplier}/edit', [AdminSupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::put('/suppliers/{supplier}', [AdminSupplierController::class, 'update'])->name('suppliers.update');
+    Route::delete('/suppliers/{supplier}', [AdminSupplierController::class, 'destroy'])->name('suppliers.destroy');
+    Route::post('/suppliers/{supplier}/toggle-status', [AdminSupplierController::class, 'toggleStatus'])->name('suppliers.toggleStatus');
+
+    // Brands
+    Route::get('/brands', [AdminBrandController::class, 'index'])->name('brands.index');
+    Route::get('/brands/create', [AdminBrandController::class, 'create'])->name('brands.create');
+    Route::post('/brands', [AdminBrandController::class, 'store'])->name('brands.store');
+    Route::get('/brands/{brand}/edit', [AdminBrandController::class, 'edit'])->name('brands.edit');
+    Route::put('/brands/{brand}', [AdminBrandController::class, 'update'])->name('brands.update');
+    Route::delete('/brands/{brand}', [AdminBrandController::class, 'destroy'])->name('brands.destroy');
+    Route::post('/brands/{brand}/toggle-status', [AdminBrandController::class, 'toggleStatus'])->name('brands.toggleStatus');
 
     // About Page Editor
     Route::get('/about-page', [AdminAboutPageController::class, 'index'])->name('about_page.index');

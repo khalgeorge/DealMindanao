@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * One-time pre-launch catalog reset.
  *
- * Deletes ALL development data (products, categories, companies, orders)
+ * Deletes ALL development data (products, categories, suppliers, orders)
  * while preserving user accounts and CMS content.
  *
  * Usage:
@@ -27,21 +27,21 @@ class ResetForProduction extends Command
                             {--dry-run : Show counts only, make NO changes (default behaviour)}
                             {--force  : Actually execute the reset (requires CONFIRM_PROD_RESET=true)}';
 
-    protected $description = 'One-time pre-launch reset: deletes all dev products/categories/companies/orders. Preserves users and CMS content.';
+    protected $description = 'One-time pre-launch reset: deletes all dev products/categories/suppliers/orders. Preserves users and CMS content.';
 
     // ── Tables cleared completely ──────────────────────────────────────────────
     // Deletion order must respect FK constraints:
     //   order_items → orders (and → products)
-    //   products    → categories, companies
+    //   products    → categories, suppliers
     //   addresses   → (users, kept) safe to clear dev addresses
     //   sessions    → no FK, dev sessions only
     private const RESET_TABLES = [
         'order_items',  // FK → orders, products
         'orders',       // FK → users  (users are NOT deleted)
         'addresses',    // FK → users  (users are NOT deleted)
-        'products',     // FK → categories, companies
+        'products',     // FK -> categories, suppliers
         'categories',
-        'companies',
+        'suppliers',
         'deals',        // independent, currently empty
         'sessions',     // PHP/browser sessions, no FK
     ];
@@ -49,7 +49,7 @@ class ResetForProduction extends Command
     // ── Tables whose AUTO_INCREMENT is reset to 1 after clearing ──────────────
     private const RESET_AI_TABLES = [
         'order_items', 'orders', 'addresses',
-        'products', 'categories', 'companies', 'deals', 'sessions',
+        'products', 'categories', 'suppliers', 'deals', 'sessions',
     ];
 
     // ── Storage directories whose files are wiped (relative to storage/app/public) ──

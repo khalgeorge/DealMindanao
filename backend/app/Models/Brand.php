@@ -3,26 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Company extends Model
+class Brand extends Model
 {
     protected $fillable = [
         'name',
-        'city',
-        'province',
-        'contact_email',
-        'contact_phone',
-        'messenger_link',
-        'logo',
         'description',
-        'is_active'
+        'website',
+        'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
     ];
 
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }

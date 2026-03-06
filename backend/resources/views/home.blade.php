@@ -121,8 +121,8 @@
                 $imageUrl = product_image_url($product->images ?? []);
             @endphp
             <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-brand-200 transition-all duration-300 hover:shadow-xl">
-                <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
-                    <img src="{{ $imageUrl }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $product->name }}" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                <div class="h-56 bg-white p-3 overflow-hidden relative">
+                    <img src="{{ $imageUrl }}" class="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105" alt="{{ $product->name }}" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                     @if($discountPercent > 0)
                     <div class="absolute top-4 right-4"><span class="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg">-{{ $discountPercent }}%</span></div>
                     @endif
@@ -133,9 +133,10 @@
                         <a href="{{ route('product.show', $product->slug) }}" class="px-6 py-3 bg-white text-gray-900 font-black text-sm uppercase tracking-wider rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">Quick View</a>
                     </div>
                 </div>
-                <div class="p-5">
-                    @if($product->company?->name)
-                    <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">{{ $product->company->name }}</p>
+                <div class="border-t border-gray-200"></div>
+                <div class="px-6 pt-4 pb-8">
+                    @if($product->supplier)
+                    <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">{{ $product->supplier->region ?: 'Mindanao' }}</p>
                     @endif
                     <h3 class="font-black text-gray-900 text-lg mb-3 leading-tight min-h-[56px]">{{ $product->name }}</h3>
                     <div class="flex items-center gap-2 mb-4">

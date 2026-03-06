@@ -14,7 +14,7 @@ class HomeController extends Controller
     public function index()
     {
         // Featured products (dynamic, from products table)
-        $featuredProducts = Product::with(['category', 'company'])
+        $featuredProducts = Product::with(['category', 'supplier', 'brand'])
             ->where('is_featured', true)
             ->where('is_active', true)
             ->take(8)

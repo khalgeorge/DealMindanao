@@ -17,7 +17,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::query()->with(['category', 'company']);
+        $query = Product::query()->with(['category', 'supplier', 'brand']);
 
         // ─── Visibility filter ────────────────────────────────────────────────
         $user    = auth('api')->user();
@@ -33,9 +33,9 @@ class ProductController extends Controller
             $query->where('category_id', $request->category);
         }
 
-        // Filter by company
-        if ($request->has('company')) {
-            $query->where('company_id', $request->company);
+        // Filter by supplier
+        if ($request->has('supplier')) {
+            $query->where('supplier_id', $request->supplier);
         }
 
         // Search by name
@@ -43,13 +43,13 @@ class ProductController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        // Filter by price range
+        // Filter by price range (uses srp — the customer-facing selling price)
         if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+            $query->where('srp', '>=', $request->min_price);
         }
 
         if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+            $query->where('srp', '<=', $request->max_price);
         }
 
         // Filter discounted only
@@ -92,7 +92,7 @@ class ProductController extends Controller
             return response()->json(['message' => 'Product not found.'], 404);
         }
 
-        $product->load(['category', 'company']);
+        $product->load(['category', 'supplier', 'brand']);
 
         return response()->json($product);
     }
@@ -131,7 +131,7 @@ class ProductController extends Controller
         unset($data['uploaded_images']);
 
         $product = Product::create($data);
-        $product->load(['category', 'company']);
+        $product->load(['category', 'supplier']);
 
         return response()->json($product, 201);
     }
@@ -171,7 +171,7 @@ class ProductController extends Controller
         unset($data['uploaded_images']);
 
         $product->update($data);
-        $product->load(['category', 'company']);
+        $product->load(['category', 'supplier']);
 
         return response()->json($product);
     }

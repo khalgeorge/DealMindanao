@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +34,8 @@ Route::get('/products/{product}', [ProductController::class, 'show']);
 // Public category routes
 Route::get('/categories', [CategoryController::class, 'index']);
 
-// Public company routes
-Route::get('/companies', [CompanyController::class, 'index']);
+// Public supplier routes
+Route::get('/suppliers', [SupplierController::class, 'index']);
 
 // Protected routes
 Route::middleware('auth:api')->group(function () {
@@ -59,7 +59,7 @@ Route::middleware('auth:api')->group(function () {
         // Product and category management
         Route::apiResource('products', ProductController::class)->except(['index', 'show']);
         Route::apiResource('categories', CategoryController::class)->except(['index']);
-        Route::apiResource('companies', CompanyController::class)->except(['index']);
+        Route::apiResource('suppliers', SupplierController::class)->except(['index']);
 
         // System information (environment, production mode flag)
         Route::get('/system/info', function () {

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Company;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -18,7 +18,7 @@ class DashboardController extends Controller
             'pending_orders' => Order::where('status', 'pending')->count(),
             'total_products' => Product::count(),
             'total_categories' => Category::count(),
-            'total_companies' => Company::count(),
+            'total_suppliers' => Supplier::where('is_active', true)->count(),
             'total_revenue' => Order::where('status', '!=', 'cancelled')->sum('total'),
         ];
         

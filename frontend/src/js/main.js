@@ -60,23 +60,33 @@ function createProductCard(product) {
     : 0;
 
   return `
-    <a href="/product.html?id=${product.id}" class="card group hover:shadow-lg transition-shadow">
-      <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4 relative">
-        ${product.image_url 
-          ? `<img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">`
+    <a href="/product.html?id=${product.id}" class="product-card group flex flex-col">
+
+      <!-- Image section -->
+      <div class="relative h-56 bg-white p-3 overflow-hidden rounded-t-xl flex-shrink-0">
+        ${product.image_url
+          ? `<img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">`
           : `<div class="w-full h-full flex items-center justify-center text-gray-400">
               <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
               </svg>
             </div>`
         }
-        ${hasDiscount ? `<span class="absolute top-2 right-2 badge-danger">${discountPercent}% OFF</span>` : ''}
+        ${hasDiscount ? `<span class="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow">${discountPercent}% OFF</span>` : ''}
       </div>
-      <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">${product.name}</h3>
-      <div class="flex items-center gap-2">
-        <span class="text-lg font-bold text-brand-600">${formatPrice(hasDiscount ? product.sale_price : product.price)}</span>
-        ${hasDiscount ? `<span class="text-sm text-gray-500 line-through">${formatPrice(product.price)}</span>` : ''}
+
+      <!-- Image / Content separator -->
+      <div class="border-t border-gray-200"></div>
+
+      <!-- Content section -->
+      <div class="px-6 pt-4 pb-8 flex-1 flex flex-col gap-3">
+        <h3 class="text-sm font-bold text-gray-900 line-clamp-2 leading-snug">${product.name}</h3>
+        <div class="flex items-center gap-2 mt-auto">
+          <span class="text-lg font-black text-brand-600">${formatPrice(hasDiscount ? product.sale_price : product.price)}</span>
+          ${hasDiscount ? `<span class="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>` : ''}
+        </div>
       </div>
+
     </a>
   `;
 }

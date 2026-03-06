@@ -80,6 +80,13 @@
                     {{ $product->category->name }}
                 </span>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight mb-2">{{ $product->name }}</h1>
+                @if($product->model_code || $product->variant)
+                <p class="text-sm text-gray-500 font-medium">
+                    @if($product->model_code)Model: <span class="font-semibold text-gray-700">{{ $product->model_code }}</span>@endif
+                    @if($product->model_code && $product->variant) &bull; @endif
+                    @if($product->variant)Variant: <span class="font-semibold text-gray-700">{{ $product->variant }}</span>@endif
+                </p>
+                @endif
             </div>
 
             <!-- Price Section -->
@@ -90,7 +97,7 @@
                 </div>
                 @endif
                 <div class="flex items-center gap-4">
-                    <span class="text-4xl font-black text-brand-600">₱{{ number_format($finalPrice, 2) }}</span>
+                    <span id="display-price" class="text-4xl font-black text-brand-600">₱{{ number_format($finalPrice, 2) }}</span>
                     @if($isOnPromo)
                     <div class="flex flex-col">
                         <span class="text-lg text-gray-400 line-through decoration-brand-200">₱{{ number_format($product->price, 2) }}</span>
@@ -98,7 +105,31 @@
                     </div>
                     @endif
                 </div>
-                
+
+                @if(!empty($product->variants['attribute']) && !empty($product->variants['options']))
+                <!-- Variant Selector -->
+                <div class="mt-5 pt-5 border-t border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-3">
+                        {{ $product->variants['attribute'] }}
+                    </p>
+                    <div class="flex flex-wrap gap-2" id="variant-options">
+                        @foreach($product->variants['options'] as $i => $option)
+                        <button type="button"
+                                class="variant-btn px-4 py-2 rounded-lg border text-sm font-semibold transition-all
+                                       {{ $i === 0 ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-gray-200 bg-white text-gray-700 hover:border-brand-400' }}"
+                                data-price="{{ $option['price'] }}"
+                                data-stock="{{ $option['stock'] }}"
+                                data-label="{{ $option['label'] }}">
+                            {{ $option['label'] }}
+                            @if(isset($option['stock']) && $option['stock'] < 1)
+                                <span class="ml-1 text-[10px] text-red-400">(Out of stock)</span>
+                            @endif
+                        </button>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
                 <div class="mt-4 pt-4 border-t border-gray-50 flex items-center gap-2 text-gray-500 text-sm italic">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -108,12 +139,63 @@
             </div>
 
             <!-- Description -->
-            <div class="mb-10">
+            <div class="mb-8">
                 <h3 class="font-bold text-gray-900 mb-4 text-lg">About this deal</h3>
                 <div class="text-gray-600 leading-relaxed text-lg prose">
                     {{ $product->description ?? 'No description available.' }}
                 </div>
             </div>
+
+            <!-- Product Details -->
+            @php
+                $specs = array_filter([
+                    'Brand'       => $product->brand?->name,
+                    'Model Code'  => $product->model_code,
+                    'Variant'     => $product->variant,
+                    'Category'    => $product->category?->name,
+                ]);
+            @endphp
+            @if(count($specs))
+            <div class="mb-10">
+                <h3 class="font-bold text-gray-900 mb-4 text-lg">Product Details</h3>
+                <div class="divide-y divide-gray-100 rounded-lg border border-gray-100 overflow-hidden">
+                    @foreach($specs as $label => $value)
+                    <div class="flex">
+                        <span class="w-36 flex-shrink-0 px-4 py-3 bg-gray-50 text-xs font-bold uppercase tracking-wider text-gray-500">{{ $label }}</span>
+                        <span class="px-4 py-3 text-sm text-gray-800 font-medium">{{ $value }}</span>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            <!-- Technical Specifications -->
+            @if(!empty($product->specifications) && count($product->specifications))
+            <div class="mb-10">
+                <h3 class="font-bold text-gray-900 mb-4 text-lg">Technical Specifications</h3>
+                <div class="space-y-4">
+                    @foreach($product->specifications as $group)
+                        @if(!empty($group['group']) && !empty($group['items']))
+                        <div class="rounded-lg border border-gray-100 overflow-hidden">
+                            <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100">
+                                <h4 class="text-xs font-black uppercase tracking-widest text-gray-700">{{ $group['group'] }}</h4>
+                            </div>
+                            <div class="divide-y divide-gray-50">
+                                @foreach($group['items'] as $item)
+                                    @if(!empty($item['label']))
+                                    <div class="flex">
+                                        <span class="w-44 flex-shrink-0 px-4 py-2.5 text-xs font-semibold text-gray-500 bg-gray-50/50">{{ $item['label'] }}</span>
+                                        <span class="px-4 py-2.5 text-sm text-gray-800">{{ $item['value'] ?? '—' }}</span>
+                                    </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+            @endif
 
             <!-- Actions -->
             <div class="space-y-6">
@@ -221,9 +303,50 @@
 
 @push('scripts')
 <script>
-    const maxStock  = {{ (int) $product->stock_quantity }};
-    const productId = {{ $product->id }};
-    let quantity = 1;
+    const productId      = {{ $product->id }};
+    const basePrice      = {{ (float) $finalPrice }};
+    const baseStock      = {{ (int) $product->stock_quantity }};
+    const discountPct    = {{ $discountPercent }};
+    const productVariants = @json($product->variants ?? null);
+
+    let maxStock        = baseStock;
+    let currentPrice    = basePrice;
+    let selectedVariant = null;
+    let quantity        = 1;
+
+    // --- Variant selector ---
+    const variantBtns = document.querySelectorAll('.variant-btn');
+    if (variantBtns.length) {
+        // Auto-select first option
+        const firstBtn = variantBtns[0];
+        selectedVariant = firstBtn.dataset.label;
+        currentPrice    = parseFloat(firstBtn.dataset.price);
+        maxStock        = parseInt(firstBtn.dataset.stock, 10);
+        document.getElementById('display-price').textContent = '₱' + currentPrice.toLocaleString('en-PH', { minimumFractionDigits: 2 });
+        const stockEl = document.getElementById('stock-val');
+        if (stockEl) stockEl.textContent = maxStock;
+        updateQuantity(1);
+
+        variantBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                variantBtns.forEach(b => {
+                    b.classList.remove('border-brand-600', 'bg-brand-50', 'text-brand-700');
+                    b.classList.add('border-gray-200', 'bg-white', 'text-gray-700');
+                });
+                this.classList.add('border-brand-600', 'bg-brand-50', 'text-brand-700');
+                this.classList.remove('border-gray-200', 'bg-white', 'text-gray-700');
+
+                selectedVariant = this.dataset.label;
+                currentPrice    = parseFloat(this.dataset.price);
+                maxStock        = parseInt(this.dataset.stock, 10);
+
+                document.getElementById('display-price').textContent =
+                    '₱' + currentPrice.toLocaleString('en-PH', { minimumFractionDigits: 2 });
+                if (stockEl) stockEl.textContent = maxStock;
+                updateQuantity(1);
+            });
+        });
+    }
 
     // --- Quantity controls ---
     const minusBtn = document.getElementById('minus-qty');
@@ -299,15 +422,21 @@
             alert('Not enough stock available.');
             return;
         }
+        // Require a variant selection if variants exist
+        if (variantBtns.length && !selectedVariant) {
+            alert('Please select an option first.');
+            return;
+        }
 
-        const productName   = @json($product->name);
-        const originalPrice = parseFloat('{{ $product->price }}');
-        const discountPct   = {{ $discountPercent }};
-        const images        = @json($product->images ?? []);
-        const companyName   = @json($product->company->name);
+        const productName = @json($product->name);
+        const images      = @json($product->images ?? []);
+        const companyName = @json($product->supplier?->name ?? '');
+        // Cart key includes variant so different options are separate line items
+        const cartKey     = selectedVariant ? `${productId}__${selectedVariant}` : String(productId);
+        const displayName = selectedVariant ? `${productName} (${selectedVariant})` : productName;
 
         const cart     = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existing = cart.find(item => item.id == productId);
+        const existing = cart.find(item => item.cart_key === cartKey);
 
         if (existing) {
             const newQty = existing.quantity + quantity;
@@ -319,12 +448,14 @@
         } else {
             cart.push({
                 id:                  productId,
-                name:                productName,
-                price:               originalPrice,
+                cart_key:            cartKey,
+                name:                displayName,
+                variant:             selectedVariant,
+                price:               currentPrice,
                 discount_percentage: discountPct,
                 quantity:            quantity,
                 stock_quantity:      maxStock,
-                company:             companyName,
+                supplier:            companyName,
                 images:              images
             });
         }
@@ -332,18 +463,17 @@
         localStorage.setItem('cart', JSON.stringify(cart));
         window.dispatchEvent(new Event('cart-updated'));
 
-        // Decrement displayed stock counter
         const stockEl = document.getElementById('stock-val');
         if (stockEl) {
             const remaining = parseInt(stockEl.textContent, 10) - quantity;
             stockEl.textContent = Math.max(0, remaining);
         }
 
-        const btn  = document.getElementById('add-to-cart');
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Added!';
-        btn.disabled = true;
-        setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 1500);
+        const addBtn  = document.getElementById('add-to-cart');
+        const orig    = addBtn.innerHTML;
+        addBtn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Added!';
+        addBtn.disabled = true;
+        setTimeout(() => { addBtn.innerHTML = orig; addBtn.disabled = false; }, 1500);
 
         quantity = 1;
         updateQuantity(1);

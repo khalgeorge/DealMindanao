@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Company;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -14,7 +14,7 @@ class ShopController extends Controller
     {
         $categories = Category::orderBy('name')->get();
 
-        $allProducts = Product::with(['category', 'company'])
+        $allProducts = Product::with(['category', 'supplier', 'brand'])
             ->where('is_active', true)
             ->latest()
             ->get()
@@ -35,8 +35,8 @@ class ShopController extends Controller
                     'image'            => $image,
                     'category_id'      => $p->category_id,
                     'category'         => $p->category?->slug ?? '',
-                    'company_id'       => $p->company_id,
-                    'company'          => $p->company?->name ?? '',
+                    'supplier_id'      => $p->supplier_id,
+                    'supplier'         => $p->supplier?->name ?? '',
                 ];
             })
             ->values();
@@ -46,12 +46,12 @@ class ShopController extends Controller
 
     public function show($slug)
     {
-        $product = Product::with(['category', 'company'])
+        $product = Product::with(['category', 'supplier', 'brand'])
             ->where('slug', $slug)
             ->where('is_active', true)
             ->firstOrFail();
 
-        $relatedProducts = Product::with(['category', 'company'])
+        $relatedProducts = Product::with(['category', 'supplier', 'brand'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)

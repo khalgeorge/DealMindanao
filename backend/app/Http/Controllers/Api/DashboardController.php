@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Company;
+use App\Models\Supplier;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +25,8 @@ class DashboardController extends Controller
         // Total orders count
         $totalOrders = Order::count();
         
-        // Active companies/partners count
-        $activePartners = Company::count();
+        // Active suppliers/partners count
+        $activePartners = Supplier::where('is_active', true)->count();
         
         // Pending orders count
         $pendingOrders = Order::where('status', 'pending')->count();
