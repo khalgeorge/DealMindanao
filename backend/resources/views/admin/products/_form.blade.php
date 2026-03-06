@@ -679,16 +679,22 @@
         const options   = [];
         rowsContainer.querySelectorAll('.variant-row').forEach(row => {
             const label = row.querySelector('.v-label').value.trim();
+            const cost  = parseFloat(row.querySelector('.v-cost').value);
             const price = parseFloat(row.querySelector('.v-srp').value);
             const stock = parseInt(row.querySelector('.v-stock').value, 10);
-            if (label) options.push({ label, price: isNaN(price) ? 0 : price, stock: isNaN(stock) ? 0 : stock });
+            if (label) options.push({
+                label,
+                cost:  isNaN(cost)  ? 0 : cost,
+                price: isNaN(price) ? 0 : price,
+                stock: isNaN(stock) ? 0 : stock
+            });
         });
         hiddenInput.value = (attribute && options.length)
             ? JSON.stringify({ attribute, options })
             : '';
     }
 
-    function addRow(label, price, stock) {
+    function addRow(label, cost, price, stock) {
         const row = document.createElement('div');
         row.className = 'variant-row grid grid-cols-12 gap-2 items-center';
         row.innerHTML = `
@@ -710,8 +716,11 @@
         const srpBadge  = row.querySelector('.v-srp-badge');
         let srpManual   = false;
 
-        // Pre-populate: existing saved price goes into SRP field (no stored cost)
+        // Pre-populate from existing saved data
         row.querySelector('.v-label').value = label || '';
+        if (cost !== undefined && cost !== '' && !isNaN(parseFloat(cost))) {
+            costInput.value = cost;
+        }
         if (price !== undefined && price !== '') {
             srpInput.value = price;
             srpManual      = true;
@@ -754,7 +763,7 @@
 
     // Load existing
     if (existing && existing.attribute && Array.isArray(existing.options) && existing.options.length) {
-        existing.options.forEach(o => addRow(o.label, o.price, o.stock));
+        existing.options.forEach(o => addRow(o.label, o.cost, o.price, o.stock));
     }
 
     attrInput.addEventListener('input', serialize);

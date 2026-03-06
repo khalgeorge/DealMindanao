@@ -80,11 +80,12 @@
                     {{ $product->category->name }}
                 </span>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight mb-2">{{ $product->name }}</h1>
-                @if($product->model_code || $product->variant)
+                @php $hasVariantOptions = !empty($product->variants['options']); @endphp
+                @if($product->model_code || ($product->variant && !$hasVariantOptions))
                 <p class="text-sm text-gray-500 font-medium">
                     @if($product->model_code)Model: <span class="font-semibold text-gray-700">{{ $product->model_code }}</span>@endif
-                    @if($product->model_code && $product->variant) &bull; @endif
-                    @if($product->variant)Variant: <span class="font-semibold text-gray-700">{{ $product->variant }}</span>@endif
+                    @if($product->model_code && $product->variant && !$hasVariantOptions) &bull; @endif
+                    @if($product->variant && !$hasVariantOptions)Variant: <span class="font-semibold text-gray-700">{{ $product->variant }}</span>@endif
                 </p>
                 @endif
             </div>
@@ -139,19 +140,21 @@
             </div>
 
             <!-- Description -->
+            @if(!empty(trim($product->description ?? '')))
             <div class="mb-8">
                 <h3 class="font-bold text-gray-900 mb-4 text-lg">About this deal</h3>
                 <div class="text-gray-600 leading-relaxed text-lg prose">
-                    {{ $product->description ?? 'No description available.' }}
+                    {{ $product->description }}
                 </div>
             </div>
+            @endif
 
             <!-- Product Details -->
             @php
                 $specs = array_filter([
                     'Brand'       => $product->brand?->name,
                     'Model Code'  => $product->model_code,
-                    'Variant'     => $product->variant,
+                    'Variant'     => !$hasVariantOptions ? $product->variant : null,
                     'Category'    => $product->category?->name,
                 ]);
             @endphp
@@ -303,63 +306,64 @@
 
 @push('scripts')
 <script>
+    // --- Constants (server-rendered) ---
     const productId      = {{ $product->id }};
     const basePrice      = {{ (float) $finalPrice }};
     const baseStock      = {{ (int) $product->stock_quantity }};
     const discountPct    = {{ $discountPercent }};
-    const productVariants = @json($product->variants ?? null);
 
+    // --- Mutable state ---
     let maxStock        = baseStock;
     let currentPrice    = basePrice;
     let selectedVariant = null;
     let quantity        = 1;
 
-    // --- Variant selector ---
-    const variantBtns = document.querySelectorAll('.variant-btn');
-    if (variantBtns.length) {
-        // Auto-select first option
-        const firstBtn = variantBtns[0];
-        selectedVariant = firstBtn.dataset.label;
-        currentPrice    = parseFloat(firstBtn.dataset.price);
-        maxStock        = parseInt(firstBtn.dataset.stock, 10);
-        document.getElementById('display-price').textContent = '₱' + currentPrice.toLocaleString('en-PH', { minimumFractionDigits: 2 });
-        const stockEl = document.getElementById('stock-val');
+    // --- DOM refs (declared first so helpers can use them) ---
+    const minusBtn  = document.getElementById('minus-qty');
+    const plusBtn   = document.getElementById('plus-qty');
+    const qtyVal    = document.getElementById('qty-val');
+    const priceEl   = document.getElementById('display-price');
+    const stockEl   = document.getElementById('stock-val');
+
+    // --- Helpers ---
+    function updateQuantity(newQty) {
+        quantity = Math.max(1, Math.min(newQty, maxStock));
+        if (qtyVal)   qtyVal.textContent   = quantity;
+        if (stockEl)  stockEl.textContent  = maxStock - quantity;
+    }
+
+    function formatPrice(amount) {
+        return '₱' + amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function applyVariant(btn) {
+        document.querySelectorAll('.variant-btn').forEach(b => {
+            b.classList.remove('border-brand-600', 'bg-brand-50', 'text-brand-700');
+            b.classList.add('border-gray-200', 'bg-white', 'text-gray-700');
+        });
+        btn.classList.add('border-brand-600', 'bg-brand-50', 'text-brand-700');
+        btn.classList.remove('border-gray-200', 'bg-white', 'text-gray-700');
+
+        selectedVariant = btn.dataset.label;
+        currentPrice    = parseFloat(btn.dataset.price);
+        maxStock        = parseInt(btn.dataset.stock, 10);
+
+        if (priceEl) priceEl.textContent = formatPrice(currentPrice);
         if (stockEl) stockEl.textContent = maxStock;
         updateQuantity(1);
-
-        variantBtns.forEach(btn => {
-            btn.addEventListener('click', function () {
-                variantBtns.forEach(b => {
-                    b.classList.remove('border-brand-600', 'bg-brand-50', 'text-brand-700');
-                    b.classList.add('border-gray-200', 'bg-white', 'text-gray-700');
-                });
-                this.classList.add('border-brand-600', 'bg-brand-50', 'text-brand-700');
-                this.classList.remove('border-gray-200', 'bg-white', 'text-gray-700');
-
-                selectedVariant = this.dataset.label;
-                currentPrice    = parseFloat(this.dataset.price);
-                maxStock        = parseInt(this.dataset.stock, 10);
-
-                document.getElementById('display-price').textContent =
-                    '₱' + currentPrice.toLocaleString('en-PH', { minimumFractionDigits: 2 });
-                if (stockEl) stockEl.textContent = maxStock;
-                updateQuantity(1);
-            });
-        });
     }
 
     // --- Quantity controls ---
-    const minusBtn = document.getElementById('minus-qty');
-    const plusBtn  = document.getElementById('plus-qty');
-    const qtyVal   = document.getElementById('qty-val');
+    if (minusBtn) minusBtn.addEventListener('click', () => updateQuantity(quantity - 1));
+    if (plusBtn)  plusBtn.addEventListener('click',  () => updateQuantity(quantity + 1));
 
-    function updateQuantity(newQty) {
-        quantity = Math.max(1, Math.min(newQty, maxStock));
-        qtyVal.textContent = quantity;
+    // --- Variant selector ---
+    const variantBtns = document.querySelectorAll('.variant-btn');
+    if (variantBtns.length) {
+        // Auto-select first option on page load
+        applyVariant(variantBtns[0]);
+        variantBtns.forEach(btn => btn.addEventListener('click', function () { applyVariant(this); }));
     }
-
-    minusBtn.addEventListener('click', () => updateQuantity(quantity - 1));
-    plusBtn.addEventListener('click',  () => updateQuantity(quantity + 1));
 
     // --- Thumbnail gallery ---
     const mainImage = document.getElementById('main-product-image');
@@ -463,11 +467,9 @@
         localStorage.setItem('cart', JSON.stringify(cart));
         window.dispatchEvent(new Event('cart-updated'));
 
-        const stockEl = document.getElementById('stock-val');
-        if (stockEl) {
-            const remaining = parseInt(stockEl.textContent, 10) - quantity;
-            stockEl.textContent = Math.max(0, remaining);
-        }
+        // Reduce available stock by the purchased quantity
+        maxStock = Math.max(0, maxStock - quantity);
+        updateQuantity(1);
 
         const addBtn  = document.getElementById('add-to-cart');
         const orig    = addBtn.innerHTML;
