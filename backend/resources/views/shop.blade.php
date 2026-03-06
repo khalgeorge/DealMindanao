@@ -9,55 +9,62 @@
 <div class="page-shell py-8">
 
     <!-- Page Header -->
-    <div class="mb-8 pb-6 border-b border-gray-100">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Shop Local Deals in Mindanao</h1>
-        <p class="text-gray-500 text-base max-w-2xl">Browse verified hardware and local products from trusted Mindanao sellers.</p>
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Shop Local Deals in Mindanao</h1>
+        <p class="text-gray-600 mt-2">Browse verified hardware and local products from trusted Mindanao sellers. Order online — our team reviews your request and contacts you to confirm payment and arrange delivery.</p>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8">
 
         <!-- Sidebar Filters -->
-        <aside class="w-full lg:w-64 flex-shrink-0 space-y-3">
+        <aside class="w-full lg:w-64 space-y-8 flex-shrink-0">
 
             <!-- Search -->
-            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-                <label class="block mb-2 text-xs font-black uppercase tracking-widest text-gray-500">Search</label>
+            <div>
+                <label class="block mb-2 font-bold uppercase tracking-tight text-xs text-gray-500">Search</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </span>
-                    <input type="text" id="search-input" class="input pl-9 h-10 text-sm" placeholder="Search products...">
+                    <input type="text" id="search-input" class="input pl-10 h-11" placeholder="Search keywords...">
                 </div>
             </div>
 
             <!-- Category -->
-            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-                <label class="block mb-3 text-xs font-black uppercase tracking-widest text-gray-500">Categories</label>
-                <div id="category-filters" class="space-y-1.5">
+            <div>
+                <label class="block mb-3 font-bold uppercase tracking-tight text-xs text-gray-500">Category</label>
+                <div id="category-filters" class="space-y-2">
                     @foreach($categories as $category)
-                    <label class="flex items-center gap-2.5 cursor-pointer group py-0.5">
-                        <input type="checkbox" value="{{ $category->id }}" class="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 flex-shrink-0">
-                        <span class="text-sm text-gray-700 group-hover:text-brand-600 transition-colors">{{ $category->name }}</span>
+                    <label class="flex items-center group cursor-pointer">
+                        <input type="checkbox" value="{{ $category->id }}" class="w-4 h-4 text-brand-600 rounded border-gray-300 focus:ring-brand-500">
+                        <span class="ml-3 text-sm text-gray-700 group-hover:text-brand-600">{{ $category->name }}</span>
                     </label>
                     @endforeach
                 </div>
             </div>
 
             <!-- Sort By -->
-            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-                <label class="block mb-2 text-xs font-black uppercase tracking-widest text-gray-500">Sort By</label>
-                <select id="sort-select" class="input h-10 text-sm">
+            <div>
+                <label class="block mb-2 font-bold uppercase tracking-tight text-xs text-gray-500">Sort By</label>
+                <select id="sort-select" class="input h-11">
                     <option value="newest">Newest First</option>
                     <option value="price-low">Price: Low to High</option>
                     <option value="price-high">Price: High to Low</option>
+                    <option value="popular">Most Popular</option>
                 </select>
             </div>
 
+            <div>
+                <p class="text-xs text-gray-500 mt-2">
+                    Verified Mindanao sellers &bull; Offline payment &bull; Manual order confirmation
+                </p>
+            </div>
+
             <!-- Reset Filters -->
-            <button id="reset-filters-btn" class="btn-outline w-full text-sm py-2.5">
-                <svg class="w-4 h-4 mr-1.5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button id="reset-filters-btn" class="btn-outline w-full">
+                <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                 </svg>
                 Reset Filters
@@ -69,11 +76,8 @@
         <div class="flex-1">
 
             <!-- Grid Header -->
-            <div class="flex items-center justify-between mb-5">
-                <div>
-                    <p class="text-sm font-bold text-gray-900"><span id="result-count">0</span> products found</p>
-                    <p class="text-xs text-gray-400 mt-0.5" id="showing-range"></p>
-                </div>
+            <div class="flex items-center justify-between mb-6">
+                <p class="text-sm text-gray-500"><span id="result-count" class="font-bold text-gray-900">0</span> products found</p>
             </div>
 
             <!-- Loading Skeleton -->
@@ -114,26 +118,26 @@
             </div>
 
             <!-- Pagination Controls -->
-            <div id="pagination-controls" class="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-2.5">
-                    <span class="text-sm text-gray-500">Show</span>
-                    <select id="rows-per-page" class="input h-9 w-20 text-sm">
+            <div id="pagination-controls" class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <label class="text-sm text-gray-600">Show:</label>
+                    <select id="rows-per-page" class="input h-10 w-20 focus-visible:ring-0 focus-visible:border-gray-300">
                         <option value="8">8</option>
                         <option value="12">12</option>
                         <option value="16">16</option>
                         <option value="24">24</option>
                         <option value="all">All</option>
                     </select>
-                    <span class="text-sm text-gray-500">per page</span>
+                    <span class="text-sm text-gray-600">per page</span>
                 </div>
-                <div class="flex items-center gap-1.5">
-                    <button id="prev-page" class="w-9 h-9 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors" disabled>
+                <div class="flex items-center gap-2">
+                    <button id="prev-page" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </button>
-                    <span id="page-info" class="text-sm text-gray-600 px-3 font-medium">Page 1 of 1</span>
-                    <button id="next-page" class="w-9 h-9 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors" disabled>
+                    <span id="page-info" class="text-sm text-gray-600 px-4">Page 1 of 1</span>
+                    <button id="next-page" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -223,17 +227,6 @@
         document.getElementById('next-page').disabled = currentPage === totalPages;
         document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
 
-        const showingEl = document.getElementById('showing-range');
-        if (showingEl) {
-            if (rowsPerPage === 'all' || products.length === 0) {
-                showingEl.textContent = '';
-            } else {
-                const from = startIndex + 1;
-                const to   = Math.min(endIndex, products.length);
-                showingEl.textContent = `Showing ${from}–${to} of ${products.length}`;
-            }
-        }
-
         grid.innerHTML = pageProducts.map(p => {
             const salePrice       = p.display_price;
             const discountPercent = p.discount_percent;
@@ -244,7 +237,7 @@
                 <div class="product-card group flex flex-col">
 
                     <!-- Image area -->
-                    <div class="relative aspect-square bg-gray-50 cursor-pointer overflow-hidden flex-shrink-0"
+                    <div class="relative aspect-square cursor-pointer overflow-hidden flex-shrink-0"
                          onclick="window.viewProductModal(${p.id})">
                         <img src="${imageUrl}" alt="${p.name} – Buy local in Mindanao"
                              onerror="this.onerror=null;this.src='/images/unknown-product.svg'"
