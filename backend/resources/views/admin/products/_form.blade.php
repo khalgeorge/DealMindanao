@@ -330,7 +330,7 @@
               <div class="relative group">
                 <img src="{{ $img }}" class="w-24 h-24 object-cover rounded-lg border border-gray-200">
                 <button type="button" data-path="{{ $img }}"
-                        class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs hidden group-hover:flex items-center justify-center leading-none remove-img">✕</button>
+                        class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs flex items-center justify-center leading-none remove-img">✕</button>
               </div>
             @endforeach
           @endif
@@ -530,7 +530,7 @@
         wrap.innerHTML = `
             <img src="${path}" class="w-24 h-24 object-cover rounded-lg border border-gray-200">
             <button type="button" data-path="${path}"
-                class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs hidden group-hover:flex items-center justify-center leading-none remove-img">\u2715</button>`;
+                class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs flex items-center justify-center leading-none remove-img">\u2715</button>`;
         wrap.querySelector('.remove-img').addEventListener('click', function () {
             uploadedPaths = uploadedPaths.filter(p => p !== this.dataset.path);
             syncHidden();
