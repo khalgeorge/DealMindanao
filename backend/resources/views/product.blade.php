@@ -5,16 +5,66 @@
     $discountPercent = $product->discountPercent();
     $isOnPromo       = $product->isOnPromo();
     $imageUrl        = product_image_url($product->images ?? []);
-    $metaTitle = $product->meta_title ?: ($product->name . ' | DealMindanao');
-    $metaDescription = $product->meta_description
-        ?: \Illuminate\Support\Str::limit($product->description ?? 'Discover this deal from DealMindanao.', 160);
+
+    // SEO Title: custom > auto-generated
+    $seoTitle = $product->meta_title
+        ?: ($product->name . ' | DealMindanao');
+
+    // SEO Description: custom > short description > fallback
+    $seoDescription = $product->meta_description
+        ?: \Illuminate\Support\Str::limit(
+            $product->description ?? 'Discover this deal on DealMindanao.',
+            155
+        );
+
+    // SEO Keywords: custom > auto from name + category
+    $seoKeywords = $product->meta_keywords
+        ?: implode(', ', array_filter([
+            $product->name,
+            optional($product->category)->name,
+            'DealMindanao',
+            'Mindanao products',
+            'buy online Philippines',
+        ]));
+
+    $canonicalUrl = url('/product/' . $product->slug);
 @endphp
 
-@section('meta_title', $metaTitle . " in Mindanao | Verified Seller – DealMindanao")
-@section('meta_description', "Buy " . $metaDescription . " from verified Mindanao sellers. Order online, pay offline via COD or GCash after confirmation.")
+@section('meta_title',       $seoTitle)
+@section('meta_description', 'Buy ' . $product->name . ' from verified Mindanao sellers. ' . \Illuminate\Support\Str::limit($seoDescription, 140) . ' Order online, pay via COD or GCash.')
+@section('meta_keywords',    $seoKeywords)
+@section('canonical',        $canonicalUrl)
+@section('og_url',           $canonicalUrl)
+@section('meta_robots',      'index,follow')
 @if($imageUrl)
-    @section('meta_image', $imageUrl)
+    @section('meta_image',   $imageUrl)
 @endif
+
+{{-- Structured Data: Product (JSON-LD) --}}
+@push('scripts')
+@php
+    $ldJson = [
+        '@context' => 'https://schema.org',
+        '@type'    => 'Product',
+        'name'        => $product->name,
+        'description' => \Illuminate\Support\Str::limit($product->description ?? '', 500),
+        'url'         => $canonicalUrl,
+        'offers'      => [
+            '@type'         => 'Offer',
+            'priceCurrency' => 'PHP',
+            'price'         => number_format($finalPrice, 2, '.', ''),
+            'availability'  => $product->stock_quantity > 0
+                ? 'https://schema.org/InStock'
+                : 'https://schema.org/OutOfStock',
+            'seller'        => ['@type' => 'Organization', 'name' => 'DealMindanao'],
+        ],
+    ];
+    if ($imageUrl)          { $ldJson['image'] = $imageUrl; }
+    if ($product->brand)    { $ldJson['brand'] = ['@type' => 'Brand', 'name' => $product->brand->name]; }
+    if ($product->sku)      { $ldJson['sku']   = $product->sku; }
+@endphp
+<script type="application/ld+json">{{ json_encode($ldJson, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) }}</script>
+@endpush
 
 @section('content')
 <div class="page-shell py-12">
@@ -328,8 +378,8 @@
     // --- Helpers ---
     function updateQuantity(newQty) {
         quantity = Math.max(1, Math.min(newQty, maxStock));
-        if (qtyVal)   qtyVal.textContent   = quantity;
-        if (stockEl)  stockEl.textContent  = maxStock - quantity;
+        if (qtyVal)  qtyVal.textContent  = quantity;
+        if (stockEl) stockEl.textContent = maxStock - quantity;
     }
 
     function formatPrice(amount) {
@@ -349,7 +399,6 @@
         maxStock        = parseInt(btn.dataset.stock, 10);
 
         if (priceEl) priceEl.textContent = formatPrice(currentPrice);
-        if (stockEl) stockEl.textContent = maxStock;
         updateQuantity(1);
     }
 

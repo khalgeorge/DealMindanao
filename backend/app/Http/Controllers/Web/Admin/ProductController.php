@@ -15,7 +15,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'supplier']);
+        $query = Product::with(['category', 'supplier', 'brand']);
         
         // Capture filter values
         $search = $request->get('search', '');
@@ -64,7 +64,7 @@ class ProductController extends Controller
                 break;
         }
         
-        $products   = $query->paginate(15);
+        $products   = $query->get()->makeVisible(['supplier_price']);
         $categories = Category::orderBy('name')->get();
         $suppliers  = Supplier::where('is_active', true)->orderBy('name')->get();
         $brands     = Brand::where('is_active', true)->orderBy('name')->get();
@@ -234,6 +234,38 @@ class ProductController extends Controller
         return back()->with('success', 'Featured status updated!');
     }
     
+    public function duplicate(Product $product)
+    {
+        // makeVisible ensures hidden fields (e.g. supplier_price) are included
+        $data = $product->makeVisible(['supplier_price'])->toArray();
+
+        // Remove fields that must not be copied
+        unset($data['id'], $data['created_at'], $data['updated_at'], $data['deleted_at']);
+
+        // Mark as draft and append (Copy) to name
+        $data['name']   = $data['name'] . ' (Copy)';
+        $data['status'] = 'draft';
+        $data['is_active'] = false;
+
+        // Generate unique slug
+        $base = \Illuminate\Support\Str::slug($data['name']);
+        $slug = $base;
+        $counter = 1;
+        while (Product::where('slug', $slug)->exists()) {
+            $slug = $base . '-' . $counter++;
+        }
+        $data['slug'] = $slug;
+
+        // Clear unique/identity fields
+        $data['sku'] = null;
+
+        $copy = Product::create($data);
+
+        return redirect()
+            ->route('admin.products.edit', $copy)
+            ->with('success', 'Product duplicated! Review and update the details before publishing.');
+    }
+
     public function uploadImage(Request $request)
     {
         try {

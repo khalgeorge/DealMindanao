@@ -18,6 +18,7 @@ class Product extends Model
         'description',
         'meta_title',
         'meta_description',
+        'meta_keywords',
         'supplier_price',
         'srp',
         'price',        // legacy — kept in sync with srp

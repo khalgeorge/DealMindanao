@@ -234,15 +234,12 @@
                    class="w-full max-w-xs px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none">
           </div>
           <div class="p-3">
-            <div class="grid grid-cols-12 gap-2 mb-2 px-1">
-              <span class="col-span-3 text-[10px] font-bold uppercase tracking-wider text-gray-400">Option Label</span>
-              <span class="col-span-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Partner Cost (₱)</span>
-              <span class="col-span-3 text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                Selling Price (₱)
-                <span class="normal-case font-normal text-brand-500">+{{ round(config('products.default_margin') * 100) }}%</span>
-              </span>
+            <div class="grid grid-cols-12 gap-2 mb-2">
+              <span class="col-span-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Option Label</span>
+              <span class="col-span-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Cost (₱)</span>
+              <span class="col-span-3 text-[10px] font-bold uppercase tracking-wider text-gray-400">Price (₱) <span class="normal-case font-normal text-brand-500">+{{ round(config('products.default_margin') * 100) }}%</span></span>
               <span class="col-span-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Stock</span>
-              <span class="col-span-2"></span>
+              <span class="col-span-1"></span>
             </div>
             <div id="variant-rows" class="space-y-2"></div>
             <button type="button" id="add-variant-row"
@@ -394,6 +391,92 @@
                  class="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500">
           <span class="text-sm font-semibold text-gray-700">Active <span class="text-gray-400 font-normal">(visible to customers)</span></span>
         </label>
+      </div>
+
+      {{-- SEO / Meta --}}
+      <div class="md:col-span-2 border-t border-gray-100 pt-6 mt-2">
+        <div class="flex items-center gap-2 mb-4">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <div>
+            <p class="text-xs font-black text-gray-500 uppercase tracking-widest">SEO / Meta</p>
+            <p class="text-xs text-gray-400 mt-0.5">Leave blank to auto-generate from product name and description.</p>
+          </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-5 bg-gray-50 grid grid-cols-1 gap-4">
+
+          {{-- URL Slug --}}
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">
+              URL Slug <span class="font-normal normal-case text-gray-400">(auto-generated from name)</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-400 font-mono shrink-0">/product/</span>
+              <input type="text" name="slug"
+                     value="{{ old('slug', $product->slug ?? '') }}"
+                     placeholder="e.g. extension-cord-4-gang"
+                     class="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-mono focus:ring-1 focus:ring-brand-500 outline-none">
+            </div>
+            <p class="text-xs text-gray-400 mt-1">Lowercase letters, numbers, and hyphens only. Leave blank to auto-generate.</p>
+            @error('slug')
+              <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          {{-- SEO Title --}}
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">
+              SEO Title <span class="font-normal normal-case text-gray-400">(max 70 characters)</span>
+            </label>
+            <input type="text" name="meta_title" maxlength="70"
+                   value="{{ old('meta_title', $product->meta_title ?? '') }}"
+                   placeholder="{{ ($product->name ?? 'Product Name') . ' | DealMindanao' }}"
+                   class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none"
+                   id="meta-title-input">
+            <p class="text-xs text-gray-400 mt-1">
+              <span id="meta-title-count">0</span>/70 characters.
+              Shown as the browser tab title and Google headline.
+            </p>
+            @error('meta_title')
+              <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          {{-- SEO Description --}}
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">
+              SEO Description <span class="font-normal normal-case text-gray-400">(max 160 characters)</span>
+            </label>
+            <textarea name="meta_description" maxlength="320" rows="3"
+                      placeholder="Buy [Product Name] from verified Mindanao sellers on DealMindanao."
+                      class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none resize-none"
+                      id="meta-desc-input">{{ old('meta_description', $product->meta_description ?? '') }}</textarea>
+            <p class="text-xs text-gray-400 mt-1">
+              <span id="meta-desc-count">0</span>/320 characters.
+              Shown under the page title in Google results.
+            </p>
+            @error('meta_description')
+              <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          {{-- SEO Keywords --}}
+          <div>
+            <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">
+              SEO Keywords <span class="font-normal normal-case text-gray-400">(optional, comma-separated)</span>
+            </label>
+            <input type="text" name="meta_keywords" maxlength="500"
+                   value="{{ old('meta_keywords', $product->meta_keywords ?? '') }}"
+                   placeholder="e.g. extension cord, 4 gang, hardware, Mindanao"
+                   class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none">
+            <p class="text-xs text-gray-400 mt-1">Comma-separated keywords. Auto-generated from product name and category if left blank.</p>
+            @error('meta_keywords')
+              <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+        </div>
       </div>
 
     </div>{{-- /grid --}}
@@ -698,14 +781,14 @@
         const row = document.createElement('div');
         row.className = 'variant-row grid grid-cols-12 gap-2 items-center';
         row.innerHTML = `
-            <input type="text"   class="v-label col-span-3 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none" placeholder="e.g. 3M">
+            <input type="text"   class="v-label col-span-4 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none" placeholder="e.g. 3M">
             <input type="number" class="v-cost  col-span-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none" placeholder="0.00" step="0.01" min="0">
             <div class="col-span-3 relative">
                 <input type="number" class="v-srp w-full px-3 py-2 bg-white border border-brand-200 rounded-lg text-sm font-semibold text-brand-700 focus:ring-1 focus:ring-brand-500 outline-none" placeholder="auto" step="0.01" min="0">
                 <span class="v-srp-badge absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-brand-500 font-bold pointer-events-none hidden">auto</span>
             </div>
             <input type="number" class="v-stock col-span-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-brand-500 outline-none" placeholder="0" min="0">
-            <div class="col-span-2 flex justify-center">
+            <div class="col-span-1 flex justify-center">
                 <button type="button" class="remove-variant w-7 h-7 flex items-center justify-center text-gray-400 hover:text-red-500 rounded transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
@@ -771,4 +854,21 @@
     addBtn.closest('form').addEventListener('submit', serialize);
 })();
 </script>
+
+<script>
+// ── SEO character counters ───────────────────────────────────────────────────
+(function () {
+    function bindCounter(inputId, counterId) {
+        const el = document.getElementById(inputId);
+        const counter = document.getElementById(counterId);
+        if (!el || !counter) return;
+        function update() { counter.textContent = el.value.length; }
+        el.addEventListener('input', update);
+        update();
+    }
+    bindCounter('meta-title-input', 'meta-title-count');
+    bindCounter('meta-desc-input',  'meta-desc-count');
+})();
+</script>
+
 @endpush

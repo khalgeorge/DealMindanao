@@ -97,7 +97,10 @@ class ProductRequest extends FormRequest
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:500'],
             'specifications' => ['nullable', 'array'],
-            'variants'       => ['nullable', 'array'],
+            'meta_title'       => ['nullable', 'string', 'max:70'],
+            'meta_description' => ['nullable', 'string', 'max:320'],
+            'meta_keywords'    => ['nullable', 'string', 'max:500'],
+            'variants'         => ['nullable', 'array'],
         ];
     }
 
@@ -147,8 +150,11 @@ class ProductRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Auto-generate slug from name if not provided
-        if (!$this->slug && $this->name) {
+        // Auto-generate slug from name only on create (store).
+        // On update the controller handles slug uniqueness correctly itself;
+        // auto-generating here would produce a slug that conflicts with the
+        // existing slug when e.g. a duplicated product is saved.
+        if (!$this->slug && $this->name && !$this->route('product')) {
             $this->merge([
                 'slug' => str($this->name)->slug()->toString(),
             ]);

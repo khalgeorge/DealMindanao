@@ -2,7 +2,9 @@
 
 @section('meta_title', 'Shop Local Deals in Mindanao | Hardware, Food and More – DealMindanao')
 @section('meta_description', 'Browse hardware and local products from verified Mindanao sellers. Order online and pay offline via COD or GCash after confirmation.')
+@section('meta_keywords', 'hardware deals Mindanao, buy online Philippines, local products, COD GCash, DealMindanao shop')
 @section('canonical', url('/shop'))
+@section('og_url',    url('/shop'))
 @section('meta_robots', 'index,follow')
 
 @section('content')
