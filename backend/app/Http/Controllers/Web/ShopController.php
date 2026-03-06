@@ -35,6 +35,7 @@ class ShopController extends Controller
                     'image'            => $image,
                     'category_id'      => $p->category_id,
                     'category'         => $p->category?->slug ?? '',
+                    'category_name'    => $p->category?->name ?? '',
                     'supplier_id'      => $p->supplier_id,
                     'supplier'         => $p->supplier?->name ?? '',
                     'variants'         => $p->variants,
