@@ -263,11 +263,6 @@
                     <!-- Content section -->
                     <div class="px-6 pt-4 pb-8 flex-1 flex flex-col gap-3">
 
-                        <!-- Partner / Region -->
-                        ${p.company ? `
-                        <p class="text-brand-600 text-[10px] font-black uppercase tracking-widest leading-none">${p.company}</p>
-                        ` : ''}
-
                         <!-- Product name -->
                         <h3 class="text-sm font-bold text-gray-900 line-clamp-2 leading-snug">${p.name}</h3>
 
@@ -365,9 +360,18 @@
         const p = allProducts.find(p => p.id === productId);
         if (!p) return;
 
-        const salePrice       = p.display_price;
+        // Reset selected variant each time the modal opens
+        selectedModalVariant = null;
+
+        const hasVariants    = p.variants?.options?.length > 0;
+        const salePrice      = p.display_price;
         const discountPercent = p.discount_percent;
-        const imageUrl        = p.image || '/images/unknown-product.svg';
+        const imageUrl       = p.image || '/images/unknown-product.svg';
+
+        // Pre-select first variant
+        if (hasVariants) {
+            selectedModalVariant = p.variants.options[0];
+        }
 
         modalContent.innerHTML = `
             <div class="grid md:grid-cols-2 gap-8">
@@ -379,16 +383,30 @@
                 <div class="flex flex-col">
                     <div class="mb-6">
                         <h2 class="text-3xl font-bold text-gray-900 mb-4">${p.name}</h2>
-                        ${p.company ? `<p class="text-sm text-gray-500 mb-2">by ${p.company}</p>` : ''}
                         ${p.is_on_promo ? `
                         <div class="inline-flex items-center gap-2 bg-brand-50 px-3 py-1 rounded-full mb-4">
                             <span class="text-brand-600 font-bold text-sm">${p.promo_label || discountPercent + '% OFF'}</span>
                         </div>` : ''}
-                        <div class="flex items-baseline gap-3 mb-6">
-                            <span class="text-4xl font-bold text-gray-900">${formatPrice(salePrice)}</span>
-                            ${p.is_on_promo ? `<span class="text-xl text-gray-400 line-through">${formatPrice(p.price)}</span>` : ''}
+                        <div class="flex items-baseline gap-3 mb-4" id="modal-price-block">
+                            <span class="text-4xl font-bold text-gray-900" id="modal-price">${formatPrice(hasVariants ? p.variants.options[0].price : salePrice)}</span>
+                            ${p.is_on_promo && !hasVariants ? `<span class="text-xl text-gray-400 line-through">${formatPrice(p.price)}</span>` : ''}
                         </div>
                     </div>
+                    ${hasVariants ? `
+                    <div class="mb-5">
+                        <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">${p.variants.attribute}</p>
+                        <div class="flex flex-wrap gap-2" id="modal-variant-options">
+                            ${p.variants.options.map((o, i) => `
+                                <button type="button"
+                                        class="modal-variant-btn px-3 py-1.5 rounded-lg border text-sm font-semibold transition-all
+                                               ${i === 0 ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'}"
+                                        data-price="${o.price}"
+                                        data-stock="${o.stock}"
+                                        data-label="${o.label}">
+                                    ${o.label}
+                                </button>`).join('')}
+                        </div>
+                    </div>` : ''}
                     <div class="mb-6">
                         <h3 class="text-sm font-bold text-gray-900 mb-2">Product Details</h3>
                         <p class="text-gray-600">${p.description || 'Contact seller for detailed specifications and availability.'}</p>
@@ -408,6 +426,27 @@
             </div>
         `;
 
+        // Attach variant pill click handlers after innerHTML is set
+        if (hasVariants) {
+            document.querySelectorAll('.modal-variant-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.modal-variant-btn').forEach(b => {
+                        b.classList.remove('border-brand-600', 'bg-brand-50', 'text-brand-700');
+                        b.classList.add('border-gray-200', 'bg-white', 'text-gray-700', 'hover:border-gray-400');
+                    });
+                    btn.classList.add('border-brand-600', 'bg-brand-50', 'text-brand-700');
+                    btn.classList.remove('border-gray-200', 'bg-white', 'text-gray-700', 'hover:border-gray-400');
+
+                    selectedModalVariant = {
+                        label: btn.dataset.label,
+                        price: parseFloat(btn.dataset.price),
+                        stock: parseInt(btn.dataset.stock, 10),
+                    };
+                    document.getElementById('modal-price').textContent = formatPrice(selectedModalVariant.price);
+                });
+            });
+        }
+
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     };
@@ -422,32 +461,59 @@
     }
 
     // ─── Add to Cart (localStorage) ───────────────────────────────────────────
-    window.addToCartFromShop  = id => addToCart(id);
-    window.addToCartFromModal = id => { addToCart(id); closeModal(); };
 
-    function addToCart(productId) {
+    // Card cart icon: redirect to product page if variants exist
+    window.addToCartFromShop = id => {
+        const p = allProducts.find(p => p.id == id);
+        if (p?.variants?.options?.length) {
+            window.location.href = '/product/' + p.slug;
+            return;
+        }
+        addToCart(id, null);
+    };
+
+    // Track the currently selected variant inside the quick-view modal
+    let selectedModalVariant = null;
+
+    window.addToCartFromModal = id => {
+        addToCart(id, selectedModalVariant);
+        closeModal();
+    };
+
+    function addToCart(productId, variant) {
         const p = allProducts.find(p => p.id == productId);
         if (!p) return;
 
+        // Safety-net: if product has variants but none chosen, redirect to product page
+        if (p.variants?.options?.length && !variant) {
+            window.location.href = '/product/' + p.slug;
+            return;
+        }
+
+        const price    = variant ? variant.price : p.display_price;
+        const cartKey  = variant ? `${productId}__${variant.label}` : String(productId);
+        const dispName = variant ? `${p.name} (${variant.label})` : p.name;
+
         const cart     = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existing = cart.find(item => item.id == productId);
+        const existing = cart.find(item => (item.cart_key ?? String(item.id)) === cartKey);
 
         if (existing) {
             existing.quantity += 1;
-            showToast(`${p.name} quantity updated!`);
+            showToast(`${dispName} quantity updated!`);
         } else {
-            const discountPercent = p.discount_percent;
             cart.push({
                 id:                  p.id,
-                name:                p.name,
-                price:               p.price,
-                discount_percentage: discountPercent,
+                cart_key:            cartKey,
+                name:                dispName,
+                variant:             variant ? variant.label : null,
+                price:               price,
+                discount_percentage: p.discount_percent,
                 quantity:            1,
-                stock_quantity:      999,
-                company:             p.company,
+                stock_quantity:      variant ? variant.stock : (p.stock_quantity ?? 999),
+                supplier:            p.supplier,
                 images:              p.image ? [p.image] : [],
             });
-            showToast(`${p.name} added to cart!`);
+            showToast(`${dispName} added to cart!`);
         }
 
         localStorage.setItem('cart', JSON.stringify(cart));

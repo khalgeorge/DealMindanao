@@ -85,7 +85,7 @@
     @include('partials.navbar')
     
     {{-- Main Content --}}
-    <main>
+    <main class="bg-white">
         @yield('content')
     </main>
     

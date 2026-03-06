@@ -57,17 +57,18 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0',
-            'shipping_address' => 'required|string',
-            'shipping_city' => 'required|string',
-            'shipping_province' => 'required|string',
-            'shipping_postal_code' => 'required|string',
-            'phone' => 'required|string',
-            'notes' => 'nullable|string',
-            'payment_method' => 'required|in:gcash,cod,bank_transfer',
+            'items'                  => 'required|array|min:1',
+            'items.*.product_id'     => 'required|exists:products,id',
+            'items.*.quantity'       => 'required|integer|min:1',
+            'items.*.price'          => 'required|numeric|min:0',
+            'items.*.variant'        => 'nullable|string|max:255',
+            'shipping_address'       => 'required|string',
+            'shipping_city'          => 'required|string',
+            'shipping_province'      => 'required|string',
+            'shipping_postal_code'   => 'nullable|string',
+            'phone'                  => 'nullable|string',
+            'notes'                  => 'nullable|string',
+            'payment_method'         => 'required|in:gcash,cod,bank_transfer',
         ]);
 
         // Calculate total
@@ -97,10 +98,11 @@ class OrderController extends Controller
         foreach ($validated['items'] as $item) {
             $product = \App\Models\Product::find($item['product_id']);
             $order->items()->create([
-                'product_id' => $item['product_id'],
+                'product_id'   => $item['product_id'],
                 'product_name' => $product->name,
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
+                'variant'      => $item['variant'] ?? null,
+                'quantity'     => $item['quantity'],
+                'price'        => $item['price'],
             ]);
         }
 

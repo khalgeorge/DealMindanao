@@ -106,10 +106,11 @@
     function loadCart() {
       let cart = JSON.parse(localStorage.getItem('cart') || '[]');
       
-      // Consolidate duplicate items by merging quantities
+      // Consolidate truly duplicate items (same cart_key = same product + same variant)
       const consolidatedCart = [];
       cart.forEach(item => {
-        const existing = consolidatedCart.find(c => c.id == item.id);
+        const key = item.cart_key ?? String(item.id);
+        const existing = consolidatedCart.find(c => (c.cart_key ?? String(c.id)) === key);
         if (existing) {
           existing.quantity += item.quantity;
         } else {
@@ -168,7 +169,8 @@
                 <div class="flex justify-between items-start gap-2">
                   <div>
                     <h3 class="font-bold text-gray-900 text-sm sm:text-lg mb-1">${item.name}</h3>
-                    <p class="text-xs text-gray-500">${item.company || 'Mindanao Partner'}</p>
+                    ${item.variant ? `<span class="inline-block text-[10px] font-bold text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-full mb-1">${item.variant}</span>` : ''}
+                    <p class="text-xs text-gray-500">${item.supplier || 'Mindanao Partner'}</p>
                   </div>
                   <button onclick="removeFromCart(${idx})" class="p-2 text-gray-300 hover:text-red-500 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>

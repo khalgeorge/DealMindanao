@@ -194,6 +194,7 @@
              </div>
              <div class="flex-1 min-w-0">
                 <p class="text-sm font-bold text-gray-900 truncate">${item.name}</p>
+                ${item.variant ? `<span class="inline-block text-[10px] font-bold text-brand-700 bg-brand-50 border border-brand-200 px-1.5 py-px rounded-full">${item.variant}</span>` : ''}
                 <p class="text-xs text-gray-500">${item.quantity} × ${formatPrice(itemPrice)}</p>
              </div>
              <div class="text-right">
@@ -245,17 +246,21 @@
       }, 0);
 
       // Prepare order data matching backend API structure
+      const addressParts = formData.get('address').split(',');
       const orderData = {
         items: cart.map(item => ({
           product_id: item.id,
-          quantity: item.quantity,
-          price: item.price
+          quantity:   item.quantity,
+          price:      item.price,
+          variant:    item.variant || null,
         })),
-        shipping_address: formData.get('address'),
-        shipping_city: formData.get('address').split(',')[formData.get('address').split(',').length - 2]?.trim() || 'Mindanao',
-        shipping_province: formData.get('address').split(',')[formData.get('address').split(',').length - 1]?.trim() || '',
-        payment_method: formData.get('payment_method'),
-        total_amount: total
+        shipping_address:     formData.get('address'),
+        shipping_city:        addressParts[addressParts.length - 2]?.trim() || 'Mindanao',
+        shipping_province:    addressParts[addressParts.length - 1]?.trim() || '',
+        shipping_postal_code: '',
+        phone:                formData.get('phone'),
+        payment_method:       formData.get('payment_method'),
+        total_amount:         total,
       };
 
       try {
@@ -270,10 +275,10 @@
         window.dispatchEvent(new Event('cart-updated'));
         showToast('Order placed successfully!', 'success');
         
-        // Redirect to order confirmation or success page
+        const orderNumber = response.order_number || response.data?.order_number || '';
         setTimeout(() => {
-          window.location.href = '/index.html?order_success=true';
-        }, 1500);
+          window.location.href = '/order-confirmed.html' + (orderNumber ? '?order=' + encodeURIComponent(orderNumber) : '');
+        }, 1000);
         
       } catch (err) {
         console.error('Order submission error:', err);

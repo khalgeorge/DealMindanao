@@ -19,8 +19,13 @@
         </svg>
       </div>
 
-      <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-4">Order Request Received</h1>
+      <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-4">Order Request Received!</h1>
       
+      <div id="order-number-block" class="hidden bg-brand-50 border border-brand-200 rounded-lg px-6 py-4 mb-6 inline-block">
+        <p class="text-xs font-black uppercase tracking-widest text-brand-500 mb-1">Order Number</p>
+        <p id="order-number-val" class="text-2xl font-black text-brand-700"></p>
+      </div>
+
       <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 mb-8">
         <p class="text-lg text-gray-700 leading-relaxed mb-6">
           Thank you for your order! Our team will review your request and contact you shortly to confirm payment and delivery details.
@@ -58,5 +63,13 @@
   <div id="footer"></div>
 
   <script type="module" src="/src/js/layout.js"></script>
+  <script>
+    const params      = new URLSearchParams(window.location.search);
+    const orderNumber = params.get('order');
+    if (orderNumber) {
+      document.getElementById('order-number-val').textContent  = orderNumber;
+      document.getElementById('order-number-block').classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>

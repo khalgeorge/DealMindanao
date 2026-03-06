@@ -37,6 +37,7 @@ class ShopController extends Controller
                     'category'         => $p->category?->slug ?? '',
                     'supplier_id'      => $p->supplier_id,
                     'supplier'         => $p->supplier?->name ?? '',
+                    'variants'         => $p->variants,
                 ];
             })
             ->values();
