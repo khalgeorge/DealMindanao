@@ -136,15 +136,27 @@
                         >
                     </div>
 
+                    {{-- reCAPTCHA v3 token (populated by JS on submit) --}}
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-register">
+
                     <!-- Submit Button -->
                     <div class="pt-4">
                         <button 
+                            id="register-submit-btn"
                             type="submit" 
                             class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-black uppercase tracking-widest rounded-lg shadow-lg shadow-brand-100 transition-all transform hover:scale-[1.02]"
                         >
                             Start Exploring
                         </button>
                     </div>
+
+                    @if(config('services.recaptcha.site_key'))
+                    <p class="text-[10px] text-gray-400 text-center">
+                        Protected by reCAPTCHA &mdash;
+                        <a href="https://policies.google.com/privacy" class="underline hover:text-gray-600" target="_blank" rel="noopener noreferrer">Privacy</a> &amp;
+                        <a href="https://policies.google.com/terms" class="underline hover:text-gray-600" target="_blank" rel="noopener noreferrer">Terms</a> apply.
+                    </p>
+                    @endif
 
                     <!-- Login Link -->
                     <div class="pt-6 text-center">
@@ -159,3 +171,50 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+@if(config('services.recaptcha.site_key'))
+<script>
+(function () {
+    // Lazy-load reCAPTCHA only on this page — does NOT block page rendering
+    var s = document.createElement('script');
+    s.src = 'https://www.google.com/recaptcha/api.js?render={{ config("services.recaptcha.site_key") }}';
+    s.async = true;
+    s.defer = true;
+    document.head.appendChild(s);
+
+    var form = document.querySelector('form[action*="register"]');
+    var btn  = document.getElementById('register-submit-btn');
+    if (!form || !btn) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = 'Verifying…';
+
+        function execute() {
+            if (typeof grecaptcha === 'undefined') {
+                return setTimeout(execute, 80);
+            }
+            grecaptcha.ready(function () {
+                grecaptcha.execute('{{ config("services.recaptcha.site_key") }}', { action: 'register' })
+                    .then(function (token) {
+                        document.getElementById('g-recaptcha-register').value = token;
+                        form.submit();
+                    })
+                    .catch(function () {
+                        btn.disabled = false;
+                        btn.textContent = 'Start Exploring';
+                    });
+            });
+        }
+        execute();
+    });
+}());
+</script>
+@else
+<script>
+/* reCAPTCHA not configured — form submits directly */
+</script>
+@endif
+@endpush

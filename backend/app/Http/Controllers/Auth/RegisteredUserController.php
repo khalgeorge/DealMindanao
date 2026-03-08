@@ -9,8 +9,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -39,6 +42,37 @@ class RegisteredUserController extends Controller
             ]);
         }
         RateLimiter::hit($ipKey, 3600); // decay: 1 hour
+
+        // ── reCAPTCHA v3 verification ────────────────────────────────────────
+        $secretKey = config('services.recaptcha.secret_key');
+        $token     = $request->input('g-recaptcha-response');
+
+        if ($secretKey && $token !== 'dev-bypass') {
+            if (empty($token)) {
+                throw ValidationException::withMessages([
+                    'email' => 'CAPTCHA verification required. Please try again.',
+                ]);
+            }
+            try {
+                /** @var \Illuminate\Http\Client\Response $resp */
+                $resp = Http::asForm()->timeout(5)->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret'   => $secretKey,
+                    'response' => $token,
+                    'remoteip' => $request->ip(),
+                ]);
+                $data = $resp->json() ?? [];
+                if (!($data['success'] ?? false) || ($data['score'] ?? 0) < 0.5) {
+                    throw ValidationException::withMessages([
+                        'email' => 'CAPTCHA verification failed. Please refresh and try again.',
+                    ]);
+                }
+            } catch (ValidationException $e) {
+                throw $e;
+            } catch (\Exception $e) {
+                Log::warning('reCAPTCHA check failed: ' . $e->getMessage());
+                // Don't block user if reCAPTCHA service is down
+            }
+        }
 
         // ── Validation ───────────────────────────────────────────────────────
         $request->validate([
