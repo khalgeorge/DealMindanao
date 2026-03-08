@@ -62,6 +62,13 @@
                 <form method="POST" action="{{ route('register') }}" class="space-y-4">
                     @csrf
 
+                    {{-- Honeypot: must stay empty. Bots fill this; humans never see it. --}}
+                    <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;overflow:hidden;" aria-hidden="true">
+                        <label for="_hp">Leave this blank</label>
+                        <input type="text" id="_hp" name="_hp" value="" tabindex="-1" autocomplete="off">
+                        <input type="text" id="website" name="website" value="" tabindex="-1" autocomplete="off">
+                    </div>
+
                     <!-- Name -->
                     <div>
                         <label for="name" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">

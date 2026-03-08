@@ -9,7 +9,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -19,6 +21,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        // Store timestamp so we can detect instant/bot submissions
+        session(['_reg_started' => now()->timestamp]);
+
         return view('auth.register');
     }
 
@@ -29,17 +34,49 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // ── Anti-DDoS: per-IP hourly rate limit ─────────────────────────────
+        $ipKey = 'register|' . $request->ip();
+        if (RateLimiter::tooManyAttempts($ipKey, 10)) {
+            $seconds = RateLimiter::availableIn($ipKey);
+            throw ValidationException::withMessages([
+                'email' => "Too many registration attempts. Please try again in " . ceil($seconds / 60) . " minute(s).",
+            ]);
+        }
+        RateLimiter::hit($ipKey, 3600); // decay: 1 hour
+
+        // ── Anti-robot: honeypot check ───────────────────────────────────────
+        // Bots fill in hidden fields; humans don't see them and leave them blank
+        if ($request->filled('_hp') || $request->filled('website')) {
+            // Silently redirect as if successful (don't tell bot it was caught)
+            return redirect()->route('dashboard');
+        }
+
+        // ── Anti-robot: minimum form-fill time (< 3s = bot) ─────────────────
+        $startedAt = session('_reg_started');
+        if (!$startedAt || (now()->timestamp - $startedAt) < 3) {
+            throw ValidationException::withMessages([
+                'name' => 'Form submitted too quickly. Please try again.',
+            ]);
+        }
+        session()->forget('_reg_started');
+
+        // ── Validation ───────────────────────────────────────────────────────
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name'     => ['required', 'string', 'min:2', 'max:255', 'regex:/^[\pL\s\-\.\']+$/u'],
+            'email'    => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
+        ], [
+            'name.regex' => 'Name may only contain letters, spaces, hyphens, and periods.',
+            'email.email' => 'Please enter a valid email address.',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => strip_tags(trim($request->name)),
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        RateLimiter::clear($ipKey);
 
         event(new Registered($user));
 
@@ -48,3 +85,4 @@ class RegisteredUserController extends Controller
         return redirect(route('dashboard', absolute: false));
     }
 }
+
