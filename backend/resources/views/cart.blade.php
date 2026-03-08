@@ -246,14 +246,16 @@
   @if(session('reorder_items'))
   (function () {
     const reorderItems = @json(session('reorder_items'));
-    const existing = JSON.parse(localStorage.getItem('cart') || '[]');
+    // Start from current cart, remove any stale entry for the same product+variant,
+    // then push the fresh reorder item (avoids quantity stacking from previous reorder attempts).
+    let existing = JSON.parse(localStorage.getItem('cart') || '[]');
     reorderItems.forEach(function (newItem) {
-      const found = existing.find(function (c) { return c.id == newItem.id; });
-      if (found) {
-        found.quantity += newItem.quantity;
-      } else {
-        existing.push(newItem);
-      }
+      const newKey = newItem.cart_key ?? String(newItem.id);
+      // Drop ALL existing entries that resolve to the same cart_key
+      existing = existing.filter(function (c) {
+        return (c.cart_key ?? String(c.id)) !== newKey;
+      });
+      existing.push(newItem);
     });
     localStorage.setItem('cart', JSON.stringify(existing));
     window.dispatchEvent(new Event('cart-updated'));

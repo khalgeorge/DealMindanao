@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -71,40 +75,94 @@ class OrderController extends Controller
             'payment_method'         => 'required|in:gcash,cod,bank_transfer',
         ]);
 
+        // Pre-load all products to minimise queries
+        $productIds = collect($validated['items'])->pluck('product_id')->unique();
+        $products   = \App\Models\Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        // ── 1. Validate stock availability ────────────────────────────────────
+        foreach ($validated['items'] as $item) {
+            $product      = $products->get($item['product_id']);
+            $variantLabel = $item['variant'] ?? null;
+
+            if ($variantLabel && $product->variants) {
+                $options = $product->variants['options'] ?? [];
+                $option  = collect($options)->firstWhere('label', $variantLabel);
+
+                if (!$option) {
+                    return response()->json([
+                        'message' => "Variant \"{$variantLabel}\" not found for {$product->name}.",
+                    ], 422);
+                }
+
+                if ((int) $option['stock'] < $item['quantity']) {
+                    return response()->json([
+                        'message' => "Not enough stock for {$product->name} ({$variantLabel}). Available: {$option['stock']}.",
+                    ], 422);
+                }
+            } else {
+                if ($product->stock_quantity < $item['quantity']) {
+                    return response()->json([
+                        'message' => "Not enough stock for {$product->name}. Available: {$product->stock_quantity}.",
+                    ], 422);
+                }
+            }
+        }
+
         // Calculate total
-        $total = collect($validated['items'])->sum(function ($item) {
-            return $item['price'] * $item['quantity'];
-        });
+        $total = collect($validated['items'])->sum(fn($item) => $item['price'] * $item['quantity']);
 
         // Generate unique order number
         $orderNumber = 'DM-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
 
-        // Create order
-        $order = Order::create([
-            'user_id' => $request->user()->id,
-            'order_number' => $orderNumber,
-            'total' => $total,
-            'status' => 'pending',
-            'shipping_address' => $validated['shipping_address'],
-            'shipping_city' => $validated['shipping_city'],
-            'shipping_province' => $validated['shipping_province'],
-            'shipping_postal_code' => $validated['shipping_postal_code'],
-            'phone' => $validated['phone'],
-            'notes' => $validated['notes'] ?? null,
-            'payment_method' => $validated['payment_method'],
-        ]);
-
-        // Create order items
-        foreach ($validated['items'] as $item) {
-            $product = \App\Models\Product::find($item['product_id']);
-            $order->items()->create([
-                'product_id'   => $item['product_id'],
-                'product_name' => $product->name,
-                'variant'      => $item['variant'] ?? null,
-                'quantity'     => $item['quantity'],
-                'price'        => $item['price'],
+        // ── 2. Create order, items, and deduct stock atomically ───────────────
+        $order = DB::transaction(function () use ($validated, $total, $orderNumber, $request, $products) {
+            $order = Order::create([
+                'user_id'              => $request->user()->id,
+                'order_number'         => $orderNumber,
+                'total'                => $total,
+                'status'               => 'pending',
+                'shipping_address'     => $validated['shipping_address'],
+                'shipping_city'        => $validated['shipping_city'],
+                'shipping_province'    => $validated['shipping_province'],
+                'shipping_postal_code' => $validated['shipping_postal_code'],
+                'phone'                => $validated['phone'],
+                'notes'                => $validated['notes'] ?? null,
+                'payment_method'       => $validated['payment_method'],
             ]);
-        }
+
+            foreach ($validated['items'] as $item) {
+                $product      = $products->get($item['product_id']);
+                $variantLabel = $item['variant'] ?? null;
+
+                $order->items()->create([
+                    'product_id'   => $item['product_id'],
+                    'product_name' => $product->name,
+                    'variant'      => $variantLabel,
+                    'quantity'     => $item['quantity'],
+                    'price'        => $item['price'],
+                ]);
+
+                // ── Deduct stock ──────────────────────────────────────────────
+                if ($variantLabel && $product->variants) {
+                    // Variant product: update the stock inside the JSON options
+                    $variants = $product->variants;
+                    foreach ($variants['options'] as &$option) {
+                        if ($option['label'] === $variantLabel) {
+                            $option['stock'] = max(0, (int) $option['stock'] - $item['quantity']);
+                            break;
+                        }
+                    }
+                    unset($option);
+                    $product->variants = $variants;
+                    $product->save();
+                } else {
+                    // Simple product: decrement the stock column directly
+                    $product->decrement('stock_quantity', $item['quantity']);
+                }
+            }
+
+            return $order;
+        });
 
         $order->load(['items.product']);
 
@@ -113,7 +171,7 @@ class OrderController extends Controller
             \Illuminate\Support\Facades\Mail::to($request->user()->email)
                 ->send(new \App\Mail\OrderConfirmationMail($order));
         } catch (\Exception $e) {
-            \Log::error('Failed to send order confirmation email: ' . $e->getMessage());
+            Log::error('Failed to send order confirmation email: ' . $e->getMessage());
         }
 
         // Send email notification to admin (if configured)
@@ -124,7 +182,7 @@ class OrderController extends Controller
                     ->send(new \App\Mail\AdminNewOrderMail($order));
             }
         } catch (\Exception $e) {
-            \Log::error('Failed to send admin order notification email: ' . $e->getMessage());
+            Log::error('Failed to send admin order notification email: ' . $e->getMessage());
         }
 
         return response()->json($order, 201);
@@ -173,7 +231,33 @@ class OrderController extends Controller
             ], 422);
         }
 
-        $order->update(['status' => 'cancelled']);
+        DB::transaction(function () use ($order) {
+            $order->load('items.product');
+            $order->update(['status' => 'cancelled']);
+
+            // Restore stock for each cancelled item
+            foreach ($order->items as $item) {
+                $product = $item->product;
+                if (!$product) continue;
+
+                $variantLabel = $item->variant;
+
+                if ($variantLabel && $product->variants) {
+                    $variants = $product->variants;
+                    foreach ($variants['options'] as &$option) {
+                        if ($option['label'] === $variantLabel) {
+                            $option['stock'] = (int) $option['stock'] + $item->quantity;
+                            break;
+                        }
+                    }
+                    unset($option);
+                    $product->variants = $variants;
+                    $product->save();
+                } else {
+                    $product->increment('stock_quantity', $item->quantity);
+                }
+            }
+        });
 
         return response()->json([
             'message' => 'Order cancelled successfully',

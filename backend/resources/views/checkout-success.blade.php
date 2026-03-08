@@ -4,6 +4,7 @@
 @section('meta_description', 'Your order request is received. We will contact you to arrange offline payment.')
 
 @section('content')
+<div class="py-24">
 <div class="card max-w-xl mx-auto text-center">
     <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-3xl">
         ✅
@@ -36,6 +37,7 @@
             Back to Home
         </a>
     </div>
+</div>
 </div>
 @endsection
 

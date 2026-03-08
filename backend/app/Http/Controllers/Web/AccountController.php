@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -53,6 +54,7 @@ class AccountController extends Controller
 
     public function updateProfile(Request $request)
     {
+        /** @var User $user */
         $user  = Auth::user();
         $rules = [
             'name'  => ['required', 'string', 'max:255'],
@@ -107,6 +109,7 @@ class AccountController extends Controller
             'new_password.confirmed'    => 'New password confirmation does not match.',
         ]);
 
+        /** @var User $user */
         $user = Auth::user();
 
         if (!Hash::check($request->current_password, $user->password)) {
@@ -216,9 +219,9 @@ class AccountController extends Controller
     {
         abort_if($order->user_id !== Auth::id(), 403);
 
-        $order->load('items.product.company');
+        $order->load('items.product.supplier');
 
-        $cartItems    = [];
+        $cartMap     = [];   // keyed by "productId__variant" to merge duplicates
         $skippedItems = [];
 
         foreach ($order->items as $item) {
@@ -229,21 +232,32 @@ class AccountController extends Controller
                 continue;
             }
 
+            $variantLabel = $item->variant ?? '';
+            $key          = $product->id . '__' . $variantLabel;
+
             $discountPct = 0;
             if ($product->isOnPromo() && $product->price > 0) {
                 $discountPct = (int) round($product->discount / $product->price * 100);
             }
 
-            $cartItems[] = [
-                'id'                  => $product->id,
-                'name'                => $product->name,
-                'price'               => (float) $product->price,
-                'discount_percentage' => $discountPct,
-                'quantity'            => (int) $item->quantity,
-                'images'              => $product->images ?? [],
-                'company'             => $product->company?->name ?? 'Local Partner',
-            ];
+            if (isset($cartMap[$key])) {
+                $cartMap[$key]['quantity'] += (int) $item->quantity;
+            } else {
+                $cartMap[$key] = [
+                    'id'                  => $product->id,
+                    'cart_key'            => $variantLabel ? ($product->id . '__' . $variantLabel) : (string) $product->id,
+                    'name'                => $product->name,
+                    'price'               => (float) $product->price,
+                    'discount_percentage' => $discountPct,
+                    'quantity'            => (int) $item->quantity,
+                    'images'              => $product->images ?? [],
+                    'company'             => $product->supplier?->name ?? 'Local Partner',
+                    'variant'             => $variantLabel ?: null,
+                ];
+            }
         }
+
+        $cartItems = array_values($cartMap);
 
         if (empty($cartItems)) {
             return back()->with('reorder_error', 'None of the items from this order are currently available.');

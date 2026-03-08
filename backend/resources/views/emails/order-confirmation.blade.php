@@ -45,7 +45,7 @@
             <tfoot>
                 <tr>
                     <td colspan="3" style="padding: 16px 12px 12px; text-align: right; font-weight: bold; font-size: 16px; color: #111827;">Total</td>
-                    <td style="padding: 16px 12px 12px; text-align: right; font-weight: bold; font-size: 18px; color: #059669;">₱{{ number_format($order->total_amount, 2) }}</td>
+                    <td style="padding: 16px 12px 12px; text-align: right; font-weight: bold; font-size: 18px; color: #059669;">₱{{ number_format($order->total, 2) }}</td>
                 </tr>
             </tfoot>
         </table>

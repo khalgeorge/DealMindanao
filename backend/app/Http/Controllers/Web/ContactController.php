@@ -43,13 +43,14 @@ class ContactController extends Controller
             }
 
             try {
+                /** @var \Illuminate\Http\Client\Response $response */
                 $response = Http::asForm()->timeout(5)->post('https://www.google.com/recaptcha/api/siteverify', [
                     'secret'   => $secretKey,
                     'response' => $token,
                     'remoteip' => $request->ip(),
                 ]);
 
-                $data = $response->json();
+                $data = $response->json() ?? [];
 
                 if (!($data['success'] ?? false) || ($data['score'] ?? 0) < 0.5) {
                     return back()

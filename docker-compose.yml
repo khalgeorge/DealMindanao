@@ -11,6 +11,7 @@ services:
       - ./backend/php.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - db
+      - mailpit
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html/public
       - APP_NAME="DealMindanao API"
@@ -29,6 +30,15 @@ services:
       MYSQL_PASSWORD: password
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - dealmindanao
+
+  # Mailpit - Local email catcher (inbox at http://localhost:8025)
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP
     networks:
       - dealmindanao
 
