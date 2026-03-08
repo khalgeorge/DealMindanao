@@ -21,9 +21,8 @@ return [
 
     'allowed_origins' => array_filter([
         env('FRONTEND_URL'),
-        // Fallback for local dev only
-        app()->environment('local', 'staging') ? 'http://localhost:5173' : null,
-        app()->environment('local', 'staging') ? 'http://localhost:3000' : null,
+        env('APP_ENV') !== 'production' ? 'http://localhost:5173' : null,
+        env('APP_ENV') !== 'production' ? 'http://localhost:3000' : null,
     ]),
 
     'allowed_origins_patterns' => [],
