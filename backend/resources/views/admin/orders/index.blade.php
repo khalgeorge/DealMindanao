@@ -490,7 +490,10 @@ function printInvoice() {
                 <tbody>
                     ${orderData.items.map(item => `
                         <tr>
-                            <td>${item.product_name || 'Product'}</td>
+                            <td>
+                                ${item.product_name || 'Product'}
+                                ${item.variant ? '<br><span style="font-size:10px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">' + item.variant + '</span>' : ''}
+                            </td>
                             <td>${formatPrice(item.price)}</td>
                             <td>${item.quantity}</td>
                             <td style="text-align: right;">${formatPrice(item.price * item.quantity)}</td>
