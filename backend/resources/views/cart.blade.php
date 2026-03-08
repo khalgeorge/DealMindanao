@@ -60,10 +60,7 @@
               <span>Subtotal</span>
               <span id="subtotal" class="font-bold text-gray-900">₱0.00</span>
             </div>
-            <div class="flex justify-between text-gray-600">
-              <span>Mindanao Delivery</span>
-              <span id="shipping-fee" class="font-bold text-green-600">FREE</span>
-            </div>
+
             <div class="border-t border-gray-100 pt-4 flex justify-between">
               <span class="text-lg font-bold text-gray-900">Total</span>
               <span id="total" class="text-2xl font-black text-brand-600">₱0.00</span>
