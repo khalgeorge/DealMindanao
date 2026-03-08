@@ -49,8 +49,13 @@
     </button>
   </div>
 
-  <h1>Order {{ $order->order_number }}</h1>
-  <p class="meta">Placed on {{ $order->created_at->format('F j, Y, g:i A') }}</p>
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+    <img src="/logo_main-final.png" alt="DealMindanao" style="height:48px; object-fit:contain;">
+    <div style="text-align:right;">
+      <h1 style="font-size:18px; font-weight:700; margin:0;">Order {{ $order->order_number }}</h1>
+      <p class="meta" style="margin:4px 0 0;">Placed on {{ $order->created_at->format('F j, Y, g:i A') }}</p>
+    </div>
+  </div>
 
   {{-- Items table (no price columns) --}}
   <p class="section-title">Items to Prepare</p>
