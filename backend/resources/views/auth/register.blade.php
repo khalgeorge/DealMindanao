@@ -4,21 +4,42 @@
 @section('meta_description', 'Create an account to access exclusive local deals from Mindanao.')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-32">
+<div class="min-h-screen bg-gray-50 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white via-gray-50 to-gray-100 py-32">
     <div class="container mx-auto px-6">
-        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl shadow-brand-100 overflow-hidden flex flex-col md:flex-row-reverse border border-gray-100">
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl shadow-brand-100 overflow-hidden flex flex-col md:flex-row border border-gray-100">
             <!-- Side Decor -->
-            <div class="md:w-1/2 bg-gray-900 p-12 text-white flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-brand-600 rounded-full blur-2xl opacity-50"></div>
+            <div class="md:w-1/2 bg-brand-600 p-12 text-white flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
                 <div class="relative z-10">
                     <h2 class="text-3xl font-black italic tracking-tighter">DEALMINDANAO</h2>
-                    <p class="mt-6 text-gray-400 font-medium leading-relaxed italic">"Bringing Mindanao's quality to the center stage."</p>
+                    <p class="mt-6 text-brand-100 font-medium leading-relaxed">Discover the finest local products and exclusive deals straight from Mindanao.</p>
                 </div>
-                
-                <div class="bg-white/5 p-6 rounded-lg backdrop-blur-sm border border-white/10 relative z-10">
-                    <p class="text-xs font-bold uppercase tracking-widest text-brand-400 mb-2">Benefit #1</p>
-                    <h4 class="font-black text-lg">Exclusive Early Access</h4>
-                    <p class="text-sm text-gray-400 mt-2">Be the first to know about limited handicrafts and seasonal harvests.</p>
+
+                <div class="space-y-6 relative z-10">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm font-bold uppercase tracking-widest">Exclusive Early Access</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm font-bold uppercase tracking-widest">Authentic Local Products</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm font-bold uppercase tracking-widest">Order Tracking</span>
+                    </div>
                 </div>
             </div>
 
@@ -51,7 +72,7 @@
                             id="name" 
                             name="name" 
                             value="{{ old('name') }}" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent @error('name') border-red-500 @enderror" 
+                            class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all @error('name') border-red-500 @enderror" 
                             placeholder="Juan Dela Cruz" 
                             required 
                             autofocus
@@ -71,7 +92,7 @@
                             id="email" 
                             name="email" 
                             value="{{ old('email') }}" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent @error('email') border-red-500 @enderror" 
+                            class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all @error('email') border-red-500 @enderror" 
                             placeholder="juan@example.ph" 
                             required
                         >
@@ -89,7 +110,7 @@
                             type="password" 
                             id="password" 
                             name="password" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent @error('password') border-red-500 @enderror" 
+                            class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all @error('password') border-red-500 @enderror" 
                             placeholder="••••••••" 
                             required
                         >
@@ -108,7 +129,7 @@
                             type="password" 
                             id="password_confirmation" 
                             name="password_confirmation" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent" 
+                            class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all" 
                             placeholder="••••••••" 
                             required
                         >
