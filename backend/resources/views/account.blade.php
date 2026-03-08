@@ -66,7 +66,7 @@
       <form method="POST" action="{{ route('logout') }}" class="sm:ml-auto">
         @csrf
         <button type="submit"
-                class="text-sm text-gray-400 hover:text-red-500 transition-colors font-medium focus-visible:outline-none focus-visible:underline"
+                class="btn-danger btn-sm px-4"
                 aria-label="Log out of your account">
           Logout
         </button>

@@ -72,9 +72,13 @@ class OrderController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,contacted,processing,completed,cancelled',
+            'notes'  => 'nullable|string|max:2000',
         ]);
         
-        $order->update(['status' => $request->status]);
+        $order->update([
+            'status' => $request->status,
+            'notes'  => $request->notes,
+        ]);
         
         // Return JSON for AJAX requests
         if ($request->expectsJson()) {

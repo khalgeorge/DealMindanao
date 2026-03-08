@@ -194,6 +194,11 @@
                                     <option value="cancelled">Cancelled</option>
                                 </select>
                             </div>
+                            <div>
+                                <label class="block text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-2">Admin Notes</label>
+                                <textarea id="modal-admin-notes" rows="3" placeholder="Internal notes about this order..."
+                                          class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none text-gray-700 text-xs resize-none"></textarea>
+                            </div>
                             <button onclick="updateOrderStatus()" class="w-full py-2.5 bg-brand-600 text-white rounded-lg font-black text-[10px] uppercase tracking-widest shadow-lg shadow-brand-100 hover:bg-brand-700 transition-all">
                                 Save Changes
                             </button>
@@ -204,7 +209,7 @@
                 <section>
                     <h3 class="text-[11px] font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <span class="w-1 h-4 bg-brand-600 rounded-full"></span>
-                        Order Items
+                        Order Items1
                     </h3>
                     <div class="rounded-xl border border-gray-100 overflow-hidden">
                         <table class="w-full text-left bg-white">
@@ -342,6 +347,7 @@ async function manageOrder(orderId) {
         document.getElementById('modal-customer-email').innerText = order.email;
         document.getElementById('modal-payment-method').innerText = order.payment_method.toUpperCase();
         document.getElementById('modal-update-status').value = order.status;
+        document.getElementById('modal-admin-notes').value = order.notes ?? '';
 
         const statusBadge = document.getElementById('modal-order-status');
         statusBadge.innerText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
@@ -395,7 +401,7 @@ async function updateOrderStatus() {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ status: newStatus })
+            body: JSON.stringify({ status: newStatus, notes: document.getElementById('modal-admin-notes').value })
         });
         
         if (!response.ok) throw new Error('Failed to update status');

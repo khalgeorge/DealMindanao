@@ -48,14 +48,37 @@
         {{-- Actions --}}
         <div class="flex items-center space-x-3">
             @auth
-                <a href="{{ route('account') }}"
-                   class="p-2 transition-colors {{ $isAccountActive ? 'text-brand-600' : 'text-gray-700 hover:text-brand-600' }}"
-                   aria-label="My Account"
-                   @if($isAccountActive) aria-current="page" @endif>
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                </a>
+                {{-- Account dropdown --}}
+                <div class="relative" id="account-dropdown-wrap">
+                    <button id="account-dropdown-btn"
+                            class="p-2 transition-colors {{ $isAccountActive ? 'text-brand-600' : 'text-gray-700 hover:text-brand-600' }} flex items-center gap-1"
+                            aria-label="Account menu"
+                            aria-expanded="false"
+                            aria-haspopup="true">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span class="hidden md:inline text-sm font-semibold max-w-[120px] truncate">{{ Auth::user()->name }}</span>
+                        <svg class="w-3 h-3 hidden md:inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="account-dropdown-menu"
+                         class="hidden absolute right-0 mt-1 w-auto min-w-max bg-white border border-gray-100 rounded-xl shadow-lg py-1 z-50">
+                        <a href="{{ route('account') }}"
+                           class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            My Account
+                        </a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                    class="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                Log Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
             @else
                 <a href="{{ route('login') }}"
                    class="p-2 text-gray-700 hover:text-brand-600 transition-colors"
@@ -112,6 +135,16 @@
         const isNowOpen = !mobileMenu.classList.toggle('hidden');
         mobileMenuBtn.setAttribute('aria-expanded', String(isNowOpen));
     });
+
+    // Account dropdown toggle
+    const acctBtn  = document.getElementById('account-dropdown-btn');
+    const acctMenu = document.getElementById('account-dropdown-menu');
+    acctBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !acctMenu.classList.toggle('hidden');
+        acctBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+    document.addEventListener('click', () => acctMenu?.classList.add('hidden'));
 
     function updateCartCount() {
         const cart       = JSON.parse(localStorage.getItem('cart') || '[]');
