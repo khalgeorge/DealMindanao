@@ -64,11 +64,11 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name</label>
-              <input type="text" name="shipping_name" required placeholder="Juan Dela Cruz" class="input" value="{{ old('shipping_name', $defaultAddress?->full_name) }}">
+              <input type="text" name="shipping_name" required placeholder="Juan Dela Cruz" class="input" value="{{ old('shipping_name', $defaultAddress?->full_name ?? $user->name) }}">
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number</label>
-              <input type="tel" name="shipping_phone" required placeholder="09XX XXX XXXX" class="input" value="{{ old('shipping_phone', $defaultAddress?->phone) }}">
+              <input type="tel" name="shipping_phone" required placeholder="09XX XXX XXXX" class="input" value="{{ old('shipping_phone', $defaultAddress?->phone ?? $user->phone) }}">
             </div>
             <div class="md:col-span-2">
               <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email Address</label>

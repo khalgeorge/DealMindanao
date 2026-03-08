@@ -21,7 +21,9 @@ class CheckoutController extends Controller
             ->where('is_default', true)
             ->first();
 
-        return view('checkout', compact('defaultAddress'));
+        $user = Auth::user();
+
+        return view('checkout', compact('defaultAddress', 'user'));
     }
     
     public function store(CheckoutRequest $request)

@@ -213,65 +213,6 @@ class AccountController extends Controller
         ]);
     }
 
-    // ─── Reorder ───────────────────────────────────────────────────────────────
-
-    public function reorder(Order $order)
-    {
-        abort_if($order->user_id !== Auth::id(), 403);
-
-        $order->load('items.product.supplier');
-
-        $cartMap     = [];   // keyed by "productId__variant" to merge duplicates
-        $skippedItems = [];
-
-        foreach ($order->items as $item) {
-            $product = $item->product;
-
-            if (!$product || !$product->is_active || $product->stock_quantity <= 0) {
-                $skippedItems[] = $item->product_name;
-                continue;
-            }
-
-            $variantLabel = $item->variant ?? '';
-            $key          = $product->id . '__' . $variantLabel;
-
-            $discountPct = 0;
-            if ($product->isOnPromo() && $product->price > 0) {
-                $discountPct = (int) round($product->discount / $product->price * 100);
-            }
-
-            if (isset($cartMap[$key])) {
-                $cartMap[$key]['quantity'] += (int) $item->quantity;
-            } else {
-                $cartMap[$key] = [
-                    'id'                  => $product->id,
-                    'cart_key'            => $variantLabel ? ($product->id . '__' . $variantLabel) : (string) $product->id,
-                    'name'                => $product->name,
-                    'price'               => (float) $product->price,
-                    'discount_percentage' => $discountPct,
-                    'quantity'            => (int) $item->quantity,
-                    'images'              => $product->images ?? [],
-                    'company'             => $product->supplier?->name ?? 'Local Partner',
-                    'variant'             => $variantLabel ?: null,
-                ];
-            }
-        }
-
-        $cartItems = array_values($cartMap);
-
-        if (empty($cartItems)) {
-            return back()->with('reorder_error', 'None of the items from this order are currently available.');
-        }
-
-        session()->flash('reorder_items', $cartItems);
-
-        if (!empty($skippedItems)) {
-            session()->flash('reorder_skipped', $skippedItems);
-        }
-
-        return redirect()->route('cart');
-    }
-
     // ─── Cancel Order ──────────────────────────────────────────────────────────
 
     public function cancelOrder(Order $order)

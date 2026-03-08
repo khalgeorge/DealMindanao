@@ -242,30 +242,7 @@
     loadCart();
   };
 
-  // ─── Reorder flash: merge server-side items into localStorage cart ──────────
-  @if(session('reorder_items'))
-  (function () {
-    const reorderItems = @json(session('reorder_items'));
-    // Start from current cart, remove any stale entry for the same product+variant,
-    // then push the fresh reorder item (avoids quantity stacking from previous reorder attempts).
-    let existing = JSON.parse(localStorage.getItem('cart') || '[]');
-    reorderItems.forEach(function (newItem) {
-      const newKey = newItem.cart_key ?? String(newItem.id);
-      // Drop ALL existing entries that resolve to the same cart_key
-      existing = existing.filter(function (c) {
-        return (c.cart_key ?? String(c.id)) !== newKey;
-      });
-      existing.push(newItem);
-    });
-    localStorage.setItem('cart', JSON.stringify(existing));
-    window.dispatchEvent(new Event('cart-updated'));
-  })();
-  @endif
-
   loadCart();
 
-  @if(session('reorder_skipped'))
-  showToast('Some items could not be added because they\'re currently unavailable.', 'info');
-  @endif
 </script>
 @endpush

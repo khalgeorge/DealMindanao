@@ -595,8 +595,7 @@ document.getElementById('order-search')?.addEventListener('input', (e) => {
 
 // Sort functionality (currently disabled - would need backend implementation)
 document.getElementById('sort-order')?.addEventListener('change', (e) => {
-    // Note: Sort requires backend implementation
-    console.log('Sort by:', e.target.value);
+    // TODO: implement sort
 });
 </script>
 @endpush

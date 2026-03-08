@@ -60,7 +60,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/account/addresses/{address}',               [AccountController::class, 'updateAddress'])->name('account.addresses.update');
     Route::delete('/account/addresses/{address}',            [AccountController::class, 'destroyAddress'])->name('account.addresses.destroy');
     Route::post('/account/addresses/{address}/set-default',  [AccountController::class, 'setDefaultAddress'])->name('account.addresses.setDefault');
-    Route::post('/account/orders/{order}/reorder',           [AccountController::class, 'reorder'])->name('account.orders.reorder');
     Route::post('/account/orders/{order}/cancel',            [AccountController::class, 'cancelOrder'])->name('account.orders.cancel');
 });
 

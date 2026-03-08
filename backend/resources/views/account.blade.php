@@ -303,11 +303,6 @@
     @if(session('success_order'))
     <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm font-medium" role="alert">{{ session('success_order') }}</div>
     @endif
-    {{-- Reorder error notice --}}
-    @if(session('reorder_error'))
-    <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium" role="alert">{{ session('reorder_error') }}</div>
-    @endif
-
     {{-- Filter Tabs --}}
     @php
       $activeStatus = $status ?? '';
@@ -504,17 +499,6 @@
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
                   View Details
                 </button>
-                <form method="POST" action="{{ route('account.orders.reorder', $order) }}" class="flex-1">
-                  @csrf
-                  <button type="submit"
-                          aria-label="Reorder items from order {{ $order->order_number }}"
-                          class="w-full text-xs font-semibold text-gray-600 hover:text-gray-900
-                                 border border-gray-200 hover:border-gray-400 hover:bg-gray-50
-                                 rounded-lg px-4 py-2 transition-colors
-                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400">
-                    Reorder
-                  </button>
-                </form>
                 @if($order->status === 'pending')
                 <form method="POST" action="{{ route('account.orders.cancel', $order) }}" class="flex-1"
                       onsubmit="return confirm('Cancel order {{ $order->order_number }}? This cannot be undone.')">
