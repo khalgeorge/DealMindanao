@@ -1,6 +1,7 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('password.store') }}" class="space-y-4">
         @csrf
+        <x-honeypot />
 
         <!-- Password Reset Token -->
         <input type="hidden" name="token" value="{{ $request->route('token') }}">

@@ -8,6 +8,7 @@
 
     <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
         @csrf
+        <x-honeypot />
 
         <!-- Email Address -->
         <div class="space-y-1">

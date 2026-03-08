@@ -25,6 +25,7 @@
 
     <form id="checkout-form" class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start" method="POST" action="{{ route('checkout.store') }}">
       @csrf
+      <x-honeypot />
 
       {{-- Hidden fields populated by JS — display:none removes from grid flow --}}
       <div id="cart-hidden-fields" class="hidden"></div>

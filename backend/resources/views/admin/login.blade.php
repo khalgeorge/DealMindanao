@@ -16,6 +16,7 @@
         
         <form class="p-8 space-y-6" method="POST" action="{{ route('admin.login.post') }}">
             @csrf
+            <x-honeypot />
             
             <!-- Error Messages -->
             @if ($errors->any())

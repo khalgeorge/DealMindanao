@@ -45,14 +45,14 @@ Route::get('/products/{slug}', fn($slug) => redirect()->route('product.show', $s
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
 // Checkout (requires authentication)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'throttle:20,1'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
 });
 
 // User Account (requires authentication)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::post('/account/profile',  [AccountController::class, 'updateProfile'])->name('account.profile.update');
     Route::post('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
 // Static Pages
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
-Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send')->middleware(['throttle:3,1', 'honeypot']);
 Route::get('/partner', [PageController::class, 'partner'])->name('partner');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
@@ -253,7 +253,7 @@ Route::post('/admin/login', function (\Illuminate\Http\Request $request) {
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
     ]);
-})->name('admin.login.post')->middleware('guest');
+})->name('admin.login.post')->middleware(['guest', 'throttle:5,1', 'honeypot']);
 
 Route::match(['get', 'post'], '/admin/logout', function () {
     Auth::logout();

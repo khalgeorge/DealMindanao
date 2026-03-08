@@ -110,6 +110,7 @@
 
                     <form method="POST" action="{{ url('/contact/send') }}" name="contact" id="contact-form" class="space-y-6" novalidate>
                         @csrf
+                        <x-honeypot />
 
                         {{-- Row 1: Full Name + Subject --}}
                         <div class="grid grid-cols-2 gap-6">

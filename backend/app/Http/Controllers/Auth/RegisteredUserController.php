@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -21,9 +20,6 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        // Store timestamp so we can detect instant/bot submissions
-        session(['_reg_started' => now()->timestamp]);
-
         return view('auth.register');
     }
 
@@ -43,22 +39,6 @@ class RegisteredUserController extends Controller
             ]);
         }
         RateLimiter::hit($ipKey, 3600); // decay: 1 hour
-
-        // ── Anti-robot: honeypot check ───────────────────────────────────────
-        // Bots fill in hidden fields; humans don't see them and leave them blank
-        if ($request->filled('_hp') || $request->filled('website')) {
-            // Silently redirect as if successful (don't tell bot it was caught)
-            return redirect()->route('dashboard');
-        }
-
-        // ── Anti-robot: minimum form-fill time (< 3s = bot) ─────────────────
-        $startedAt = session('_reg_started');
-        if (!$startedAt || (now()->timestamp - $startedAt) < 3) {
-            throw ValidationException::withMessages([
-                'name' => 'Form submitted too quickly. Please try again.',
-            ]);
-        }
-        session()->forget('_reg_started');
 
         // ── Validation ───────────────────────────────────────────────────────
         $request->validate([
