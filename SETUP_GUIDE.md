@@ -171,7 +171,7 @@ Backend Admin (legacy Blade views): **http://localhost:8000/admin** (optional, c
 Ensure these are set in `backend/.env`:
 
 ```env
-APP_NAME="DealMindanao API"
+APP_NAME="DealMindanao APP"
 APP_URL=http://localhost:8000
 
 DB_CONNECTION=mysql

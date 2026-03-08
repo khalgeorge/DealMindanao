@@ -14,7 +14,7 @@ services:
       - mailpit
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html/public
-      - APP_NAME="DealMindanao API"
+      - APP_NAME="DealMindanao APP"
     networks:
       - dealmindanao
 

@@ -62,7 +62,7 @@ php artisan serve
 Create `.env` file:
 
 ```env
-APP_NAME="DealMindanao API"
+APP_NAME="DealMindanao APP"
 APP_ENV=local
 APP_KEY=
 APP_DEBUG=true
