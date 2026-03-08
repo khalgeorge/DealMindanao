@@ -24,6 +24,7 @@ class CheckoutRequest extends FormRequest
             'items.*.product_id' => ['required', 'integer', 'exists:products,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1', 'max:9999'],
             'items.*.price' => ['required', 'numeric', 'min:0'],
+            'items.*.variant' => ['nullable', 'string', 'max:255'],
             
             'shipping_name' => ['required', 'string', 'max:255'],
             'shipping_email' => ['required', 'email', 'max:255'],

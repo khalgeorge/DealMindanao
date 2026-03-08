@@ -158,11 +158,14 @@
               <span id="subtotal" class="font-bold text-gray-900">₱0.00</span>
             </div>
             <div class="flex justify-between text-gray-500 text-sm">
-              <span>Shipping</span>
-              <span class="font-bold text-green-600">FREE</span>
+              <span>Shipping Fee</span>
+              <span class="font-bold text-amber-600">To be discussed</span>
             </div>
+            <p class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 leading-relaxed">
+              📦 Delivery fee depends on your location. Our team will confirm the exact amount when we contact you.
+            </p>
             <div class="flex justify-between items-end pt-2">
-              <span class="text-lg font-bold text-gray-900 leading-none">Total</span>
+              <span class="text-lg font-bold text-gray-900 leading-none">Total <span class="text-xs font-normal text-gray-400">(excl. shipping)</span></span>
               <span id="total" class="text-3xl font-black text-brand-600 leading-none">₱0.00</span>
             </div>
           </div>
@@ -205,6 +208,7 @@
       <input type="hidden" name="items[${i}][product_id]" value="${item.id}">
       <input type="hidden" name="items[${i}][quantity]" value="${item.quantity}">
       <input type="hidden" name="items[${i}][price]" value="${item.price}">
+      ${item.variant ? `<input type="hidden" name="items[${i}][variant]" value="${item.variant}">` : ''}
     `).join('');
 
     // Populate order summary
@@ -226,6 +230,7 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-bold text-gray-900 truncate">${item.name}</p>
+            ${item.variant ? `<span class="inline-block text-[10px] font-bold text-brand-700 bg-brand-50 border border-brand-200 px-1.5 py-px rounded-full mb-0.5">${item.variant}</span>` : ''}
             <p class="text-xs text-gray-500">${item.quantity} × ${formatPrice(itemPrice)}</p>
           </div>
           <div class="text-right">

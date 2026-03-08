@@ -56,10 +56,11 @@ class CheckoutController extends Controller
         foreach ($validated['items'] as $item) {
             $product = Product::find($item['product_id']);
             $order->items()->create([
-                'product_id' => $item['product_id'],
+                'product_id'   => $item['product_id'],
                 'product_name' => $product->name,
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
+                'variant'      => $item['variant'] ?? null,
+                'quantity'     => $item['quantity'],
+                'price'        => $item['price'],
             ]);
         }
         

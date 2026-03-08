@@ -46,6 +46,12 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
     
+    public function partnerSheet(Order $order)
+    {
+        $order->load(['items.product.brand']);
+        return view('admin.orders.partner-sheet', compact('order'));
+    }
+
     public function showJson(Order $order)
     {
         $order->load(['user', 'items.product']);

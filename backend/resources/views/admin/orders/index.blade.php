@@ -236,6 +236,9 @@
                 <button onclick="closeOrderModal()" class="px-8 py-4 bg-white text-gray-600 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 border border-gray-200 transition-all flex-1">
                     Close
                 </button>
+                <button onclick="openPartnerSheet()" class="flex-1 py-4 px-8 bg-gray-700 text-white rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-gray-900 transition-all">
+                    Partner Sheet
+                </button>
                 <button onclick="printInvoice()" class="flex-[2] py-4 px-8 bg-brand-600 text-white rounded-lg font-black text-[10px] uppercase tracking-widest shadow-lg shadow-brand-100 hover:bg-brand-700 transition-all">
                     Print Invoice
                 </button>
@@ -354,7 +357,8 @@ async function manageOrder(orderId) {
             <tr class="border-b border-gray-50">
                 <td class="px-6 py-4">
                     <p class="text-xs font-bold text-gray-900">${item.product_name || item.product?.name || 'Product'}</p>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Product ID: ${item.product_id}</p>
+                    ${item.product?.model_code ? `<p class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color:#9ca3af;"><span style="color:#6b7280;">MODEL:</span> ${item.product.model_code}</p>` : ''}
+                    ${item.variant ? `<p class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color:#6b7280;"><span style="color:#059669;">VARIANT:</span> ${item.variant}</p>` : ''}
                 </td>
                 <td class="px-6 py-4 text-xs font-bold text-gray-500">${formatPrice(item.price)}</td>
                 <td class="px-6 py-4 text-xs font-bold text-gray-500">${item.quantity}</td>
@@ -403,6 +407,11 @@ async function updateOrderStatus() {
         console.error('Error updating order:', error);
         alert('Failed to update order status');
     }
+}
+
+function openPartnerSheet() {
+    if (!currentOrderId) return;
+    window.open(`/admin/orders/${currentOrderId}/partner-sheet`, '_blank');
 }
 
 function printInvoice() {

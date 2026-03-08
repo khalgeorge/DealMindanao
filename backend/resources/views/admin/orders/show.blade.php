@@ -19,7 +19,10 @@
         <h1 class="text-2xl font-bold">Order {{ $order->order_number }}</h1>
         <p class="text-sm text-gray-500">Placed on {{ $order->created_at->format('M d, Y g:i A') }}</p>
     </div>
-    <a href="/admin/orders" class="btn-secondary">Back to Orders</a>
+    <div class="flex gap-2">
+        <a href="{{ route('orders.partnerSheet', $order) }}" target="_blank" class="btn-secondary">🖨 Partner Sheet</a>
+        <a href="/admin/orders" class="btn-secondary">Back to Orders</a>
+    </div>
 </div>
 
 <div class="space-y-6">
@@ -43,7 +46,15 @@
                     <tbody>
                         @foreach($order->items as $item)
                             <tr>
-                                <td class="py-3">{{ $item->product_name }}</td>
+                                <td class="py-3">
+                                    {{ $item->product_name }}
+                                    @if($item->product?->model_code)
+                                        <br><span style="font-size:10px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">MODEL: {{ $item->product->model_code }}</span>
+                                    @endif
+                                    @if($item->variant)
+                                        <br><span style="font-size:10px; color:#059669; font-weight:700; text-transform:uppercase; letter-spacing:.05em;">VARIANT: {{ $item->variant }}</span>
+                                    @endif
+                                </td>
                                 <td class="py-3">{{ $item->quantity }}</td>
                                 <td class="py-3">₱{{ number_format($item->price, 2) }}</td>
                                 <td class="py-3">₱{{ number_format($item->price * $item->quantity, 2) }}</td>
