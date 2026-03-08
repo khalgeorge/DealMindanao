@@ -19,11 +19,12 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'http://localhost:5173',
-        'http://localhost:3000',
-        env('FRONTEND_URL', 'http://localhost:5173'),
-    ],
+    'allowed_origins' => array_filter([
+        env('FRONTEND_URL'),
+        // Fallback for local dev only
+        app()->environment('local', 'staging') ? 'http://localhost:5173' : null,
+        app()->environment('local', 'staging') ? 'http://localhost:3000' : null,
+    ]),
 
     'allowed_origins_patterns' => [],
 
