@@ -188,8 +188,8 @@
 
       return `
         <div class="bg-white p-4 sm:p-6 rounded-lg border border-gray-100 flex gap-4 sm:gap-6 hover:shadow-md transition-shadow">
-          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-gray-50 shrink-0">
-            <img src="${productImage}" alt="${item.name} from Mindanao seller ${item.company || 'Local Partner'}" class="w-full h-full object-cover">
+          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-white shrink-0">
+                    <img src="${productImage}" alt="${item.name} from Mindanao seller ${item.company || 'Local Partner'}" class="w-full h-full object-contain">
           </div>
           <div class="flex-1 flex flex-col justify-between">
             <div>

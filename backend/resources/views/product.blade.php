@@ -93,7 +93,7 @@
         <!-- Image Section -->
         <div class="sticky top-24">
             <div class="aspect-square bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100 mb-6">
-                <img id="main-product-image" src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                <img id="main-product-image" src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
             </div>
             
             <!-- Image Gallery -->
@@ -102,7 +102,7 @@
                 @foreach($product->images as $index => $image)
                     @if($index < 4)
                     <div data-src="{{ product_image_url($product->images ?? [], $index) }}" class="product-thumb aspect-square bg-gray-100 rounded-lg border {{ $index === 0 ? 'border-2 border-brand-500' : 'border border-gray-100' }} overflow-hidden cursor-pointer hover:border-brand-400 transition-all">
-                        <img src="{{ product_image_url($product->images ?? [], $index) }}" alt="{{ $product->name }} - Image {{ $index + 1 }}" class="w-full h-full object-cover pointer-events-none" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                        <img src="{{ product_image_url($product->images ?? [], $index) }}" alt="{{ $product->name }} - Image {{ $index + 1 }}" class="w-full h-full object-contain pointer-events-none" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                     </div>
                     @endif
                 @endforeach
@@ -110,7 +110,7 @@
             @else
             <div class="grid grid-cols-4 gap-4">
                 <div data-src="{{ $imageUrl }}" class="product-thumb aspect-square bg-gray-100 rounded-lg border-2 border-brand-500 overflow-hidden cursor-pointer">
-                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-cover pointer-events-none" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}" class="w-full h-full object-contain pointer-events-none" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                 </div>
                 @for($i = 1; $i < 4; $i++)
                 <div class="aspect-square bg-gray-200 rounded-lg border border-gray-100 overflow-hidden flex items-center justify-center text-gray-400">
@@ -365,7 +365,7 @@
     // --- Mutable state ---
     let maxStock        = baseStock;
     let currentPrice    = basePrice;
-    let selectedVariant = null;
+    let selectedVariant = @json(!$hasVariantOptions ? ($product->variant ?? null) : null);
     let quantity        = 1;
 
     // --- DOM refs (declared first so helpers can use them) ---

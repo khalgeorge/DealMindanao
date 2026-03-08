@@ -460,6 +460,9 @@
                     @endif
                     <span class="text-gray-700 flex-1 min-w-0">
                       <span class="truncate block">{{ $item->product_name }}</span>
+                      @if($item->variant)
+                        <span class="inline-block text-[10px] font-bold text-brand-700 bg-brand-50 border border-brand-200 px-1.5 py-px rounded-full">{{ $item->variant }}</span>
+                      @endif
                     </span>
                     <span class="text-gray-400 shrink-0">× {{ $item->quantity }}</span>
                     <span class="text-gray-900 font-medium shrink-0">₱{{ number_format($item->price * $item->quantity, 2) }}</span>

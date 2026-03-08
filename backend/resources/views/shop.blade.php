@@ -376,8 +376,8 @@
         modalContent.innerHTML = `
             <div class="grid md:grid-cols-2 gap-8">
                 <div>
-                    <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                        <img src="${imageUrl}" alt="${p.name} – Buy local in Mindanao" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
+                    <div class="aspect-square bg-white rounded-lg overflow-hidden">
+                        <img src="${imageUrl}" alt="${p.name} – Buy local in Mindanao" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='/images/unknown-product.svg'">
                     </div>
                 </div>
                 <div class="flex flex-col">
@@ -490,9 +490,12 @@
             return;
         }
 
+        // Fall back to product-level simple variant (e.g. "2M") when no option selected
+        const effectiveVariant = variant ? variant.label ?? variant : (p.variant || null);
+
         const price    = variant ? variant.price : p.display_price;
-        const cartKey  = variant ? `${productId}__${variant.label}` : String(productId);
-        const dispName = variant ? `${p.name} (${variant.label})` : p.name;
+        const cartKey  = effectiveVariant ? `${productId}__${effectiveVariant}` : String(productId);
+        const dispName = effectiveVariant ? `${p.name} (${effectiveVariant})` : p.name;
 
         const cart     = JSON.parse(localStorage.getItem('cart') || '[]');
         const existing = cart.find(item => (item.cart_key ?? String(item.id)) === cartKey);
@@ -505,7 +508,7 @@
                 id:                  p.id,
                 cart_key:            cartKey,
                 name:                dispName,
-                variant:             variant ? variant.label : null,
+                variant:             effectiveVariant,
                 price:               price,
                 discount_percentage: p.discount_percent,
                 quantity:            1,
