@@ -41,7 +41,7 @@
                     @foreach($categories as $category)
                     <label class="flex items-center group cursor-pointer">
                         <input type="checkbox" value="{{ $category->id }}" class="w-4 h-4 text-brand-600 rounded border-gray-300 focus:ring-brand-500">
-                        <span class="ml-3 text-sm text-gray-700 group-hover:text-brand-600">{{ $category->name }}</span>
+                        <span class="ml-3 text-sm capitalize text-gray-700 group-hover:text-brand-600">{{ $category->name }}</span>
                     </label>
                     @endforeach
                 </div>
@@ -250,11 +250,6 @@
                             ${p.promo_label || discountPercent + '% OFF'}
                         </div>` : ''}
 
-                        ${catLabel ? `
-                        <div class="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md shadow-sm text-gray-700 border border-gray-100">
-                            ${catLabel}
-                        </div>` : ''}
-
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
                     </div>
 
@@ -266,7 +261,7 @@
 
                         ${catLabel ? `<p class="text-[10px] font-black uppercase tracking-widest text-brand-600 leading-none">${catLabel}</p>` : ''}
 
-                        <h3 class="text-sm font-bold text-gray-900 line-clamp-2 leading-snug">${p.name}</h3>
+                        <p class="text-sm font-bold uppercase text-gray-900 line-clamp-2 leading-snug">${p.name}</p>
 
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-base font-black text-gray-900">${formatPrice(salePrice)}</span>

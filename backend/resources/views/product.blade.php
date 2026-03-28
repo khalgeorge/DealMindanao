@@ -119,18 +119,8 @@
         <!-- Info Section -->
         <div class="flex flex-col">
             <div class="mb-8">
-                <span class="inline-block px-3 py-1 bg-brand-50 text-brand-700 text-xs font-bold uppercase tracking-widest rounded-full mb-4">
-                    {{ $product->category->name }}
-                </span>
                 <h1 class="text-4xl font-extrabold text-gray-900 leading-tight mb-2">{{ $product->name }}</h1>
                 @php $hasVariantOptions = !empty($product->variants['options']); @endphp
-                @if($product->model_code || ($product->variant && !$hasVariantOptions))
-                <p class="text-sm text-gray-500 font-medium">
-                    @if($product->model_code)Model: <span class="font-semibold text-gray-700">{{ $product->model_code }}</span>@endif
-                    @if($product->model_code && $product->variant && !$hasVariantOptions) &bull; @endif
-                    @if($product->variant && !$hasVariantOptions)Variant: <span class="font-semibold text-gray-700">{{ $product->variant }}</span>@endif
-                </p>
-                @endif
             </div>
 
             <!-- Price Section -->
@@ -203,25 +193,29 @@
             @endphp
             @if(count($specs))
             <div class="mb-10">
-                <h3 class="font-bold text-gray-900 mb-4 text-lg">Product Details</h3>
-                <div class="divide-y divide-gray-100 rounded-lg border border-gray-100 overflow-hidden">
-                    @foreach($specs as $label => $value)
-                    <div class="flex">
-                        <span class="w-36 flex-shrink-0 px-4 py-3 bg-gray-50 text-xs font-bold uppercase tracking-wider text-gray-500">{{ $label }}</span>
-                        <span class="px-4 py-3 text-sm text-gray-800 font-medium">{{ $value }}</span>
+                <div class="rounded-lg border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100">
+                        <h4 class="text-xs font-black uppercase tracking-widest text-gray-700">Product Details</h4>
                     </div>
-                    @endforeach
+                    <div class="divide-y divide-gray-50">
+                        @foreach($specs as $label => $value)
+                        <div class="flex">
+                            <span class="w-44 flex-shrink-0 px-4 py-2.5 text-xs font-semibold text-gray-500 bg-gray-50/50">{{ $label }}</span>
+                            <span class="px-4 py-2.5 text-sm text-gray-800">{{ $value }}</span>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
             @endif
 
             <!-- Technical Specifications -->
             @if(!empty($product->specifications) && count($product->specifications))
+            @php $specGroups = array_values(array_filter($product->specifications, fn($g) => !empty($g['group']) && !empty($g['items']))); @endphp
+            @if(count($specGroups))
             <div class="mb-10">
-                <h3 class="font-bold text-gray-900 mb-4 text-lg">Technical Specifications</h3>
                 <div class="space-y-4">
-                    @foreach($product->specifications as $group)
-                        @if(!empty($group['group']) && !empty($group['items']))
+                    @foreach($specGroups as $group)
                         <div class="rounded-lg border border-gray-100 overflow-hidden">
                             <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100">
                                 <h4 class="text-xs font-black uppercase tracking-widest text-gray-700">{{ $group['group'] }}</h4>
@@ -237,10 +231,10 @@
                                 @endforeach
                             </div>
                         </div>
-                        @endif
                     @endforeach
                 </div>
             </div>
+            @endif
             @endif
 
             <!-- Actions -->
