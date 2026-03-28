@@ -119,7 +119,7 @@
         <!-- Info Section -->
         <div class="flex flex-col">
             <div class="mb-8">
-                <h1 class="text-4xl font-extrabold text-gray-900 leading-tight mb-2">{{ $product->name }}</h1>
+                <h1 class="text-4xl font-extrabold capitalize text-gray-900 leading-tight mb-2">{{ $product->name }}</h1>
                 @php $hasVariantOptions = !empty($product->variants['options']); @endphp
             </div>
 
