@@ -767,8 +767,8 @@
             const stock = parseInt(row.querySelector('.v-stock').value, 10);
             if (label) options.push({
                 label,
-                cost:  isNaN(cost)  ? 0 : cost,
-                price: isNaN(price) ? 0 : price,
+                cost:  isNaN(cost)  ? 0 : Math.round(cost * 100) / 100,
+                price: isNaN(price) ? 0 : Math.round(price * 100) / 100,
                 stock: isNaN(stock) ? 0 : stock
             });
         });
@@ -801,12 +801,17 @@
 
         // Pre-populate from existing saved data
         row.querySelector('.v-label').value = label || '';
-        if (cost !== undefined && cost !== '' && !isNaN(parseFloat(cost))) {
-            costInput.value = cost;
+        const parsedCost  = parseFloat(cost);
+        const parsedPrice = parseFloat(price);
+        if (cost !== undefined && cost !== '' && !isNaN(parsedCost)) {
+            costInput.value = parsedCost.toFixed(2);
         }
         if (price !== undefined && price !== '') {
-            srpInput.value = price;
-            srpManual      = true;
+            srpInput.value = parsedPrice.toFixed(2);
+            // Only treat as manually-set if price differs from auto-computed value
+            const autoPrice = Math.round(parsedCost * (1 + MARGIN) * 100) / 100;
+            srpManual = Math.abs(parsedPrice - autoPrice) > 0.005;
+            if (!srpManual) srpBadge.classList.remove('hidden');
         }
         row.querySelector('.v-stock').value = stock !== undefined && stock !== '' ? stock : '';
 

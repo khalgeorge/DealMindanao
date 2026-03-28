@@ -9,6 +9,10 @@
     <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Manage Store Inventory</p>
   </div>
   <div class="flex items-center gap-4">
+    <button onclick="exportForPartners()" class="btn-secondary flex items-center gap-2">
+       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+       Export for Partners
+    </button>
     <a href="/admin/products/create" class="btn-primary flex items-center gap-2">
        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
        Add Product
@@ -96,6 +100,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script>
 window.resetFilters = function() {
    document.getElementById('product-search').value = '';
@@ -163,6 +168,8 @@ function loadProducts() {
     stock_status: (p.stock_quantity||0) > 10 ? 'Active' : ((p.stock_quantity||0) > 0 ? 'Low' : 'Out'),
     status: p.status || 'draft',
     description: p.description || '',
+    specifications: p.specifications || '',
+    variants: p.variants || [],
     images: p.images,
     category_id: p.category?.id,
     supplier_id: p.supplier?.id || null
@@ -213,8 +220,8 @@ window.deleteProduct = async (id) => {
     });
     
     if (response.ok) {
-      alert('Product deleted successfully!');
-      loadProducts();
+      allProducts = allProducts.filter(pr => pr.id != id);
+      renderProducts();
     } else {
       throw new Error('Delete failed');
     }
@@ -348,6 +355,83 @@ window.toggleFeatured = async (id) => {
       if (p) { p.is_featured = !p.is_featured; renderProducts(); }
     }
   } catch(e) { alert('Failed to toggle featured'); }
+};
+
+window.exportForPartners = () => {
+  const search = document.getElementById('product-search').value.toLowerCase();
+  const catFilter = document.getElementById('filter-category').value;
+  const statusFilter = document.getElementById('filter-status').value;
+
+  const filtered = allProducts.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(search) || p.partner.toLowerCase().includes(search);
+    const matchesCat = !catFilter || p.cat === catFilter;
+    const matchesStatus = !statusFilter ||
+      (['draft','published'].includes(statusFilter) ? p.status === statusFilter : p.stock_status === statusFilter);
+    return matchesSearch && matchesCat && matchesStatus;
+  });
+
+  if (filtered.length === 0) {
+    alert('No products to export.');
+    return;
+  }
+
+  const now = new Date();
+  const datetime = now.getFullYear() + '-' +
+    String(now.getMonth()+1).padStart(2,'0') + '-' +
+    String(now.getDate()).padStart(2,'0') + '_' +
+    String(now.getHours()).padStart(2,'0') + '-' +
+    String(now.getMinutes()).padStart(2,'0') + '-' +
+    String(now.getSeconds()).padStart(2,'0');
+
+  // Format specifications [{group, items:[{label,value}]}] into readable text
+  const formatSpecs = (specs) => {
+    if (!specs || !Array.isArray(specs) || specs.length === 0) return '';
+    return specs.map(g => {
+      const items = (g.items || []).map(i => `${i.label}: ${i.value}`).join(', ');
+      return g.group ? `${g.group} — ${items}` : items;
+    }).join(' | ');
+  };
+  const formatVariants = (p) => {
+    // Simple product-level variant (e.g. "2M")
+    const simple = p.variant || '';
+    // Selectable options array [{attribute, options:[{label,price,stock}]}]
+    const opts = Array.isArray(p.variants) ? p.variants : [];
+    if (opts.length > 0) {
+      return opts.map(g =>
+        `${g.attribute}: ${(g.options || []).map(o => o.label).join(', ')}`
+      ).join(' | ');
+    }
+    return simple;
+  };
+
+  // Build rows array (header + data)
+  const sheetData = [
+    ['Name', 'Category', 'Brand', 'Model Code', 'Technical Specifications', 'Product Variants / Options'],
+    ...filtered.map(p => [
+      p.name,
+      p.cat,
+      p.brand || '',
+      p.model_code || '',
+      formatSpecs(p.specifications),
+      formatVariants(p)
+    ])
+  ];
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+  // Column widths
+  ws['!cols'] = [
+    { wch: 40 }, // Name
+    { wch: 20 }, // Category
+    { wch: 20 }, // Brand
+    { wch: 18 }, // Model Code
+    { wch: 50 }, // Technical Specifications
+    { wch: 45 }, // Product Variants / Options
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Products');
+  XLSX.writeFile(wb, `products_${datetime}.xlsx`);
 };
 
 loadProducts();
