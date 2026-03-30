@@ -56,6 +56,7 @@
                  <th>Category</th>
                  <th>Partner</th>
                  <th>Price</th>
+                 <th>Variants</th>
                  <th>Stock</th>
                  <th>Active</th>
                  <th>Featured</th>
@@ -253,7 +254,7 @@ window.renderProducts = () => {
   const items = filtered.slice(start, end);
   
   if (items.length === 0) {
-    body.innerHTML = '<tr><td colspan="9" class="px-6 py-8 text-center text-gray-400">No products found</td></tr>';
+    body.innerHTML = '<tr><td colspan="10" class="px-6 py-8 text-center text-gray-400">No products found</td></tr>';
   } else {
     body.innerHTML = items.map(p => `<tr>
       <td class="px-6 py-4">
@@ -263,6 +264,15 @@ window.renderProducts = () => {
       <td class="px-6 py-4">${p.cat}</td>
       <td class="px-6 py-4 text-xs font-bold text-brand-600 uppercase">${p.partner}</td>
       <td class="px-6 py-4 font-mono">₱${p.srp.toFixed(2)}</td>
+      <td class="px-6 py-4">
+        ${p.variants?.options?.length > 0
+          ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-700">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+              ${p.variants.options.length} ${p.variants.attribute || 'variant'}${p.variants.options.length > 1 ? 's' : ''}
+            </span>`
+          : `<span class="text-xs text-gray-400">—</span>`
+        }
+      </td>
       <td class="px-6 py-4">${p.stock}</td>
       <td class="px-6 py-4">
         <button onclick="toggleActive(${p.id})" title="Toggle active"

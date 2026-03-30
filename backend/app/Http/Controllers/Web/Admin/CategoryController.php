@@ -12,9 +12,8 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $query = Category::withCount('products');
-        
-        // Get all categories for client-side pagination
-        $allCategories = $query->latest()->get();
+        // Sort categories by name (ascending)
+        $allCategories = $query->orderBy('name')->get();
 
         // $perPage must be at least 1 — LengthAwarePaginator divides by it
         // and throws DivisionByZeroError when the collection is empty.

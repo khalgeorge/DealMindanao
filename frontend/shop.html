@@ -221,10 +221,10 @@
         const products = response.data.map(product => ({
           id: product.id,
           name: product.name,
-          partner: product.company.name,
+          partner: product.company?.name,
           price: parseFloat(product.price),
           discount: parseFloat(product.discount || 0),
-          category: product.category.slug,
+          category: product.category?.slug,
           image: product.images && product.images.length > 0 
             ? `http://localhost:8000${product.images[0]}` 
             : 'https://via.placeholder.com/400',
@@ -284,55 +284,23 @@
 
       grid.innerHTML = paginatedProducts.map(product => {
         const salePrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
-        
         return `
           <div class="product-card group flex flex-col h-full animate-fade-in">
-
-            <!-- Image section -->
             <div class="relative h-56 bg-white p-3 overflow-hidden rounded-t-xl flex-shrink-0 cursor-pointer"
                  onclick="window.viewProductModal(${product.id})">
               <img src="${product.image || 'https://via.placeholder.com/400'}"
                    alt="${product.name}"
                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
-
-              <!-- Discount badge — top right -->
-              ${product.discount > 0 ? `
-                <div class="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow">
-                  ${product.discount}% OFF
-                </div>
-              ` : ''}
-
-              <!-- Category badge — top left -->
-              ${product.category ? `
-                <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-lg shadow text-gray-800">
-                  ${product.category}
-                </div>
-              ` : ''}
-
               <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
             </div>
-
-            <!-- Image / Content separator -->
             <div class="border-t border-gray-200"></div>
-
-            <!-- Content section -->
             <div class="px-6 pt-4 pb-8 flex-1 flex flex-col gap-3">
-
-              <!-- Partner / Region -->
-              ${product.partner ? `
-                <p class="text-brand-600 text-[10px] font-black uppercase tracking-widest leading-none">${product.partner}</p>
-              ` : ''}
-
-              <!-- Product name -->
+              ${product.partner ? `<p class="text-brand-600 text-[10px] font-black uppercase tracking-widest leading-none">${product.partner}</p>` : ''}
               <h3 class="text-sm font-bold text-gray-900 line-clamp-2 leading-snug">${product.name}</h3>
-
-              <!-- Price -->
               <div class="flex items-center gap-2">
                 <span class="text-lg font-black text-gray-900">${formatPrice(salePrice)}</span>
                 ${product.discount > 0 ? `<span class="text-xs text-gray-400 line-through">${formatPrice(product.price)}</span>` : ''}
               </div>
-
-              <!-- Action buttons -->
               <div class="flex gap-2 mt-auto pt-1">
                 <button onclick="window.viewProductModal(${product.id})" class="btn-primary flex-1 btn-sm text-xs">
                   <svg class="w-3.5 h-3.5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,7 +315,6 @@
                   </svg>
                 </button>
               </div>
-
             </div>
           </div>
         `;
