@@ -14,7 +14,7 @@
       facebook.com/dealmindanao → About → Page transparency → Page ID
 --}}
 @php
-    $fbPageId = env('FACEBOOK_PAGE_ID', '');
+    $fbPageId = config('services.facebook.page_id', '');
 @endphp
 
 @if(app()->environment('production') && $fbPageId)
