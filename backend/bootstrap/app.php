@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // HTTPS/IP headers (CF-Connecting-IP, X-Forwarded-For, etc.)
         $middleware->trustProxies(at: '*');
 
+        // Attach security response headers to all web and API responses
+        $middleware->appendToGroup('web', \App\Http\Middleware\SecurityHeaders::class);
+        $middleware->appendToGroup('api', \App\Http\Middleware\SecurityHeaders::class);
+
         $middleware->alias([
             'admin'    => \App\Http\Middleware\AdminMiddleware::class,
             'honeypot' => \App\Http\Middleware\VerifyHoneypot::class,
