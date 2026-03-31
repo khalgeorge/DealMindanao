@@ -33,7 +33,7 @@
   </div>
 
   <!-- Stats Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-10">
     <!-- Revenue Card -->
     <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
       <div class="flex items-center justify-between mb-4">
@@ -45,6 +45,36 @@
       <p class="text-3xl font-black text-gray-900 leading-none">₱{{ number_format($stats['total_revenue'] ?? 0, 2) }}</p>
       <div class="mt-4 flex items-center gap-1.5 text-xs">
         <span class="text-gray-400 font-medium">Total sales</span>
+      </div>
+    </div>
+
+    <!-- Net Profit Card -->
+    <div class="bg-white p-6 rounded-lg border border-green-100 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Net Profit</span>
+        <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+        </div>
+      </div>
+      <p class="text-3xl font-black text-green-700 leading-none">₱{{ number_format($stats['net_profit'] ?? 0, 2) }}</p>
+      <div class="mt-4 flex items-center gap-1.5 text-xs">
+        <span class="text-gray-400 font-medium">After partner cost</span>
+        <span class="text-gray-300">·</span>
+        <span class="text-gray-400">Cost: ₱{{ number_format($stats['partner_cost'] ?? 0, 2) }}</span>
+      </div>
+    </div>
+
+    <!-- Products Card -->
+    <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Products</span>
+        <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+        </div>
+      </div>
+      <p class="text-3xl font-black text-gray-900 leading-none">{{ $stats['total_products'] ?? 0 }}</p>
+      <div class="mt-4 flex items-center gap-1.5 text-xs">
+        <a href="{{ route('admin.products.index') }}" class="text-indigo-600 font-bold underline cursor-pointer">Manage</a>
       </div>
     </div>
 
@@ -146,14 +176,16 @@
         <h3 class="font-black text-gray-900 mb-6">Stock & Partner Alerts</h3>
         <div class="space-y-4">
            <!-- Low stock item -->
+           @if(($stats['low_stock_count'] ?? 0) > 0)
            <div class="flex items-center gap-4 p-4 bg-red-50 rounded-lg border border-red-100">
               <div class="w-10 h-10 rounded-lg bg-white border border-red-100 flex items-center justify-center text-red-600 font-bold shadow-sm">!</div>
               <div class="flex-1">
                  <p class="text-sm font-bold text-red-900">Low Stock Alert</p>
-                 <p class="text-xs text-red-700">Some products may need restocking soon.</p>
+                 <p class="text-xs text-red-700">{{ $stats['low_stock_count'] }} product{{ $stats['low_stock_count'] > 1 ? 's' : '' }} with stock below 100 — may need restocking soon.</p>
               </div>
               <a href="{{ route('admin.products.index') }}" class="btn-danger btn-sm px-4">View Products</a>
            </div>
+           @endif
            
            <!-- Partner info -->
            <div class="flex items-center gap-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
