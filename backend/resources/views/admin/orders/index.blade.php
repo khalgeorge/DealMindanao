@@ -76,7 +76,7 @@
                             </td>
                             <td class="px-6 py-5 text-sm font-bold text-gray-500">{{ $order->created_at->format('M d, Y') }}</td>
                             <td class="px-6 py-5 font-black text-gray-900">₱{{ number_format($total, 2) }}</td>
-                            <td class="px-6 py-5"><span class="text-[10px] font-bold uppercase py-1 px-2 bg-gray-100 rounded-lg text-gray-600">{{ strtoupper($order->payment_method) }}</span></td>
+                            <td class="px-6 py-5"><span class="text-[10px] font-bold uppercase py-1 px-2 bg-gray-100 rounded-lg text-gray-600">{{ strtoupper(str_replace('_', ' ', $order->payment_method)) }}</span></td>
                             <td class="px-6 py-5">
                                 <span class="badge-{{ strtolower($order->status) }} text-[10px]">{{ ucfirst($order->status) }}</span>
                             </td>
@@ -345,7 +345,7 @@ async function manageOrder(orderId) {
         });
         document.getElementById('modal-customer-name').innerText = order.customer_name;
         document.getElementById('modal-customer-email').innerText = order.email;
-        document.getElementById('modal-payment-method').innerText = order.payment_method.toUpperCase();
+        document.getElementById('modal-payment-method').innerText = order.payment_method.replace(/_/g, ' ').toUpperCase();
         document.getElementById('modal-update-status').value = order.status;
         document.getElementById('modal-admin-notes').value = order.notes ?? '';
 
@@ -533,7 +533,7 @@ function exportCSV() {
             order.email,
             new Date(order.created_at).toLocaleDateString('en-PH'),
             formatPrice(total),
-            order.payment_method.toUpperCase(),
+            order.payment_method.replace(/_/g, ' ').toUpperCase(),
             order.status.charAt(0).toUpperCase() + order.status.slice(1)
         ];
     });

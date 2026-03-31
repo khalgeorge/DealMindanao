@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('meta_title', 'Checkout | Submit Your Order – DealMindanao')
-@section('meta_description', 'Complete your delivery details to submit your order. No online payment needed — our team will contact you within 24 hours to confirm via COD or GCash.')
+@section('meta_description', 'Complete your delivery details to submit your order. No online payment needed — our team will contact you within 24 hours to confirm via GCash or Bank Transfer.')
 
 @section('content')
 <div class="page-shell py-12">
@@ -92,28 +92,28 @@
           </h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label class="relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all border-brand-600 bg-brand-50" id="label-cod">
-              <input type="radio" name="payment_method" value="cod" checked class="hidden">
-              <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-600 font-bold">₱</div>
-                <div>
-                  <p class="font-bold text-gray-900">Cash on Delivery</p>
-                  <p class="text-xs text-gray-500">Pay when you receive items</p>
-                </div>
-              </div>
-              <div class="ml-auto w-5 h-5 border-4 border-brand-600 rounded-full bg-white" id="radio-dot-cod"></div>
-            </label>
-
-            <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-lg cursor-pointer hover:border-brand-200 transition-all" id="label-gcash">
-              <input type="radio" name="payment_method" value="gcash" class="hidden">
+            <label class="relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all border-brand-600 bg-brand-50" id="label-gcash">
+              <input type="radio" name="payment_method" value="gcash" checked class="hidden">
               <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold">G</div>
                 <div>
-                  <p class="font-bold text-gray-900">GCash / Bank</p>
+                  <p class="font-bold text-gray-900">GCash</p>
                   <p class="text-xs text-gray-500">Direct wallet transfer</p>
                 </div>
               </div>
-              <div class="ml-auto w-5 h-5 border-2 border-gray-200 rounded-full bg-white" id="radio-dot-gcash"></div>
+              <div class="ml-auto w-5 h-5 border-4 border-brand-600 rounded-full bg-white" id="radio-dot-gcash"></div>
+            </label>
+
+            <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-lg cursor-pointer hover:border-brand-200 transition-all" id="label-bank">
+              <input type="radio" name="payment_method" value="bank_transfer" class="hidden">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-700 font-bold">₱</div>
+                <div>
+                  <p class="font-bold text-gray-900">Bank Transfer</p>
+                  <p class="text-xs text-gray-500">Direct bank deposit</p>
+                </div>
+              </div>
+              <div class="ml-auto w-5 h-5 border-2 border-gray-200 rounded-full bg-white" id="radio-dot-bank"></div>
             </label>
           </div>
 
@@ -246,42 +246,42 @@
   }
 
   function updatePaymentUI(method) {
-    const codLabel   = document.getElementById('label-cod');
     const gcashLabel = document.getElementById('label-gcash');
-    const codDot     = document.getElementById('radio-dot-cod');
+    const bankLabel  = document.getElementById('label-bank');
     const gcashDot   = document.getElementById('radio-dot-gcash');
+    const bankDot    = document.getElementById('radio-dot-bank');
 
-    if (method === 'cod') {
-      // Activate COD label
-      codLabel.classList.add('border-brand-600', 'bg-brand-50');
-      codLabel.classList.remove('border-gray-100');
-      // Activate COD dot (filled)
-      codDot.classList.remove('border-2', 'border-gray-200');
-      codDot.classList.add('border-4', 'border-brand-600');
-      // Deactivate GCash label
-      gcashLabel.classList.remove('border-brand-600', 'bg-brand-50');
-      gcashLabel.classList.add('border-gray-100');
-      // Deactivate GCash dot (empty)
-      gcashDot.classList.remove('border-4', 'border-brand-600');
-      gcashDot.classList.add('border-2', 'border-gray-200');
-    } else {
+    if (method === 'gcash') {
       // Activate GCash label
       gcashLabel.classList.add('border-brand-600', 'bg-brand-50');
       gcashLabel.classList.remove('border-gray-100');
       // Activate GCash dot (filled)
       gcashDot.classList.remove('border-2', 'border-gray-200');
       gcashDot.classList.add('border-4', 'border-brand-600');
-      // Deactivate COD label
-      codLabel.classList.remove('border-brand-600', 'bg-brand-50');
-      codLabel.classList.add('border-gray-100');
-      // Deactivate COD dot (empty)
-      codDot.classList.remove('border-4', 'border-brand-600');
-      codDot.classList.add('border-2', 'border-gray-200');
+      // Deactivate Bank label
+      bankLabel.classList.remove('border-brand-600', 'bg-brand-50');
+      bankLabel.classList.add('border-gray-100');
+      // Deactivate Bank dot (empty)
+      bankDot.classList.remove('border-4', 'border-brand-600');
+      bankDot.classList.add('border-2', 'border-gray-200');
+    } else {
+      // Activate Bank Transfer label
+      bankLabel.classList.add('border-brand-600', 'bg-brand-50');
+      bankLabel.classList.remove('border-gray-100');
+      // Activate Bank dot (filled)
+      bankDot.classList.remove('border-2', 'border-gray-200');
+      bankDot.classList.add('border-4', 'border-brand-600');
+      // Deactivate GCash label
+      gcashLabel.classList.remove('border-brand-600', 'bg-brand-50');
+      gcashLabel.classList.add('border-gray-100');
+      // Deactivate GCash dot (empty)
+      gcashDot.classList.remove('border-4', 'border-brand-600');
+      gcashDot.classList.add('border-2', 'border-gray-200');
     }
   }
 
-  document.getElementById('label-cod').addEventListener('click', () => updatePaymentUI('cod'));
   document.getElementById('label-gcash').addEventListener('click', () => updatePaymentUI('gcash'));
+  document.getElementById('label-bank').addEventListener('click', () => updatePaymentUI('bank_transfer'));
 
   // Parse city and province from address on form submit
   document.getElementById('checkout-form').addEventListener('submit', (e) => {

@@ -35,7 +35,7 @@ class CheckoutRequest extends FormRequest
             'shipping_province' => ['required', 'string', 'max:100'],
             'shipping_zip' => ['nullable', 'string', 'max:10'],
             
-            'payment_method' => ['required', 'in:cod,gcash,bank_transfer'],
+            'payment_method' => ['required', 'in:gcash,bank_transfer'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }

@@ -31,7 +31,7 @@
 @endphp
 
 @section('meta_title',       $seoTitle)
-@section('meta_description', 'Buy ' . $product->name . ' from verified Mindanao sellers. ' . \Illuminate\Support\Str::limit($seoDescription, 140) . ' Order online, pay via COD or GCash.')
+@section('meta_description', 'Buy ' . $product->name . ' from verified Mindanao sellers. ' . \Illuminate\Support\Str::limit($seoDescription, 140) . ' Order online, pay via GCash or Bank Transfer.')
 @section('meta_keywords',    $seoKeywords)
 @section('canonical',        $canonicalUrl)
 @section('og_url',           $canonicalUrl)
@@ -168,7 +168,7 @@
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    Offline Payment Only: Pay via GCash or COD upon confirmation.
+                    Offline Payment Only: Pay via GCash or Bank Transfer upon confirmation.
                 </div>
             </div>
 

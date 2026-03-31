@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('meta_title', 'Shop Local Deals in Mindanao | Hardware, Food and More – DealMindanao')
-@section('meta_description', 'Browse hardware and local products from verified Mindanao sellers. Order online and pay offline via COD or GCash after confirmation.')
-@section('meta_keywords', 'hardware deals Mindanao, buy online Philippines, local products, COD GCash, DealMindanao shop')
+@section('meta_description', 'Browse hardware and local products from verified Mindanao sellers. Order online and pay offline via GCash or Bank Transfer after confirmation.')
+@section('meta_keywords', 'hardware deals Mindanao, buy online Philippines, local products, GCash Bank Transfer, DealMindanao shop')
 @section('canonical', url('/shop'))
 @section('og_url',    url('/shop'))
 @section('meta_robots', 'index,follow')
@@ -149,7 +149,7 @@
 
             <!-- Footer Note -->
             <div class="mt-12 text-center">
-                <p class="text-sm text-gray-500">All prices are indicative. Final pricing and availability are confirmed by our team after order review. Order online, pay offline via COD or GCash.</p>
+                <p class="text-sm text-gray-500">All prices are indicative. Final pricing and availability are confirmed by our team after order review. Order online, pay offline via GCash or Bank Transfer.</p>
             </div>
 
         </div>

@@ -11,7 +11,7 @@
           <img src="{{ asset('logo_main-final.png') }}" alt="DealMindanao Logo" class="h-20 w-auto">
         </a>
         <p class="text-sm text-gray-500 font-medium leading-relaxed max-w-xs">
-          DealMindanao is a Mindanao-based online marketplace for hardware, food, and local products from verified regional sellers. Browse online, place your order, and pay offline via COD or GCash after confirmation.
+          DealMindanao is a Mindanao-based online marketplace for hardware, food, and local products from verified regional sellers. Browse online, place your order, and pay offline via GCash or Bank Transfer after confirmation.
         </p>
         <div class="flex gap-4">
           <a href="https://www.facebook.com/dealmindanao" target="_blank" rel="noopener noreferrer" aria-label="DealMindanao on Facebook" class="w-10 h-10 bg-white/5 rounded-lg border border-white/5 flex items-center justify-center hover:bg-brand-600 transition-colors">

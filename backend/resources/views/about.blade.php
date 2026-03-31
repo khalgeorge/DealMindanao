@@ -52,7 +52,7 @@
                 <div class="aspect-video bg-gray-200 rounded-lg overflow-hidden shadow-2xl relative z-10">
                     <img src="{{ $storyImg }}" class="w-full h-full object-cover" alt="Local sellers and communities in Mindanao supported by DealMindanao marketplace">
                 </div><p class="mt-4 text-sm text-gray-500">
-  ✔ Manual confirmation • ✔ COD/GCash • ✔ Verified Mindanao sellers
+  ✔ Manual confirmation • ✔ GCash / Bank Transfer • ✔ Verified Mindanao sellers
 </p>
                 <div class="absolute -top-10 -left-10 w-40 h-40 bg-brand-600 rounded-lg -z-0"></div>
             </div>
