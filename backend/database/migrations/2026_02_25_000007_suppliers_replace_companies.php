@@ -17,13 +17,20 @@ return new class extends Migration
         // ── 1. Clean up suppliers table ───────────────────────────────────────
         Schema::table('suppliers', function (Blueprint $table) {
             // Add internal_notes after contact_phone (safe anchor that exists)
-            $table->text('internal_notes')->nullable()->after('contact_phone');
+            if (!Schema::hasColumn('suppliers', 'internal_notes')) {
+                $table->text('internal_notes')->nullable()->after('contact_phone');
+            }
 
-            // Rename verified → is_verified
-            $table->renameColumn('verified', 'is_verified');
+            // Rename verified → is_verified (only if not already renamed)
+            if (Schema::hasColumn('suppliers', 'verified') && !Schema::hasColumn('suppliers', 'is_verified')) {
+                $table->renameColumn('verified', 'is_verified');
+            }
 
-            // Drop columns that no longer belong in the supplier model
-            $table->dropColumn(['city', 'province', 'messenger_link', 'logo', 'description']);
+            // Drop columns that no longer belong in the supplier model (only if they exist)
+            $dropCols = array_filter(['city', 'province', 'messenger_link', 'logo', 'description'], fn($col) => Schema::hasColumn('suppliers', $col));
+            if (!empty($dropCols)) {
+                $table->dropColumn(array_values($dropCols));
+            }
         });
 
         // ── 2. Rename products.company_id → supplier_id ──────────────────────
