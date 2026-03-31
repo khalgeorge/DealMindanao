@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust all proxies — required for Cloudflare to pass correct
+        // HTTPS/IP headers (CF-Connecting-IP, X-Forwarded-For, etc.)
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'admin'    => \App\Http\Middleware\AdminMiddleware::class,
             'honeypot' => \App\Http\Middleware\VerifyHoneypot::class,
