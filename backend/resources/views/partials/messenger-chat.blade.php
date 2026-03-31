@@ -12,8 +12,9 @@
     <div id="fb-root"></div>
 
     <div class="fb-customerchat"
-         attribution="biz_inbox"
+         attribution="setup_tool"
          page_id="{{ $fbPageId }}"
+         theme_color="#16a34a"
          logged_in_greeting="Hi! Need help with your order or delivery in Mindanao?"
          logged_out_greeting="Hi! Need help with your order or delivery in Mindanao?">
     </div>
