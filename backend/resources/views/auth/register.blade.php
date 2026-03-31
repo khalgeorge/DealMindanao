@@ -66,7 +66,7 @@
                     <!-- Name -->
                     <div>
                         <label for="name" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                            Full Name
+                            Full Name <span class="text-red-500">*</span>
                         </label>
                         <input 
                             type="text" 
@@ -86,7 +86,7 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                            Email Address
+                            Email Address <span class="text-red-500">*</span>
                         </label>
                         <input 
                             type="email" 
@@ -105,7 +105,7 @@
                     <!-- Password -->
                     <div>
                         <label for="password" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                            Create Password
+                            Create Password <span class="text-red-500">*</span>
                         </label>
                         <input 
                             type="password" 
@@ -124,7 +124,7 @@
                     <!-- Confirm Password -->
                     <div>
                         <label for="password_confirmation" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                            Confirm Password
+                            Confirm Password <span class="text-red-500">*</span>
                         </label>
                         <input 
                             type="password" 

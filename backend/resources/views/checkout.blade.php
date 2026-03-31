@@ -64,11 +64,11 @@
           @endif
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name</label>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name <span class="text-red-500">*</span></label>
               <input type="text" name="shipping_name" required placeholder="Juan Dela Cruz" class="input" value="{{ old('shipping_name', $defaultAddress?->full_name ?? $user->name) }}">
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number</label>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number <span class="text-red-500">*</span></label>
               <input type="tel" name="shipping_phone" required placeholder="09XX XXX XXXX" class="input" value="{{ old('shipping_phone', $defaultAddress?->phone ?? $user->phone) }}">
             </div>
             <div class="md:col-span-2">
@@ -77,7 +77,7 @@
               <p class="mt-2 text-xs text-gray-400">Order updates will be sent to this address.</p>
             </div>
             <div class="md:col-span-2">
-              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Complete Address</label>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Complete Address <span class="text-red-500">*</span></label>
               <textarea name="shipping_address" required rows="3" placeholder="House #, Street, Barangay, City/Municipality, Province" class="input">{{ old('shipping_address', $defaultAddress?->full_address) }}</textarea>
               <p class="mt-2 text-xs text-brand-600 font-medium">Currently serving all Mindanao regions.</p>
             </div>

@@ -65,7 +65,7 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                            Email Address
+                            Email Address <span class="text-red-500">*</span>
                         </label>
                         <input 
                             type="email" 
@@ -86,7 +86,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <label for="password" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                Password
+                                Password <span class="text-red-500">*</span>
                             </label>
                             @if (Route::has('password.request'))
                                 <a href="{{ route('password.request') }}" class="text-[10px] font-bold text-brand-600 uppercase tracking-widest hover:underline">

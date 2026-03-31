@@ -26,14 +26,14 @@
         <div class="bg-white rounded-lg border border-gray-100 shadow-sm p-8 max-w-2xl">
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Label</label>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Label <span class="text-red-500">*</span></label>
                     <input name="label" class="input" value="{{ old('label', $item->label) }}" required>
                     @error('label')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">URL</label>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">URL <span class="text-red-500">*</span></label>
                     <input name="url" class="input" value="{{ old('url', $item->url) }}" required>
                     <p class="text-xs text-gray-400 mt-1">Use absolute or relative URLs.</p>
                     @error('url')
@@ -41,7 +41,7 @@
                     @enderror
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Location</label>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Location <span class="text-red-500">*</span></label>
                     <select name="location" class="input" required>
                         <option value="header" @selected(old('location', $item->location) === 'header')>Header</option>
                         <option value="footer" @selected(old('location', $item->location) === 'footer')>Footer</option>

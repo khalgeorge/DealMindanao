@@ -47,7 +47,7 @@
             
             <!-- Email Field -->
             <div>
-                <label for="email" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Email</label>
+                <label for="email" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Email <span class="text-red-500">*</span></label>
                 <input 
                     type="email" 
                     id="email" 
@@ -63,7 +63,7 @@
 
             <!-- Password Field -->
             <div>
-                <label for="password" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Password</label>
+                <label for="password" class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Password <span class="text-red-500">*</span></label>
                 <input 
                     type="password" 
                     id="password" 

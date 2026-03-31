@@ -26,7 +26,7 @@
 
     <div class="grid gap-4">
         <div>
-            <label class="text-sm">Category Name</label>
+            <label class="text-sm">Category Name <span class="text-red-500">*</span></label>
             <input name="name" class="input" value="{{ old('name', $category->name) }}" required>
             @error('name')
                 <p class="text-xs text-red-600 mt-1">{{ $message }}</p>

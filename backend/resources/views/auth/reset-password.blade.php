@@ -8,21 +8,21 @@
 
         <!-- Email Address -->
         <div class="space-y-1">
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('Email')" :required="true" />
             <x-text-input id="email" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" />
         </div>
 
         <!-- Password -->
         <div class="space-y-1">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Password')" :required="true" />
             <x-text-input id="password" type="password" name="password" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" />
         </div>
 
         <!-- Confirm Password -->
         <div class="space-y-1">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" :required="true" />
 
             <x-text-input id="password_confirmation"
                                 type="password"
