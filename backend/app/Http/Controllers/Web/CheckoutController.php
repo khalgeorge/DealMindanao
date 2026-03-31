@@ -66,18 +66,18 @@ class CheckoutController extends Controller
         
         $order->load(['items.product', 'user']);
         
-        // Send emails
+        // Queue emails (non-blocking — processed by queue worker)
         try {
             $user = Auth::user();
             if ($user) {
-                Mail::to($user->email)->send(new OrderConfirmationMail($order));
+                Mail::to($user->email)->queue(new OrderConfirmationMail($order));
             }
             
             if ($adminEmail = config('mail.admin_email')) {
-                Mail::to($adminEmail)->send(new AdminNewOrderMail($order));
+                Mail::to($adminEmail)->queue(new AdminNewOrderMail($order));
             }
         } catch (\Exception $e) {
-            Log::error('Failed to send order emails: ' . $e->getMessage());
+            Log::error('Failed to queue order emails: ' . $e->getMessage());
         }
         
         return redirect()->route('checkout.success', $order->id)
