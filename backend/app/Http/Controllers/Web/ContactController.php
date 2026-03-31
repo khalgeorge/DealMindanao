@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactInquiryMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -63,7 +65,7 @@ class ContactController extends Controller
             }
         }
 
-        // Log the inquiry (extend to send an email when mail is configured)
+        // Log the inquiry
         Log::info('Contact form submission', [
             'name'    => $validated['name'],
             'email'   => $validated['email'],
@@ -71,8 +73,13 @@ class ContactController extends Controller
             'phone'   => $validated['phone'] ?? null,
         ]);
 
-        // TODO: uncomment once a mail driver is configured in production
-        // Mail::to(config('mail.from.address'))->send(new \App\Mail\ContactInquiryMail($validated));
+        // Send notification email to admin
+        try {
+            $adminEmail = config('mail.admin_email', config('mail.from.address'));
+            Mail::to($adminEmail)->send(new ContactInquiryMail($validated));
+        } catch (\Exception $e) {
+            Log::error('Contact form mail failed: ' . $e->getMessage());
+        }
 
         return back()->with(
             'success',
