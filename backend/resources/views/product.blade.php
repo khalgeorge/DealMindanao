@@ -189,6 +189,7 @@
                     'Model Code'  => $product->model_code,
                     'Variant'     => !$hasVariantOptions ? $product->variant : null,
                     'Category'    => $product->category?->name,
+                    'Region'      => $product->supplier?->region,
                 ]);
             @endphp
             @if(count($specs))
