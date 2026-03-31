@@ -33,10 +33,12 @@ return new class extends Migration
             }
         });
 
-        // ── 2. Rename products.company_id → supplier_id ──────────────────────
-        Schema::table('products', function (Blueprint $table) {
-            $table->renameColumn('company_id', 'supplier_id');
-        });
+        // ── 2. Rename products.company_id → supplier_id (if not already done) ──
+        if (Schema::hasColumn('products', 'company_id') && !Schema::hasColumn('products', 'supplier_id')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->renameColumn('company_id', 'supplier_id');
+            });
+        }
     }
 
     public function down(): void
