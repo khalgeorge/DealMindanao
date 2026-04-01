@@ -15,6 +15,8 @@ class ShopController extends Controller
         $categories = Category::orderBy('name')->get();
 
         $allProducts = Product::with(['category', 'supplier', 'brand'])
+            ->withCount(['reviews as review_count' => fn($q) => $q->where('is_approved', true)])
+            ->withAvg(['reviews as avg_rating' => fn($q) => $q->where('is_approved', true)], 'rating')
             ->where('is_active', true)
             ->latest()
             ->get()
@@ -41,6 +43,8 @@ class ShopController extends Controller
                     'region'           => $p->supplier?->region ?? '',
                     'variant'          => $p->variant,
                     'variants'         => $p->variants,
+                    'avg_rating'       => round((float) ($p->avg_rating ?? 0), 1),
+                    'review_count'     => (int) ($p->review_count ?? 0),
                 ];
             })
             ->values();
@@ -55,6 +59,12 @@ class ShopController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
+        // Eager-load approved reviews with user info
+        $product->load(['reviews' => fn($q) => $q->approved()->latest()->with('user')]);
+        $supplierReviews = $product->supplier
+            ? $product->supplier->reviews()->approved()->latest()->with('user')->get()
+            : collect();
+
         $relatedProducts = Product::with(['category', 'supplier', 'brand'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
@@ -62,6 +72,6 @@ class ShopController extends Controller
             ->take(4)
             ->get();
 
-        return view('product', compact('product', 'relatedProducts'));
+        return view('product', compact('product', 'relatedProducts', 'supplierReviews'));
     }
 }

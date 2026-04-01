@@ -269,6 +269,12 @@
 
                         <p class="text-sm font-bold uppercase text-gray-900 line-clamp-2 leading-snug">${p.name}</p>
 
+                        ${p.review_count > 0 ? `
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="text-amber-400 text-xs leading-none">${'★'.repeat(Math.round(p.avg_rating))}${'☆'.repeat(5 - Math.round(p.avg_rating))}</span>
+                            <span class="text-[10px] text-gray-400 font-semibold">${p.avg_rating} (${p.review_count})</span>
+                        </div>` : ''}
+
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-base font-black text-gray-900">${formatPrice(salePrice)}</span>
                             ${p.is_on_promo ? `<span class="text-xs text-gray-400 line-through">${formatPrice(p.price)}</span>` : ''}

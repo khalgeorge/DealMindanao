@@ -33,4 +33,9 @@ class Supplier extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function reviews()
+    {
+        return $this->morphMany(\App\Models\Review::class, 'reviewable');
+    }
 }

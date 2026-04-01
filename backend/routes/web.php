@@ -26,6 +26,8 @@ use App\Http\Controllers\Web\Admin\PrivacyPageController as AdminPrivacyPageCont
 use App\Http\Controllers\Web\Admin\RefundPolicyPageController as AdminRefundPolicyPageController;
 use App\Http\Controllers\Web\Admin\TermsPageController as AdminTermsPageController;
 use App\Http\Controllers\Web\Admin\NavigationController as AdminNavigationController;
+use App\Http\Controllers\Web\ReviewController;
+use App\Http\Controllers\Web\Admin\ReviewController as AdminReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +63,12 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     Route::delete('/account/addresses/{address}',            [AccountController::class, 'destroyAddress'])->name('account.addresses.destroy');
     Route::post('/account/addresses/{address}/set-default',  [AccountController::class, 'setDefaultAddress'])->name('account.addresses.setDefault');
     Route::post('/account/orders/{order}/cancel',            [AccountController::class, 'cancelOrder'])->name('account.orders.cancel');
+});
+
+// Reviews (requires authentication)
+Route::middleware(['auth', 'throttle:10,1'])->group(function () {
+    Route::post('/product/{slug}/reviews',    [ReviewController::class, 'storeProduct'])->name('reviews.product.store');
+    Route::post('/supplier/{supplier}/reviews', [ReviewController::class, 'storeSupplier'])->name('reviews.supplier.store');
 });
 
 // Static Pages
@@ -209,6 +217,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/navigation/{navigation}/edit', [AdminNavigationController::class, 'edit'])->name('navigation.edit');
     Route::put('/navigation/{navigation}', [AdminNavigationController::class, 'update'])->name('navigation.update');
     Route::delete('/navigation/{navigation}', [AdminNavigationController::class, 'destroy'])->name('navigation.destroy');
+
+    // Reviews
+    Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('/reviews/{review}/approve', [AdminReviewController::class, 'approve'])->name('reviews.approve');
+    Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
 
     // Settings
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
