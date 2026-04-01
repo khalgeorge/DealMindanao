@@ -415,16 +415,9 @@
                                     <input type="hidden" name="rating" id="product_rating" value="">
                                     @error('rating') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
-                                <div class="mb-3">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">Title <span class="text-gray-400 font-normal normal-case">(optional)</span></label>
-                                    <input type="text" name="title" maxlength="150" value="{{ old('title') }}"
-                                           class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                                           placeholder="Summarise your experience">
-                                    @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                                </div>
                                 <div class="mb-4">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">Review <span class="text-gray-400 font-normal normal-case">(optional)</span></label>
-                                    <textarea name="body" rows="4" maxlength="2000"
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">Review</label>
+                                    <textarea name="body" rows="4" maxlength="2000" required
                                               class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
                                               placeholder="Tell others what you think...">{{ old('body') }}</textarea>
                                     @error('body') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -455,9 +448,6 @@
                                     </svg>
                                     @endfor
                                 </div>
-                                @if($review->title)
-                                <h4 class="font-bold text-gray-900 text-sm">{{ $review->title }}</h4>
-                                @endif
                             </div>
                             <p class="text-[11px] text-gray-400 font-semibold whitespace-nowrap">{{ $review->created_at->format('M j, Y') }}</p>
                         </div>

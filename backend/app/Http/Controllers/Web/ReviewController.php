@@ -20,8 +20,7 @@ class ReviewController extends Controller
 
         $request->validate([
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
-            'title'  => ['nullable', 'string', 'max:150'],
-            'body'   => ['nullable', 'string', 'max:2000'],
+            'body'   => ['required', 'string', 'min:5', 'max:2000'],
         ]);
 
         // One review per user per product
@@ -39,7 +38,6 @@ class ReviewController extends Controller
             'reviewable_id'   => $product->id,
             'user_id'         => Auth::id(),
             'rating'          => $request->rating,
-            'title'           => $request->title,
             'body'            => $request->body,
             'is_approved'     => false,
         ]);
@@ -54,8 +52,7 @@ class ReviewController extends Controller
     {
         $request->validate([
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
-            'title'  => ['nullable', 'string', 'max:150'],
-            'body'   => ['nullable', 'string', 'max:2000'],
+            'body'   => ['required', 'string', 'min:5', 'max:2000'],
         ]);
 
         // One review per user per supplier
@@ -73,7 +70,6 @@ class ReviewController extends Controller
             'reviewable_id'   => $supplier->id,
             'user_id'         => Auth::id(),
             'rating'          => $request->rating,
-            'title'           => $request->title,
             'body'            => $request->body,
             'is_approved'     => false,
         ]);
