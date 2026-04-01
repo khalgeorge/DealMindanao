@@ -263,7 +263,6 @@
                     <svg class="w-4 h-4 text-brand-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     Every order is manually verified before payment to ensure quality and availability.
                 </span>
-                <p class="text-center text-sm md:text-base text-gray-500 font-medium italic">DealMindanao ensures every order is verified, secured, and properly handled from start to finish.</p>
             </div>
             @if($hp['home_steps_info_heading'] ?? '')
             <div class="mt-16 p-8 bg-brand-50 rounded-2xl border-2 border-brand-200">
