@@ -277,6 +277,25 @@
 </section>
 @endif
 
+{{-- ── Service Coverage Section ─────────────────────────────────────── --}}
+<section class="py-16 md:py-20 bg-gray-50 border-t border-gray-100">
+    <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 mb-4">Serving Customers Across Mindanao</h2>
+            <p class="text-base md:text-lg text-gray-600 mb-8 leading-relaxed">DealMindanao provides sourcing and delivery services across:</p>
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                @foreach(['Cagayan de Oro', 'Davao City', 'Bukidnon', 'Iligan', 'Northern Mindanao and nearby areas'] as $area)
+                <span class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-brand-200 text-gray-800 text-sm font-semibold rounded-full shadow-sm">
+                    <svg class="w-3.5 h-3.5 text-brand-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                    {{ $area }}
+                </span>
+                @endforeach
+            </div>
+            <p class="text-base text-gray-600 leading-relaxed">We connect customers with reliable suppliers and ensure smooth transactions anywhere in Mindanao.</p>
+        </div>
+    </div>
+</section>
+
 @endsection
 
 @push('scripts')
