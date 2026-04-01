@@ -133,7 +133,7 @@
             <h2 id="highlights-heading" class="font-black text-gray-900 mb-4 whitespace-nowrap overflow-hidden" style="font-size: clamp(1.25rem, 4vw, 3rem);">{{ $hp['home_highlights_heading'] ?? 'Weekly Highlights' }}</h2>
             @if($hp['home_highlights_subtext'] ?? '')
             <p class="text-gray-600 font-medium text-base md:text-lg max-w-2xl mx-auto">{{ $hp['home_highlights_subtext'] }}</p>
-            <p class="mt-5 text-center text-sm md:text-base text-gray-500 font-medium italic">⚡ Fast-moving items — request now before stocks run out.</p>
+            <p class="mt-5 text-center text-sm md:text-base text-gray-500 font-medium italic">🔥 High-demand items — limited availability. Request now to secure your order.</p>
             @endif
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -162,9 +162,18 @@
                     <p class="text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">{{ $product->supplier->region ?: 'Mindanao' }}</p>
                     @endif
                     <h3 class="font-black text-gray-900 text-lg mb-3 leading-tight min-h-[56px]">{{ $product->name }}</h3>
-                    <div class="flex items-center gap-2 mb-4">
+                    <div class="flex items-center gap-2 mb-3">
                         <p class="font-black text-2xl text-brand-600">&#8369;{{ number_format($finalPrice, 2) }}</p>
                         @if($discountPercent > 0)<p class="text-sm text-gray-400 line-through">&#8369;{{ number_format($product->price, 2) }}</p>@endif
+                    </div>
+                    <div class="flex flex-col gap-1 mb-3 text-xs text-gray-500 font-medium">
+                        <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-brand-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>Verified Supplier</span>
+                        <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-brand-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>Mindanao</span>
+                        <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-brand-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>Delivery Available</span>
+                    </div>
+                    <div class="mb-3 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-xs font-bold text-amber-700 flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+                        Limited Stock – Request Now
                     </div>
                     <a href="{{ route('product.show', $product->slug) }}" class="block w-full py-3 bg-gray-900 hover:bg-brand-600 text-white text-center font-bold uppercase tracking-wider rounded-lg transition-all text-sm">Request Order</a>
                 </div>
@@ -249,7 +258,13 @@
                 </div>
                 @endforeach
             </div>
-            <p class="mt-10 text-center text-sm md:text-base text-gray-500 font-medium italic">DealMindanao ensures every order is verified, secured, and properly handled from start to finish.</p>
+            <div class="mt-10 flex flex-col items-center gap-3">
+                <span class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-50 border border-brand-200 text-brand-800 text-sm font-semibold rounded-full">
+                    <svg class="w-4 h-4 text-brand-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    Every order is manually verified before payment to ensure quality and availability.
+                </span>
+                <p class="text-center text-sm md:text-base text-gray-500 font-medium italic">DealMindanao ensures every order is verified, secured, and properly handled from start to finish.</p>
+            </div>
             @if($hp['home_steps_info_heading'] ?? '')
             <div class="mt-16 p-8 bg-brand-50 rounded-2xl border-2 border-brand-200">
                 <div class="flex items-start gap-4">
