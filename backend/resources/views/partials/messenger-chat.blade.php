@@ -134,7 +134,6 @@
         <button id="dm-chat-close" onclick="dmChatToggle()" aria-label="Close chat">✕</button>
     </div>
 
-    @if($isLoggedIn)
     {{-- Messages --}}
     <div id="dm-chat-body">
         <div id="dm-chat-empty">
@@ -150,14 +149,6 @@
             <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
     </div>
-    @else
-    {{-- Login prompt --}}
-    <div id="dm-chat-login-prompt">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <p>Please log in to chat with us.<br>We'd love to help you!</p>
-        <a href="/login" onclick="localStorage.setItem('redirect_after_login', window.location.href)">Log in to Chat</a>
-    </div>
-    @endif
 </div>
 
 <script>
@@ -165,6 +156,26 @@
     const API      = (window.VITE_API_URL || '/api');
     const token    = localStorage.getItem('auth_token');
     const isAuth   = {{ $isLoggedIn ? 'true' : 'false' }};
+
+    // Guest token: persisted UUID for unauthenticated visitors
+    function getGuestToken() {
+        let t = localStorage.getItem('dm_guest_token');
+        if (!t) {
+            t = 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+            localStorage.setItem('dm_guest_token', t);
+        }
+        return t;
+    }
+    const guestToken = isAuth ? null : getGuestToken();
+
+    // Build request headers depending on auth state
+    function chatHeaders() {
+        const h = { 'Accept': 'application/json' };
+        if (isAuth && token) { h['Authorization'] = 'Bearer ' + token; }
+        else if (guestToken)  { h['X-Guest-Token'] = guestToken; }
+        return h;
+    }
+
     let isOpen     = false;
     let lastId     = 0;
     let pollTimer  = null;
@@ -200,9 +211,8 @@
 
     // ── load history ─────────────────────────────────────
     function loadHistory() {
-        if (!isAuth || !token) return;
         fetch(API + '/chat/messages', {
-            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+            headers: chatHeaders()
         })
         .then(r => r.json())
         .then(msgs => {
@@ -213,9 +223,9 @@
 
     // ── poll for new messages ─────────────────────────────
     function poll() {
-        if (!isAuth || !token || !isOpen) return;
+        if (!isOpen) return;
         fetch(API + '/chat/messages?after=' + lastId, {
-            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+            headers: chatHeaders()
         })
         .then(r => r.json())
         .then(msgs => {
@@ -233,19 +243,17 @@
         const input = document.getElementById('dm-chat-input');
         const btn   = document.getElementById('dm-chat-send');
         const text  = input.value.trim();
-        if (!text || !token) return;
+        if (!text) return;
 
         btn.disabled = true;
         input.value  = '';
         input.style.height = 'auto';
 
+        const headers = chatHeaders();
+        headers['Content-Type'] = 'application/json';
         fetch(API + '/chat/send', {
             method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
+            headers: headers,
             body: JSON.stringify({ message: text })
         })
         .then(r => r.json())
@@ -261,10 +269,8 @@
         panel.classList.toggle('open', isOpen);
 
         if (isOpen) {
-            if (isAuth) {
-                loadHistory();
-                pollTimer = setInterval(poll, 3000);
-            }
+            loadHistory();
+            pollTimer = setInterval(poll, 3000);
             setTimeout(() => {
                 const input = document.getElementById('dm-chat-input');
                 if (input) input.focus();

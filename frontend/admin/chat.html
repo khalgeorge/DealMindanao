@@ -105,7 +105,8 @@
   <script>
     const API   = import.meta?.env?.VITE_API_URL || (window.location.origin + '/api');
     const token = localStorage.getItem('auth_token');
-    let activeUserId   = null;
+    // activeConvo: { type: "user"|"guest", id: userId|null, token: null|guestToken, name, email }
+    let activeConvo    = null;
     let activeLastId   = 0;
     let pollTimer      = null;
 
@@ -138,10 +139,16 @@
           list.innerHTML = '<div class="convo-empty">No conversations yet.</div>';
           return;
         }
-        list.innerHTML = convos.map(c => `
-          <div class="convo-item ${c.user_id === activeUserId ? 'active' : ''}"
-               onclick="openConversation(${c.user_id}, '${esc(c.user?.name || 'Unknown')}', '${esc(c.user?.email || '')}')">
-            <div class="convo-avatar">${initial(c.user?.name)}</div>
+        list.innerHTML = convos.map(c => {
+          const isActive = activeConvo &&
+            ((c.type === 'user' && activeConvo.id === c.user_id) ||
+             (c.type === 'guest' && activeConvo.token === c.guest_token));
+          const callArgs = c.type === 'user'
+            ? `openConversation('user', ${c.user_id}, null, '${esc(c.user?.name || 'Unknown')}', '${esc(c.user?.email || '')}')`
+            : `openConversation('guest', null, '${c.guest_token}', '${esc(c.user?.name || 'Guest')}', 'Guest visitor')`;
+          return `
+          <div class="convo-item ${isActive ? 'active' : ''}" onclick="${callArgs}">
+            <div class="convo-avatar">${c.type === 'guest' ? 'G' : initial(c.user?.name)}</div>
             <div class="convo-info">
               <div class="convo-name">${esc(c.user?.name || 'Unknown')}</div>
               <div class="convo-preview">${esc(c.last_message || '')}</div>
@@ -150,14 +157,15 @@
               <div class="convo-time">${fmtDate(c.last_at)}</div>
               ${c.unread ? `<div class="convo-badge">${c.unread}</div>` : ''}
             </div>
-          </div>`).join('');
+          </div>`;
+        }).join('');
       })
       .catch(() => {});
     }
 
     // ── Open conversation ────────────────────────────────
-    function openConversation(userId, name, email) {
-      activeUserId = userId;
+    function openConversation(type, userId, guestToken, name, email) {
+      activeConvo  = { type, id: userId, token: guestToken, name, email };
       activeLastId = 0;
       clearInterval(pollTimer);
 
@@ -188,17 +196,19 @@
 
       // highlight selected convo
       document.querySelectorAll('.convo-item').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.convo-item').forEach(el => {
-        if (el.textContent.includes(name)) el.classList.add('active');
-      });
+      // Active item re-rendered by loadConversations() via activeConvo check
 
-      loadMessages(userId);
-      pollTimer = setInterval(() => pollMessages(userId), 3000);
+      loadMessages();
+      pollTimer = setInterval(pollMessages, 3000);
     }
 
     // ── Load all messages for a user ─────────────────────
-    function loadMessages(userId) {
-      fetch(API + '/admin/chat/messages/' + userId, {
+    function loadMessages() {
+      if (!activeConvo) return;
+      const url = activeConvo.type === 'user'
+        ? API + '/admin/chat/messages/' + activeConvo.id
+        : API + '/admin/chat/guest/messages/' + activeConvo.token;
+      fetch(url, {
         headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
       })
       .then(r => r.json())
@@ -214,9 +224,12 @@
     }
 
     // ── Poll for new messages ────────────────────────────
-    function pollMessages(userId) {
-      if (!userId) return;
-      fetch(API + '/admin/chat/poll/' + userId + '?after=' + activeLastId, {
+    function pollMessages() {
+      if (!activeConvo) return;
+      const url = activeConvo.type === 'user'
+        ? API + '/admin/chat/poll/' + activeConvo.id + '?after=' + activeLastId
+        : API + '/admin/chat/guest/poll/' + activeConvo.token + '?after=' + activeLastId;
+      fetch(url, {
         headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
       })
       .then(r => r.json())
@@ -254,13 +267,16 @@
       const input = document.getElementById('admin-reply-input');
       const btn   = document.getElementById('admin-reply-btn');
       const text  = input?.value.trim();
-      if (!text || !activeUserId) return;
+      if (!text || !activeConvo) return;
 
       btn.disabled = true;
       input.value  = '';
       input.style.height = 'auto';
 
-      fetch(API + '/admin/chat/reply/' + activeUserId, {
+      const replyUrl = activeConvo.type === 'user'
+        ? API + '/admin/chat/reply/' + activeConvo.id
+        : API + '/admin/chat/guest/reply/' + activeConvo.token;
+      fetch(replyUrl, {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + token,

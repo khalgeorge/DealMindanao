@@ -40,6 +40,13 @@ Route::get('/categories', [CategoryController::class, 'index']);
 // Public supplier routes
 Route::get('/suppliers', [SupplierController::class, 'index']);
 
+// Chat — open to all (auth users: Bearer token; guests: X-Guest-Token header)
+Route::prefix('chat')->middleware('throttle:60,1')->group(function () {
+    Route::get('/messages', [ChatController::class, 'messages']);
+    Route::post('/send',    [ChatController::class, 'send']);
+});
+
+
 // Protected routes
 Route::middleware('auth:api')->group(function () {
     // User profile
@@ -50,11 +57,6 @@ Route::middleware('auth:api')->group(function () {
     // Orders
     Route::apiResource('orders', OrderController::class);
 
-    // Chat (authenticated users)
-    Route::prefix('chat')->group(function () {
-        Route::get('/messages', [ChatController::class, 'messages']);
-        Route::post('/send',    [ChatController::class, 'send']);
-    });
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {
@@ -74,9 +76,14 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('admin/chat')->group(function () {
             Route::get('/conversations',     [AdminChatController::class, 'conversations']);
             Route::get('/unread',            [AdminChatController::class, 'unreadCount']);
+            // Registered user conversations
             Route::get('/messages/{userId}', [AdminChatController::class, 'messages']);
             Route::post('/reply/{userId}',   [AdminChatController::class, 'reply']);
             Route::get('/poll/{userId}',     [AdminChatController::class, 'poll']);
+            // Guest conversations
+            Route::get('/guest/messages/{token}',  [AdminChatController::class, 'guestMessages']);
+            Route::post('/guest/reply/{token}',    [AdminChatController::class, 'guestReply']);
+            Route::get('/guest/poll/{token}',      [AdminChatController::class, 'guestPoll']);
         });
 
         // System information (environment, production mode flag)
