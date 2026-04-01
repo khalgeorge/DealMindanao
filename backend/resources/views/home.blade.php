@@ -314,7 +314,7 @@
                 </span>
                 @endforeach
             </div>
-            <p class="text-base text-gray-600 leading-relaxed">Looking for hardware, electrical supplies, or construction materials in Mindanao? DealMindanao connects you with verified suppliers in Cagayan de Oro, Davao, Bukidnon, Iligan, and nearby areas.</p>
+            <p class="text-base text-gray-600 leading-relaxed">We connect customers with reliable suppliers and ensure smooth transactions anywhere in Mindanao.</p>
         </div>
     </div>
 </section>
