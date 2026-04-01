@@ -226,6 +226,7 @@
                 </div>
                 @endforeach
             </div>
+            <p class="mt-10 text-center text-sm md:text-base text-gray-500 font-medium italic">DealMindanao ensures every order is verified, secured, and properly handled from start to finish.</p>
             @if($hp['home_steps_info_heading'] ?? '')
             <div class="mt-16 p-8 bg-brand-50 rounded-2xl border-2 border-brand-200">
                 <div class="flex items-start gap-4">
@@ -249,7 +250,6 @@
                 </div>
             </div>
             @endif
-            <p class="mt-10 text-center text-sm md:text-base text-gray-500 font-medium italic">DealMindanao ensures every order is verified, secured, and properly handled from start to finish.</p>
         </div>
     </div>
 </section>
