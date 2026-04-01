@@ -38,7 +38,7 @@
             <div class="absolute inset-0 flex items-center">
                 <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
                     <div class="max-w-2xl">
-                        <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6">
+                        <h1 class="hero-heading font-black text-white leading-[1.1] mb-6" style="font-size: clamp(1.5rem, 4.5vw, 4.5rem);">
                             {!! $headingHtml !!}
                         </h1>
                         @if($slide['subtext'] ?? '')
@@ -101,8 +101,30 @@
 </section>
 @endif
 
+{{-- ── Trust Bar ────────────────────────────────────────────────────── --}}
+<div class="bg-brand-50 border-y border-gray-100">
+    <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
+        <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 py-4 text-sm">
+            <span class="flex items-center gap-2 font-bold" style="color:#b45309;">
+                <svg class="w-4 h-4" style="fill:#f59e0b;" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.366 2.444a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118L10 15.347l-3.954 2.674c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"/></svg>
+                Trusted by buyers across Mindanao
+            </span>
+            <span class="hidden sm:block w-px h-4 bg-brand-200"></span>
+            <span class="flex items-center gap-2 font-medium text-gray-700">
+                <svg class="w-4 h-4 shrink-0" style="color:#16a34a;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                Verified suppliers only
+            </span>
+            <span class="hidden sm:block w-px h-4 bg-brand-200"></span>
+            <span class="flex items-center gap-2 font-medium text-gray-700">
+                <svg class="w-4 h-4 shrink-0" style="color:#16a34a;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                Managed by DealMindanao team
+            </span>
+        </div>
+    </div>
+</div>
+
 @if(($hp['home_highlights_enabled'] ?? '1') !== '0')
-<section class="py-20 md:py-28 bg-white">
+<section class="py-20 md:py-15 bg-white">
     <div class="container mx-auto px-6 lg:px-16 max-w-7xl">
         <div class="text-center mb-12 md:mb-16">
             @if($hp['home_highlights_badge'] ?? '')
@@ -111,6 +133,7 @@
             <h2 id="highlights-heading" class="font-black text-gray-900 mb-4 whitespace-nowrap overflow-hidden" style="font-size: clamp(1.25rem, 4vw, 3rem);">{{ $hp['home_highlights_heading'] ?? 'Weekly Highlights' }}</h2>
             @if($hp['home_highlights_subtext'] ?? '')
             <p class="text-gray-600 font-medium text-base md:text-lg max-w-2xl mx-auto">{{ $hp['home_highlights_subtext'] }}</p>
+            <p class="mt-5 text-center text-sm md:text-base text-gray-500 font-medium italic">⚡ Fast-moving items — request now before stocks run out.</p>
             @endif
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -143,7 +166,7 @@
                         <p class="font-black text-2xl text-brand-600">&#8369;{{ number_format($finalPrice, 2) }}</p>
                         @if($discountPercent > 0)<p class="text-sm text-gray-400 line-through">&#8369;{{ number_format($product->price, 2) }}</p>@endif
                     </div>
-                    <a href="{{ route('product.show', $product->slug) }}" class="block w-full py-3 bg-gray-900 hover:bg-brand-600 text-white text-center font-bold uppercase tracking-wider rounded-lg transition-all text-sm">View Details</a>
+                    <a href="{{ route('product.show', $product->slug) }}" class="block w-full py-3 bg-gray-900 hover:bg-brand-600 text-white text-center font-bold uppercase tracking-wider rounded-lg transition-all text-sm">Request Order</a>
                 </div>
             </div>
             @empty
@@ -291,7 +314,7 @@
                 </span>
                 @endforeach
             </div>
-            <p class="text-base text-gray-600 leading-relaxed">We connect customers with reliable suppliers and ensure smooth transactions anywhere in Mindanao.</p>
+            <p class="text-base text-gray-600 leading-relaxed">Looking for hardware, electrical supplies, or construction materials in Mindanao? DealMindanao connects you with verified suppliers in Cagayan de Oro, Davao, Bukidnon, Iligan, and nearby areas.</p>
         </div>
     </div>
 </section>
@@ -345,7 +368,7 @@
             h2.style.fontSize = fontSize + 'px';
         }
     }
-    document.addEventListener('DOMContentLoaded', fitHighlightsHeading);
-    window.addEventListener('resize', fitHighlightsHeading);
+    document.addEventListener('DOMContentLoaded', function() { fitHeroHeadings(); fitHighlightsHeading(); });
+    window.addEventListener('resize', function() { fitHeroHeadings(); fitHighlightsHeading(); });
 </script>
 @endpush
