@@ -1,6 +1,6 @@
 {{--
     Facebook Customer Chat Plugin - public pages only
-    Embeds Messenger chat inline on the page (no redirect, no popup).
+    Uses main sdk.js (xfbml.customerchat.js was deprecated by Meta).
     Requires APP_ENV=production, FACEBOOK_APP_ID, and FACEBOOK_PAGE_ID.
 --}}
 @php
@@ -22,7 +22,7 @@
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
         js = d.createElement(s); js.id = id;
-        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+        js.src = 'https://connect.facebook.net/en_US/sdk.js';
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 </script>
