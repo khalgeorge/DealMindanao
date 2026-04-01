@@ -88,7 +88,7 @@
     </nav>
 
     <!-- Product Content -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-6">
         
         <!-- Image Section -->
         <div class="sticky top-24">
@@ -342,20 +342,11 @@
 
     {{-- ======== REVIEWS SECTION ======== --}}
     @php
-        $productReviews  = $product->reviews->sortByDesc('created_at');
-        $productAvg      = $productReviews->avg('rating') ?? 0;
-        $productCount    = $productReviews->count();
-
-        $sellerReviews   = $supplierReviews ?? collect();
-        $sellerAvg       = $sellerReviews->avg('rating') ?? 0;
-        $sellerCount     = $sellerReviews->count();
-
-        // Check if current user has already reviewed
-        $userProductReview  = auth()->check()
+        $productReviews    = $product->reviews->sortByDesc('created_at');
+        $productAvg        = $productReviews->avg('rating') ?? 0;
+        $productCount      = $productReviews->count();
+        $userProductReview = auth()->check()
             ? $productReviews->firstWhere('user_id', auth()->id())
-            : null;
-        $userSellerReview   = auth()->check()
-            ? $sellerReviews->firstWhere('user_id', auth()->id())
             : null;
     @endphp
 
@@ -376,26 +367,8 @@
         </div>
         @endif
 
-        {{-- Tab nav --}}
-        <div class="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit mb-8">
-            <button id="tab-product-btn" onclick="showTab('product')"
-                    class="review-tab-btn px-5 py-2 rounded-lg text-sm font-bold transition-all bg-white text-gray-900 shadow-sm">
-                Product Reviews
-                @if($productCount)
-                <span class="ml-1.5 px-1.5 py-0.5 bg-brand-600 text-white rounded-full text-[10px] font-black">{{ $productCount }}</span>
-                @endif
-            </button>
-            <button id="tab-seller-btn" onclick="showTab('seller')"
-                    class="review-tab-btn px-5 py-2 rounded-lg text-sm font-bold transition-all text-gray-500">
-                Seller Reviews
-                @if($sellerCount)
-                <span class="ml-1.5 px-1.5 py-0.5 bg-gray-400 text-white rounded-full text-[10px] font-black">{{ $sellerCount }}</span>
-                @endif
-            </button>
-        </div>
-
-        {{-- ── PRODUCT REVIEWS TAB ── --}}
-        <div id="tab-product" class="review-tab">
+        {{-- ── PRODUCT REVIEWS ── --}}
+        <div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
                 {{-- Left: Summary + Form --}}
@@ -502,116 +475,7 @@
                 </div>
 
             </div>
-        </div>{{-- end tab-product --}}
-
-        {{-- ── SELLER REVIEWS TAB ── --}}
-        <div id="tab-seller" class="review-tab hidden">
-            @if($product->supplier)
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-
-                {{-- Left: Summary + Form --}}
-                <div>
-                    @if($sellerCount)
-                    <div class="mb-6 p-5 bg-gray-50 rounded-xl text-center">
-                        <p class="text-5xl font-black text-gray-900 mb-1">{{ number_format($sellerAvg, 1) }}</p>
-                        <div class="flex justify-center gap-0.5 mb-1">
-                            @for($i = 1; $i <= 5; $i++)
-                            <svg class="w-5 h-5 {{ $i <= round($sellerAvg) ? 'text-amber-400' : 'text-gray-300' }}" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                            @endfor
-                        </div>
-                        <p class="text-xs text-gray-500 font-semibold">{{ $sellerCount }} review{{ $sellerCount !== 1 ? 's' : '' }} for <span class="text-gray-700">{{ $product->supplier->name }}</span></p>
-                    </div>
-                    @endif
-
-                    @auth
-                        @if($userSellerReview)
-                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 font-semibold">
-                            ✓ You've already reviewed this seller.
-                        </div>
-                        @else
-                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
-                            <h3 class="font-bold text-gray-900 mb-1 text-sm uppercase tracking-wide">Review the Seller</h3>
-                            <p class="text-xs text-gray-500 mb-4">{{ $product->supplier->name }}</p>
-                            <form action="{{ route('reviews.supplier.store', $product->supplier) }}" method="POST">
-                                @csrf
-                                <div class="mb-4">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Your Rating</label>
-                                    <div class="flex gap-1 star-picker" data-for="seller_rating">
-                                        @for($i = 1; $i <= 5; $i++)
-                                        <button type="button" data-value="{{ $i }}"
-                                                class="star-btn text-gray-300 hover:text-amber-400 transition-colors">
-                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                            </svg>
-                                        </button>
-                                        @endfor
-                                    </div>
-                                    <input type="hidden" name="rating" id="seller_rating" value="">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">Title <span class="text-gray-400 font-normal normal-case">(optional)</span></label>
-                                    <input type="text" name="title" maxlength="150"
-                                           class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-                                           placeholder="Summarise your experience">
-                                </div>
-                                <div class="mb-4">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">Review <span class="text-gray-400 font-normal normal-case">(optional)</span></label>
-                                    <textarea name="body" rows="4" maxlength="2000"
-                                              class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
-                                              placeholder="How was the seller?"></textarea>
-                                </div>
-                                <button type="submit" class="btn-primary w-full">Submit Review</button>
-                                <p class="text-[11px] text-gray-400 text-center mt-2">Reviews are approved before appearing publicly.</p>
-                            </form>
-                        </div>
-                        @endif
-                    @else
-                    <div class="p-5 bg-gray-50 border border-gray-200 rounded-xl text-center">
-                        <p class="text-sm text-gray-600 mb-3">Sign in to review this seller.</p>
-                        <a href="{{ route('login') }}" class="btn-primary text-sm">Log In</a>
-                    </div>
-                    @endauth
-                </div>
-
-                {{-- Right: Approved seller reviews --}}
-                <div class="lg:col-span-2 space-y-5">
-                    @forelse($sellerReviews as $review)
-                    <div class="p-5 bg-white border border-gray-100 rounded-xl shadow-sm">
-                        <div class="flex items-start justify-between gap-4 mb-2">
-                            <div>
-                                <div class="flex gap-0.5 mb-1">
-                                    @for($i = 1; $i <= 5; $i++)
-                                    <svg class="w-4 h-4 {{ $i <= $review->rating ? 'text-amber-400' : 'text-gray-200' }}" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                    </svg>
-                                    @endfor
-                                </div>
-                                @if($review->title)
-                                <h4 class="font-bold text-gray-900 text-sm">{{ $review->title }}</h4>
-                                @endif
-                            </div>
-                            <p class="text-[11px] text-gray-400 font-semibold whitespace-nowrap">{{ $review->created_at->format('M j, Y') }}</p>
-                        </div>
-                        @if($review->body)
-                        <p class="text-sm text-gray-600 leading-relaxed mb-3">{{ $review->body }}</p>
-                        @endif
-                        <p class="text-xs text-gray-500 font-bold">— {{ $review->user->name ?? 'Anonymous' }}</p>
-                    </div>
-                    @empty
-                    <div class="flex flex-col items-center justify-center py-16 text-gray-400">
-                        <svg class="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                        <p class="font-semibold text-sm">No seller reviews yet — be the first!</p>
-                    </div>
-                    @endforelse
-                </div>
-
-            </div>
-            @else
-            <p class="text-gray-500 text-sm">No seller information available for this product.</p>
-            @endif
-        </div>{{-- end tab-seller --}}
+        </div>
 
     </div>{{-- end reviews section --}}
 
@@ -620,22 +484,6 @@
 
 @push('scripts')
 <script>
-    // ── Tab switcher ──────────────────────────────────────────────────────────
-    function showTab(tab) {
-        document.querySelectorAll('.review-tab').forEach(el => el.classList.add('hidden'));
-        document.getElementById('tab-' + tab).classList.remove('hidden');
-
-        document.querySelectorAll('.review-tab-btn').forEach(btn => {
-            btn.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
-            btn.classList.add('text-gray-500');
-        });
-        const active = document.getElementById('tab-' + tab + '-btn');
-        if (active) {
-            active.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
-            active.classList.remove('text-gray-500');
-        }
-    }
-
     // ── Interactive star pickers ──────────────────────────────────────────────
     document.querySelectorAll('.star-picker').forEach(picker => {
         const targetId = picker.dataset.for;
