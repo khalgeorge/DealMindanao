@@ -155,7 +155,7 @@
     <div id="dm-chat-login-prompt">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <p>Please log in to chat with us.<br>We'd love to help you!</p>
-        <a href="/login.html">Log in to Chat</a>
+        <a href="/login" onclick="localStorage.setItem('redirect_after_login', window.location.href)">Log in to Chat</a>
     </div>
     @endif
 </div>
