@@ -136,26 +136,19 @@
     {{-- Messages --}}
     <div id="dm-chat-body">
         <div id="dm-chat-empty">
-            @if($isLoggedIn)
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <p style="margin-top:8px">Send us a message!<br>We'll reply as soon as we can.</p>
-            @else
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <p style="margin-top:8px;font-size:13px;color:#64748b;line-height:1.5;">Hi! How can we help?<br>Use the button below to chat<br>via Facebook Messenger.</p>
-            @endif
+            <p style="margin-top:8px" id="dm-chat-empty-text">Send us a message!<br>We'll reply as soon as we can.</p>
         </div>
         <div id="dm-chat-typing">Admin is typing…</div>
     </div>
-    {{-- Input --}}
-    @if($isLoggedIn)
-    <div id="dm-chat-footer">
+    {{-- Input: auth users get textarea, guests get FB button — switched by JS --}}
+    <div id="dm-chat-footer" style="display:none">
         <textarea id="dm-chat-input" rows="1" placeholder="Type a message…"></textarea>
         <button id="dm-chat-send" onclick="dmSendMessage()" aria-label="Send">
             <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
     </div>
-    @else
-    <div id="dm-chat-fb-footer">
+    <div id="dm-chat-fb-footer" style="display:none">
         <a href="https://m.me/{{ config('services.facebook.page_id') }}"
            target="_blank" rel="noopener noreferrer" id="dm-chat-fb-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -165,19 +158,31 @@
         </a>
         <small>A Facebook account is required to chat with us</small>
     </div>
-    @endif
 </div>
 
 <script>
 (function () {
     const API      = (window.VITE_API_URL || '/api');
     const token    = localStorage.getItem('auth_token');
-    const isAuth   = {{ $isLoggedIn ? 'true' : 'false' }};
+    const isAuth   = !!localStorage.getItem('auth_token');
 
     // Request headers for authenticated users
     function chatHeaders() {
         return { 'Accept': 'application/json', 'Authorization': 'Bearer ' + token };
     }
+
+    // Show the correct footer based on auth state
+    (function initFooter() {
+        if (isAuth) {
+            document.getElementById('dm-chat-footer').style.display = '';
+            const t = document.getElementById('dm-chat-empty-text');
+            if (t) t.innerHTML = "Send us a message!<br>We'll reply as soon as we can.";
+        } else {
+            document.getElementById('dm-chat-fb-footer').style.display = '';
+            const t = document.getElementById('dm-chat-empty-text');
+            if (t) t.innerHTML = "Hi! How can we help?<br>Click below to message us<br>via Facebook Messenger.";
+        }
+    })();
 
     let isOpen     = false;
     let lastId     = 0;
