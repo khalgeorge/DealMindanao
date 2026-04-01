@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;">
+  <title>Chat - DealMindanao Admin</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="/src/css/app.css">
+  <style>
+    /* ── Chat layout ─────────────────────────────────── */
+    .chat-layout { display: grid; grid-template-columns: 320px 1fr; gap: 0; height: calc(100vh - 120px); border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #fff; }
+
+    /* Conversations sidebar */
+    .convo-list { border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
+    .convo-list-header { padding: 16px; font-weight: 700; font-size: 14px; color: #374151; border-bottom: 1px solid #f1f5f9; background: #f8fafc; }
+    .convo-list-body { overflow-y: auto; flex: 1; }
+    .convo-item { padding: 14px 16px; cursor: pointer; border-bottom: 1px solid #f8fafc; transition: background .15s; display: flex; align-items: center; gap: 12px; }
+    .convo-item:hover { background: #f0f9ff; }
+    .convo-item.active { background: #eff6ff; border-left: 3px solid #0084ff; }
+    .convo-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#0084ff,#00c6ff); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+    .convo-info { flex: 1; min-width: 0; }
+    .convo-name { font-weight: 600; font-size: 13.5px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .convo-preview { font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .convo-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .convo-time { font-size: 10px; color: #94a3b8; }
+    .convo-badge { background: #0084ff; color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+    .convo-empty { padding: 40px 16px; text-align: center; color: #94a3b8; font-size: 13px; }
+
+    /* Chat window */
+    .chat-window { display: flex; flex-direction: column; }
+    .chat-window-header { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; background: #fff; }
+    .chat-window-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#0084ff,#00c6ff); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; }
+    .chat-window-name { font-weight: 700; font-size: 14px; color: #1e293b; }
+    .chat-window-email { font-size: 11px; color: #64748b; }
+
+    /* messages */
+    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: #f8fafc; }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+    .msg { max-width: 72%; display: flex; flex-direction: column; gap: 3px; }
+    .msg.user  { align-self: flex-start; align-items: flex-start; }
+    .msg.admin { align-self: flex-end;   align-items: flex-end; }
+    .msg .bbl  { padding: 9px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; word-break: break-word; }
+    .msg.user  .bbl { background: #fff; border: 1px solid #e2e8f0; color: #1e293b; border-bottom-left-radius: 4px; }
+    .msg.admin .bbl { background: #0084ff; color: #fff; border-bottom-right-radius: 4px; }
+    .msg .ts   { font-size: 10px; color: #94a3b8; }
+    .msg .sender-label { font-size: 10px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+    /* reply footer */
+    .chat-footer { padding: 12px 16px; border-top: 1px solid #f1f5f9; display: flex; gap: 10px; align-items: flex-end; background: #fff; }
+    .chat-footer textarea { flex: 1; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; font-size: 13px; font-family: inherit; resize: none; max-height: 100px; outline: none; line-height: 1.45; transition: border-color .15s; }
+    .chat-footer textarea:focus { border-color: #0084ff; }
+    .chat-footer button { background: #0084ff; border: none; border-radius: 10px; padding: 10px 18px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0; transition: background .15s; }
+    .chat-footer button:hover { background: #006acc; }
+    .chat-footer button:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+    /* placeholder */
+    .chat-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #94a3b8; font-size: 14px; background: #f8fafc; }
+  </style>
+</head>
+<body class="admin-layout">
+  <div id="sidebar"></div>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <div>
+        <h1 class="text-xl font-black text-gray-900">Chat</h1>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Customer Messages</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="unread-badge" class="hidden bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full"></span>
+      </div>
+    </header>
+
+    <div id="env-banner" class="hidden px-8 pt-4"></div>
+
+    <div class="admin-content">
+      <div class="chat-layout">
+
+        <!-- Conversations list -->
+        <div class="convo-list">
+          <div class="convo-list-header">
+            💬 Conversations
+          </div>
+          <div class="convo-list-body" id="convo-list">
+            <div class="convo-empty">Loading conversations…</div>
+          </div>
+        </div>
+
+        <!-- Chat window -->
+        <div class="chat-window" id="chat-window">
+          <div class="chat-placeholder" id="chat-placeholder">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <p>Select a conversation to view messages</p>
+          </div>
+          <!-- Populated by JS when a conversation is selected -->
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/src/js/layout.js"></script>
+  <script>
+    const API   = import.meta?.env?.VITE_API_URL || (window.location.origin + '/api');
+    const token = localStorage.getItem('auth_token');
+    let activeUserId   = null;
+    let activeLastId   = 0;
+    let pollTimer      = null;
+
+    // ── Format helpers ──────────────────────────────────
+    function fmtTime(iso) {
+      const d = new Date(iso);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    function fmtDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    }
+    function initial(name) {
+      return (name || '?')[0].toUpperCase();
+    }
+
+    // ── Load conversations ───────────────────────────────
+    function loadConversations() {
+      fetch(API + '/admin/chat/conversations', {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+      })
+      .then(r => r.json())
+      .then(convos => {
+        const list = document.getElementById('convo-list');
+        if (!convos.length) {
+          list.innerHTML = '<div class="convo-empty">No conversations yet.</div>';
+          return;
+        }
+        list.innerHTML = convos.map(c => `
+          <div class="convo-item ${c.user_id === activeUserId ? 'active' : ''}"
+               onclick="openConversation(${c.user_id}, '${esc(c.user?.name || 'Unknown')}', '${esc(c.user?.email || '')}')">
+            <div class="convo-avatar">${initial(c.user?.name)}</div>
+            <div class="convo-info">
+              <div class="convo-name">${esc(c.user?.name || 'Unknown')}</div>
+              <div class="convo-preview">${esc(c.last_message || '')}</div>
+            </div>
+            <div class="convo-meta">
+              <div class="convo-time">${fmtDate(c.last_at)}</div>
+              ${c.unread ? `<div class="convo-badge">${c.unread}</div>` : ''}
+            </div>
+          </div>`).join('');
+      })
+      .catch(() => {});
+    }
+
+    // ── Open conversation ────────────────────────────────
+    function openConversation(userId, name, email) {
+      activeUserId = userId;
+      activeLastId = 0;
+      clearInterval(pollTimer);
+
+      const win = document.getElementById('chat-window');
+      win.innerHTML = `
+        <div class="chat-window-header">
+          <div class="chat-window-avatar">${initial(name)}</div>
+          <div>
+            <div class="chat-window-name">${esc(name)}</div>
+            <div class="chat-window-email">${esc(email)}</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-footer">
+          <textarea id="admin-reply-input" rows="1" placeholder="Type a reply…"></textarea>
+          <button id="admin-reply-btn" onclick="sendReply()">Send</button>
+        </div>`;
+
+      // auto-resize textarea
+      const ta = document.getElementById('admin-reply-input');
+      ta.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+      });
+      ta.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+      });
+
+      // highlight selected convo
+      document.querySelectorAll('.convo-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.convo-item').forEach(el => {
+        if (el.textContent.includes(name)) el.classList.add('active');
+      });
+
+      loadMessages(userId);
+      pollTimer = setInterval(() => pollMessages(userId), 3000);
+    }
+
+    // ── Load all messages for a user ─────────────────────
+    function loadMessages(userId) {
+      fetch(API + '/admin/chat/messages/' + userId, {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+      })
+      .then(r => r.json())
+      .then(msgs => {
+        const container = document.getElementById('chat-messages');
+        if (!container) return;
+        container.innerHTML = '';
+        msgs.forEach(m => appendMsg(m, false));
+        container.scrollTop = container.scrollHeight;
+        loadConversations(); // refresh unread badges
+      })
+      .catch(() => {});
+    }
+
+    // ── Poll for new messages ────────────────────────────
+    function pollMessages(userId) {
+      if (!userId) return;
+      fetch(API + '/admin/chat/poll/' + userId + '?after=' + activeLastId, {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+      })
+      .then(r => r.json())
+      .then(msgs => {
+        msgs.forEach(m => {
+          const container = document.getElementById('chat-messages');
+          if (!container) return;
+          if (!document.querySelector('[data-msg-id="' + m.id + '"]')) {
+            appendMsg(m, true);
+          }
+        });
+        if (msgs.length) loadConversations();
+      })
+      .catch(() => {});
+    }
+
+    // ── Append a single message ──────────────────────────
+    function appendMsg(msg, scroll) {
+      const container = document.getElementById('chat-messages');
+      if (!container) return;
+      const div = document.createElement('div');
+      div.className = 'msg ' + msg.sender;
+      div.dataset.msgId = msg.id;
+      div.innerHTML =
+        (msg.sender === 'admin' ? '<div class="sender-label">You</div>' : '') +
+        '<div class="bbl">' + esc(msg.message) + '</div>' +
+        '<div class="ts">' + fmtTime(msg.created_at) + '</div>';
+      container.appendChild(div);
+      if (scroll) container.scrollTop = container.scrollHeight;
+      if (msg.id > activeLastId) activeLastId = msg.id;
+    }
+
+    // ── Send reply ───────────────────────────────────────
+    function sendReply() {
+      const input = document.getElementById('admin-reply-input');
+      const btn   = document.getElementById('admin-reply-btn');
+      const text  = input?.value.trim();
+      if (!text || !activeUserId) return;
+
+      btn.disabled = true;
+      input.value  = '';
+      input.style.height = 'auto';
+
+      fetch(API + '/admin/chat/reply/' + activeUserId, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ message: text })
+      })
+      .then(r => r.json())
+      .then(msg => appendMsg(msg, true))
+      .catch(() => {})
+      .finally(() => { btn.disabled = false; });
+    }
+
+    // ── Unread badge in header ───────────────────────────
+    function refreshUnreadBadge() {
+      fetch(API + '/admin/chat/unread', {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+      })
+      .then(r => r.json())
+      .then(data => {
+        const badge = document.getElementById('unread-badge');
+        if (data.unread > 0) {
+          badge.textContent = data.unread + ' unread';
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
+      })
+      .catch(() => {});
+    }
+
+    // ── Init ─────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+      loadConversations();
+      refreshUnreadBadge();
+      setInterval(loadConversations, 10000);
+      setInterval(refreshUnreadBadge, 10000);
+    });
+  </script>
+</body>
+</html>

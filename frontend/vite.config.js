@@ -41,6 +41,7 @@ export default defineConfig({
         adminCompanies: resolve(__dirname, 'admin/companies.html'),
         adminCategories: resolve(__dirname, 'admin/categories.html'),
         adminSettings: resolve(__dirname, 'admin/settings.html'),
+        adminChat: resolve(__dirname, 'admin/chat.html'),
       },
     },
   },

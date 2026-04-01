@@ -36,8 +36,10 @@ return [
     ],
 
     'facebook' => [
-        'app_id'  => env('FACEBOOK_APP_ID', ''),
-        'page_id' => env('FACEBOOK_PAGE_ID', ''),
+        'app_id'              => env('FACEBOOK_APP_ID', ''),
+        'page_id'             => env('FACEBOOK_PAGE_ID', ''),
+        'page_access_token'   => env('FACEBOOK_PAGE_ACCESS_TOKEN', ''),
+        'admin_psid'          => env('FACEBOOK_ADMIN_PSID', ''),
     ],
 
     'recaptcha' => [

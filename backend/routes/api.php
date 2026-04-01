@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\SupplierController;
+use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\Admin\ChatController as AdminChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +49,13 @@ Route::middleware('auth:api')->group(function () {
     
     // Orders
     Route::apiResource('orders', OrderController::class);
-    
+
+    // Chat (authenticated users)
+    Route::prefix('chat')->group(function () {
+        Route::get('/messages', [ChatController::class, 'messages']);
+        Route::post('/send',    [ChatController::class, 'send']);
+    });
+
     // Admin-only routes
     Route::middleware('admin')->group(function () {
         // Dashboard statistics
@@ -61,6 +69,15 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('products', ProductController::class)->except(['index', 'show']);
         Route::apiResource('categories', CategoryController::class)->except(['index']);
         Route::apiResource('suppliers', SupplierController::class)->except(['index']);
+
+        // Admin chat management
+        Route::prefix('admin/chat')->group(function () {
+            Route::get('/conversations',     [AdminChatController::class, 'conversations']);
+            Route::get('/unread',            [AdminChatController::class, 'unreadCount']);
+            Route::get('/messages/{userId}', [AdminChatController::class, 'messages']);
+            Route::post('/reply/{userId}',   [AdminChatController::class, 'reply']);
+            Route::get('/poll/{userId}',     [AdminChatController::class, 'poll']);
+        });
 
         // System information (environment, production mode flag)
         Route::get('/system/info', function () {
