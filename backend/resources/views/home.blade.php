@@ -294,5 +294,25 @@
     function nextSlide() { currentSlide = (currentSlide + 1) % slides.length; setSlide(currentSlide); }
     function prevSlide() { currentSlide = (currentSlide - 1 + slides.length) % slides.length; setSlide(currentSlide); }
     if (slides.length > 1) setInterval(nextSlide, 5000);
+
+    // Auto-fit hero heading font size to prevent text overflow
+    function fitHeroHeadings() {
+        document.querySelectorAll('.hero-slide').forEach(function(slide) {
+            var h1 = slide.querySelector('h1');
+            var contentBox = h1 ? h1.closest('.max-w-2xl') : null;
+            if (!h1 || !contentBox) return;
+            h1.style.fontSize = ''; // reset to CSS default
+            var slideH   = slide.offsetHeight;
+            var fontSize = parseFloat(window.getComputedStyle(h1).fontSize);
+            var minSize  = 16;
+            // Shrink heading until all slide content fits within the slide height (with 40px buffer)
+            while (contentBox.offsetHeight > slideH - 40 && fontSize > minSize) {
+                fontSize -= 1;
+                h1.style.fontSize = fontSize + 'px';
+            }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', fitHeroHeadings);
+    window.addEventListener('resize', fitHeroHeadings);
 </script>
 @endpush
