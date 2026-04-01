@@ -249,6 +249,7 @@
                 </div>
             </div>
             @endif
+            <p class="mt-10 text-center text-sm md:text-base text-gray-500 font-medium italic">DealMindanao ensures every order is verified, secured, and properly handled from start to finish.</p>
         </div>
     </div>
 </section>
