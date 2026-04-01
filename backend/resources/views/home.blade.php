@@ -108,7 +108,7 @@
             @if($hp['home_highlights_badge'] ?? '')
             <span class="inline-block py-1.5 px-4 bg-accent-100 text-accent-700 text-xs font-bold uppercase tracking-wider rounded-full mb-4">{{ $hp['home_highlights_badge'] }}</span>
             @endif
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">{{ $hp['home_highlights_heading'] ?? 'Weekly Highlights' }}</h2>
+            <h2 id="highlights-heading" class="font-black text-gray-900 mb-4 whitespace-nowrap overflow-hidden" style="font-size: clamp(1.25rem, 4vw, 3rem);">{{ $hp['home_highlights_heading'] ?? 'Weekly Highlights' }}</h2>
             @if($hp['home_highlights_subtext'] ?? '')
             <p class="text-gray-600 font-medium text-base md:text-lg max-w-2xl mx-auto">{{ $hp['home_highlights_subtext'] }}</p>
             @endif
@@ -312,7 +312,20 @@
             }
         });
     }
-    document.addEventListener('DOMContentLoaded', fitHeroHeadings);
-    window.addEventListener('resize', fitHeroHeadings);
+    // Auto-fit highlights section heading to one line
+    function fitHighlightsHeading() {
+        var h2 = document.getElementById('highlights-heading');
+        if (!h2) return;
+        h2.style.fontSize = '';
+        var parent = h2.parentElement;
+        var fontSize = parseFloat(window.getComputedStyle(h2).fontSize);
+        var minSize = 14;
+        while (h2.scrollWidth > parent.clientWidth && fontSize > minSize) {
+            fontSize -= 1;
+            h2.style.fontSize = fontSize + 'px';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', fitHighlightsHeading);
+    window.addEventListener('resize', fitHighlightsHeading);
 </script>
 @endpush
