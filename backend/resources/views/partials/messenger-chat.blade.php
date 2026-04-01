@@ -76,19 +76,18 @@
 #dm-chat-empty { text-align: center; margin: auto; color: #94a3b8; font-size: 13px; padding: 20px; }
 #dm-chat-typing { font-size: 12px; color: #64748b; padding: 4px 8px; display: none; align-self: flex-start; }
 
-/* login prompt */
-#dm-chat-login-prompt {
-    padding: 24px 16px; text-align: center; background: #f8fafc;
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-    min-height: 200px; justify-content: center;
+/* Facebook Messenger button (guests) */
+#dm-chat-fb-footer {
+    padding: 14px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+    border-top: 1px solid #f1f5f9; background: #fff;
 }
-#dm-chat-login-prompt p { font-size: 13.5px; color: #475569; line-height: 1.5; }
-#dm-chat-login-prompt a {
-    display: inline-block; background: #0084ff; color: #fff; font-size: 13px;
-    font-weight: 700; padding: 9px 22px; border-radius: 999px;
-    text-decoration: none; transition: background .15s;
+#dm-chat-fb-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    width: 100%; background: #1877f2; color: #fff; font-size: 13px; font-weight: 700;
+    padding: 10px 22px; border-radius: 999px; text-decoration: none; transition: background .15s;
 }
-#dm-chat-login-prompt a:hover { background: #006acc; }
+#dm-chat-fb-btn:hover { background: #1558b0; }
+#dm-chat-fb-footer small { font-size: 11px; color: #94a3b8; text-align: center; }
 
 /* footer / input */
 #dm-chat-footer {
@@ -137,18 +136,36 @@
     {{-- Messages --}}
     <div id="dm-chat-body">
         <div id="dm-chat-empty">
+            @if($isLoggedIn)
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <p style="margin-top:8px">Send us a message!<br>We'll reply as soon as we can.</p>
+            @else
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <p style="margin-top:8px;font-size:13px;color:#64748b;line-height:1.5;">Hi! How can we help?<br>Use the button below to chat<br>via Facebook Messenger.</p>
+            @endif
         </div>
         <div id="dm-chat-typing">Admin is typing…</div>
     </div>
     {{-- Input --}}
+    @if($isLoggedIn)
     <div id="dm-chat-footer">
         <textarea id="dm-chat-input" rows="1" placeholder="Type a message…"></textarea>
         <button id="dm-chat-send" onclick="dmSendMessage()" aria-label="Send">
             <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
     </div>
+    @else
+    <div id="dm-chat-fb-footer">
+        <a href="https://m.me/{{ config('services.facebook.page_id') }}"
+           target="_blank" rel="noopener noreferrer" id="dm-chat-fb-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.952 1.464 5.59 3.757 7.32V22l3.433-1.887c.917.254 1.889.392 2.894.392 5.523 0 10-4.145 10-9.262C22 6.145 17.523 2 12 2zm1.047 12.482L10.9 12.18l-4.316 2.303 4.742-5.03 2.176 2.302 4.284-2.302-4.739 5.029z"/>
+            </svg>
+            Message us on Facebook
+        </a>
+        <small>A Facebook account is required to chat with us</small>
+    </div>
+    @endif
 </div>
 
 <script>
@@ -157,23 +174,9 @@
     const token    = localStorage.getItem('auth_token');
     const isAuth   = {{ $isLoggedIn ? 'true' : 'false' }};
 
-    // Guest token: persisted UUID for unauthenticated visitors
-    function getGuestToken() {
-        let t = localStorage.getItem('dm_guest_token');
-        if (!t) {
-            t = 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
-            localStorage.setItem('dm_guest_token', t);
-        }
-        return t;
-    }
-    const guestToken = isAuth ? null : getGuestToken();
-
-    // Build request headers depending on auth state
+    // Request headers for authenticated users
     function chatHeaders() {
-        const h = { 'Accept': 'application/json' };
-        if (isAuth && token) { h['Authorization'] = 'Bearer ' + token; }
-        else if (guestToken)  { h['X-Guest-Token'] = guestToken; }
-        return h;
+        return { 'Accept': 'application/json', 'Authorization': 'Bearer ' + token };
     }
 
     let isOpen     = false;
@@ -269,12 +272,14 @@
         panel.classList.toggle('open', isOpen);
 
         if (isOpen) {
-            loadHistory();
-            pollTimer = setInterval(poll, 3000);
-            setTimeout(() => {
-                const input = document.getElementById('dm-chat-input');
-                if (input) input.focus();
-            }, 250);
+            if (isAuth) {
+                loadHistory();
+                pollTimer = setInterval(poll, 3000);
+                setTimeout(() => {
+                    const input = document.getElementById('dm-chat-input');
+                    if (input) input.focus();
+                }, 250);
+            }
             // clear unread badge
             const badge = document.getElementById('dm-chat-unread');
             if (badge) { badge.style.display = 'none'; badge.textContent = ''; }
