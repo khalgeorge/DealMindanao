@@ -37,9 +37,15 @@ return [
 
     'facebook' => [
         'app_id'              => env('FACEBOOK_APP_ID', ''),
+        'app_secret'          => env('FACEBOOK_APP_SECRET', ''),
         'page_id'             => env('FACEBOOK_PAGE_ID', ''),
         'page_access_token'   => env('FACEBOOK_PAGE_ACCESS_TOKEN', ''),
         'admin_psid'          => env('FACEBOOK_ADMIN_PSID', ''),
+    ],
+
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN', ''),
+        'chat_id'   => env('TELEGRAM_CHAT_ID', ''),
     ],
 
     'recaptcha' => [

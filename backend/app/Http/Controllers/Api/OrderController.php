@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\TelegramService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -183,6 +184,13 @@ class OrderController extends Controller
             }
         } catch (\Exception $e) {
             Log::error('Failed to send admin order notification email: ' . $e->getMessage());
+        }
+
+        // Send Telegram notification to admin
+        try {
+            (new TelegramService())->notifyNewOrder($order);
+        } catch (\Exception $e) {
+            Log::error('Failed to send Telegram order notification: ' . $e->getMessage());
         }
 
         return response()->json($order, 201);
