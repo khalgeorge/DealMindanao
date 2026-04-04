@@ -167,6 +167,13 @@ class OrderController extends Controller
 
         $order->load(['items.product']);
 
+        // Send Telegram notification to admin (runs first — no network timeout risk)
+        try {
+            (new TelegramService())->notifyNewOrder($order);
+        } catch (\Exception $e) {
+            Log::error('Failed to send Telegram order notification: ' . $e->getMessage());
+        }
+
         // Send email notification to customer
         try {
             \Illuminate\Support\Facades\Mail::to($request->user()->email)
@@ -184,13 +191,6 @@ class OrderController extends Controller
             }
         } catch (\Exception $e) {
             Log::error('Failed to send admin order notification email: ' . $e->getMessage());
-        }
-
-        // Send Telegram notification to admin
-        try {
-            (new TelegramService())->notifyNewOrder($order);
-        } catch (\Exception $e) {
-            Log::error('Failed to send Telegram order notification: ' . $e->getMessage());
         }
 
         return response()->json($order, 201);
