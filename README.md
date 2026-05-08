@@ -272,10 +272,10 @@ The system does not process online payments. All payments are handled offline.
 
 | Risk | Mitigation |
 |------|------------|
-Spam orders | Add CAPTCHA later |
-Fake info | Admin manual verification |
-Email delivery failure | Fallback contact via phone |
-High traffic | Enable caching + pagination |
+| Spam orders | Add CAPTCHA later |
+| Fake info | Admin manual verification |
+| Email delivery failure | Fallback contact via phone |
+| High traffic | Enable caching + pagination |
 
 ---
 
